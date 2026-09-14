@@ -1,0 +1,48 @@
+{
+  "pages": [
+    { "path": "pages/raven/index", "style": { "navigationStyle": "custom", "disableScroll": true } },
+    { "path": "pages/home/index", "style": { "navigationStyle": "custom", "disableScroll": false } },
+    { "path": "pages/controls/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/service/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/me/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/me/update-messages", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/me/firmware-updates", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/onboarding/bind", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/controls/ride-modes", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/controls/power-curve", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/controls/wheel", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/service/status", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/service/battery", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/service/resources", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/service/diagnosis", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/service/diagnosis-result", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/service/ota", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/service/ota-detail", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/service/ota-progress", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/me/app-update", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/me/legal", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/me/about", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/me/debug", "style": { "navigationStyle": "custom" } }
+  ],
+  "tabBar": {
+    "color": "#6F756F",
+    "selectedColor": "#A4F45A",
+    "backgroundColor": "#0B0D0C",
+    "borderStyle": "white",
+    "height": "80px",
+    "fontSize": "11px",
+    "list": [
+      { "pagePath": "pages/home/index", "text": "首页", "iconPath": "static/tabbar/home.png", "selectedIconPath": "static/tabbar/home-active.png" },
+      { "pagePath": "pages/controls/index", "text": "车控", "iconPath": "static/tabbar/controls.png", "selectedIconPath": "static/tabbar/controls-active.png" },
+      { "pagePath": "pages/service/index", "text": "服务", "iconPath": "static/tabbar/service.png", "selectedIconPath": "static/tabbar/service-active.png" },
+      { "pagePath": "pages/me/index", "text": "我的", "iconPath": "static/tabbar/me.png", "selectedIconPath": "static/tabbar/me-active.png" }
+    ]
+  },
+  "globalStyle": {
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "BINSEN",
+    "navigationBarBackgroundColor": "#090B0A",
+    "backgroundColor": "#090B0A"
+  }
+}

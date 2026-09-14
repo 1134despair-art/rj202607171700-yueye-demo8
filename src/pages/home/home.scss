@@ -1,0 +1,200 @@
+.summit-page { position: relative; isolation: isolate; container-type: inline-size; min-height: min(100dvh,932px); padding-bottom: calc(var(--v5-tabbar-height) + 16px); overflow: hidden; color: var(--v6-text); background: #06141f; }
+.summit-page::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: url('@/static/images/summit-background-original-20260908.png') center -28cqw / 100% auto no-repeat;
+  // Keep the mountain foreground visible below the telemetry, then fade before the image ends.
+  mask-image: linear-gradient(to bottom, #000 0, #000 60cqw, rgba(0,0,0,.96) 80cqw, rgba(0,0,0,.72) 110cqw, rgba(0,0,0,.4) 140cqw, rgba(0,0,0,.12) 165cqw, transparent 180cqw);
+  pointer-events: none;
+}
+.hero-scene { position: relative; isolation: isolate; height: 88cqw; overflow: hidden; }
+.hero-scene::before { position: absolute; z-index: 1; right: -1%; bottom: 1cqw; width: 77%; height: 10cqw; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(1,8,13,.88) 0%, rgba(3,15,24,.52) 44%, rgba(4,18,29,0) 76%); content: ''; filter: blur(1.8cqw); pointer-events: none; transform: rotate(-2deg); }
+.hero-scene::after { position: absolute; z-index: 3; right: -6%; bottom: -4cqw; width: 80%; height: 11cqw; background: linear-gradient(180deg,rgba(5,17,25,0),rgba(4,16,25,.32) 46%,rgba(3,14,23,.7)); content: ''; filter: blur(.8cqw); pointer-events: none; transform: rotate(-1.5deg); }
+.status-bar { position: absolute; z-index: 5; top: 0; right: 6%; left: 6%; height: 39px; display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-weight: 600; }
+.status-bar > view { display: flex; align-items: center; gap: 6px; }
+.system-battery { position: relative; width: 25px; height: 12px; padding: 1px; border: 1px solid currentColor; border-radius: 3px; }
+.system-battery i { display: block; height: 100%; background: currentColor; border-radius: 1px; }
+.system-battery::after { content: ''; position: absolute; right: -3px; top: 3px; width: 2px; height: 5px; border-radius: 1px; background: currentColor; }
+.brand-logo { position: absolute; z-index: 5; top: 10.7cqw; left: 6%; width: 27%; height: 7cqw; }
+.summit-page .brand-logo { filter: none !important; }
+.vehicle-heading { max-width: 57%; }
+.model-name text { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.model-name.long-name { font-size: 28px; min-height: 48px; display: flex; align-items: center; }
+.vehicle-heading { position: absolute; z-index: 5; top: 21.5cqw; left: 6%; padding: 0; border: 0; background: transparent; color: var(--v6-text); text-align: left; }
+.vehicle-heading::after { border: 0; }
+.model-name { position: relative; font-size: 48px; line-height: 1; font-weight: 700; font-style: italic; }
+.model-name i { position: absolute; bottom: 4px; left: -7px; width: 2px; height: 18px; background: linear-gradient(#b5e171,var(--v6-accent)); transform: skew(-20deg); }
+.series { display: flex; align-items: center; gap: 8px; margin-top: 5px; font-size: 14px; white-space: nowrap; }
+.series > view { display: grid; place-items: center; width: 23px; height: 23px; border: 1px solid rgba(151,201,227,.35); border-radius: 50%; background: rgba(143,181,216,.2); }
+.connection-pill { position: absolute; z-index: 5; top: calc(21.5cqw + 80px); left: 5.5%; display: flex; min-width: 112px; height: 34px; padding: 6px 12px; align-items: center; gap: 9px; border: 1px solid rgba(137,196,216,.3); border-radius: 8px; background: rgba(9,32,49,.62); font-size: 12px; white-space: nowrap; }
+.connection-pill::before { content: ''; position: absolute; inset: -5px 0; }
+.connection-pill :deep(svg) { color: #a6f0c8; }
+.connection-pill i { flex: 0 0 auto; width: 4px; height: 4px; border-radius: 50%; background: var(--v6-muted); }
+.connection-pill i.online { background: var(--v6-accent); }
+.battery-dial { position: absolute; z-index: 5; top: max(52cqw,calc(21.5cqw + 124px)); left: 5.6%; width: 25cqw; height: 24cqw; border: 1px solid rgba(142,226,185,.2); border-right-color: transparent; border-radius: 17px 8px 8px 17px; background: linear-gradient(100deg,rgba(53,114,78,.43),rgba(6,26,40,.62) 40%,rgba(6,26,40,.2)); box-shadow: inset 6px 0 15px rgba(146,230,159,.09); }
+.battery-dial > svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.dial-track,.dial-progress { fill: none; stroke-width: 5.5; stroke-linecap: round; }
+.dial-track { stroke: rgba(101,192,174,.12); }
+.dial-progress { stroke: url(#battery-gradient); transition: stroke-dasharray .5s ease; }
+.dial-copy { position: absolute; inset: 14% 0 20% 18%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; }
+.dial-copy > view { display: flex; align-items: baseline; gap: 2px; font-variant-numeric: tabular-nums; }
+.dial-copy > view text:first-child { font-size: 35px; line-height: 1; font-weight: 700; }
+.dial-copy > view text:last-child { font-size: 17px; }
+.dial-copy > text { color: #d8e9f3; font-size: 11px; }
+.hero-motorcycle { position: absolute; z-index: 2; right: 1.5%; bottom: -.4cqw; width: 72.5%; height: 55cqw; object-position: center bottom; filter: brightness(.91) saturate(.94) contrast(.98) drop-shadow(0 2.2cqw 1.5cqw rgba(1,8,13,.62)) drop-shadow(1cqw 0 1.15cqw rgba(255,194,112,.16)); }
+.vehicle-retry { position: absolute; right: 5%; bottom: 8%; width: 55%; min-height: 44px; color: var(--v6-muted); }
+.connection-pill,
+.battery-dial,
+.quick-card,
+.ride-entry,
+.firmware-entry { color: var(--v6-text); }
+.glass { border: 1px solid rgba(139,195,218,.36); background: linear-gradient(125deg,rgba(27,58,73,.82),rgba(8,25,42,.87) 50%,rgba(26,51,73,.88)); box-shadow: inset 0 1px 0 rgba(224,240,255,.09),0 8px 22px rgba(2,13,23,.15); backdrop-filter: blur(12px); }
+.telemetry { position: relative; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); align-items: center; height: 18cqw; min-height: 80px; margin: 0 5%; padding: 12px 8px; border-radius: 12px; }
+.telemetry-item { min-width: 0; padding: 0 6px; }
+.telemetry-item + .telemetry-item { border-left: 1px solid rgba(137,182,216,.24); }
+.telemetry-main { display: flex; align-items: center; justify-content: center; gap: 7px; }
+.metric-icon { display: grid; place-items: center; flex: 0 0 auto; width: 30px; height: 30px; border: 1px solid rgba(138,204,220,.14); border-radius: 50%; background: linear-gradient(130deg,rgba(77,122,131,.4),rgba(17,41,59,.5)); }
+.metric-icon.green { color: #d8ffe9; box-shadow: inset 1px 1px 8px rgba(94,233,167,.25); }
+.metric-value { display: flex; align-items: baseline; font-size: 13px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.metric-value text:first-child { font-size: 23px; line-height: 1; font-weight: 600; }
+.metric-label { display: block; margin-top: 7px; color: #bad0e1; font-size: 11px; text-align: center; white-space: nowrap; }
+.data-sync { display: flex; min-height: 32px; margin: 0 5%; padding: 8px 0 0; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; color: var(--v6-muted); font-size: 11px; line-height: 1.4; }
+.data-sync > view { display: flex; align-items: center; gap: 5px; }
+.data-sync .live { color: #94f7b5; }
+.data-sync > text { font-variant-numeric: tabular-nums; }
+.dashboard { position: relative; padding: 12px 5% 0; }
+.home-alerts { display: grid; gap: 8px; margin-bottom: 12px; }
+.home-alert { display: flex; width: 100%; min-height: 64px; padding: 12px; align-items: center; gap: 10px; border: 1px solid rgba(245,183,115,.42); border-radius: 8px; color: #f5cd91; background: rgba(48,36,29,.9); text-align: left; }
+.home-alert > view { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
+.home-alert text:first-child { font-size: 13px; font-weight: 600; }
+.home-alert text:last-child { color: #e2cdb5; font-size: 11px; line-height: 1.4; }
+.home-alert > :deep(svg) { flex-shrink: 0; }
+.icon-disc { display: grid; flex: 0 0 auto; place-items: center; width: 41px; height: 41px; border: 1px solid rgba(139,194,226,.3); border-radius: 50%; background: linear-gradient(140deg,rgba(98,117,146,.68),rgba(19,54,82,.65)); color: var(--v6-text); box-shadow: inset 1px 1px 5px rgba(179,217,235,.06); }
+.icon-disc.mint { background: linear-gradient(140deg,rgba(77,145,134,.64),rgba(20,53,82,.7)); }
+.icon-disc.neutral { background: linear-gradient(145deg,rgba(125,134,168,.56),rgba(28,46,71,.65)); }
+.quick-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.quick-card { position: relative; display: flex; min-width: 0; min-height: 80px; padding: 12px; gap: 10px; border-radius: 12px; align-items: center; text-align: left; }
+.quick-copy { min-width: 0; flex: 1; }
+.quick-label { display: flex; width: 100%; justify-content: space-between; gap: 2px; align-items: center; font-size: 14px; font-weight: 600; white-space: nowrap; }
+.quick-label :deep(svg) { color: var(--v6-muted); flex-shrink: 0; width: 15px; }
+.quick-detail { display: block; color: var(--v6-muted); font-size: 11px; margin-top: 5px; line-height: 1.4; }
+.ride-entry { display: block; width: 100%; margin-top: 12px; padding: 14px 16px; border-radius: 12px; text-align: left; }
+.ride-heading { display: flex; align-items: center; gap: 8px; }
+.ride-heading > :deep(svg) { flex-shrink: 0; color: #94f7b5; }
+.ride-heading > text { font-size: 14px; font-weight: 600; }
+.ride-heading > .ride-state { margin-left: auto; color: var(--v6-muted); font-size: 10px; font-weight: 400; text-align: right; }
+.ride-heading > :deep(svg:last-child) { color: var(--v6-muted); }
+.ride-settings { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); margin-top: 14px; }
+.ride-settings > view { display: flex; min-width: 0; flex-direction: column; gap: 6px; padding: 0 8px; text-align: center; }
+.ride-settings > view + view { border-left: 1px solid rgba(137,182,216,.24); }
+.ride-settings text:first-child { color: var(--v6-muted); font-size: 11px; line-height: 1.4; }
+.ride-settings text:last-child { font-size: 14px; line-height: 1.3; font-weight: 600; font-variant-numeric: tabular-nums; }
+.firmware-entry { display: flex; width: 100%; min-height: 76px; margin-top: 12px; padding: 16px; align-items: center; gap: 12px; border-radius: 12px; text-align: left; }
+.firmware-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 6px; }
+.firmware-copy text:first-child { font-size: 15px; font-weight: 600; }
+.firmware-copy text:last-child { font-size: 12px; line-height: 1.4; color: var(--v6-muted); }
+.firmware-entry > :deep(svg:last-child) { flex: 0 0 auto; color: var(--v6-muted); }
+.bottom-dock { position: fixed; z-index: 10; right: 5.8%; bottom: max(12px,env(safe-area-inset-bottom)); left: 5.8%; }
+.home-tabs { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); height: 60px; border-radius: 24px; background: linear-gradient(135deg,rgba(115,154,75,.71),rgba(13,34,44,.96) 23%,rgba(14,31,48,.97) 65%,rgba(43,63,80,.95)); }
+.tab { position: relative; display: flex; min-width: 0; padding: 8px 0 7px; flex-direction: column; gap: 3px; align-items: center; justify-content: center; color: var(--v6-muted); font-size: 12px; }
+.tab > image { width: 27px; height: 27px; opacity: .78; }
+.tab.active { color: #a7f39c; }
+.tab.active > i { position: absolute; bottom: 3px; width: 14px; height: 2px; border-radius: 2px; background: #78efa8; }
+.home-indicator { width: 34%; height: 4px; margin: 10px auto 0; border-radius: 4px; background: #f3f7fc; }
+.modal-overlay { position: fixed; z-index: 30; inset: 0; display: flex; padding: 24px; align-items: center; justify-content: center; background: rgba(2,10,19,.7); backdrop-filter: blur(4px); }
+.connection-dialog { width: 100%; padding: 16px; border-radius: 16px; background: #122c41; }
+.dialog-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; }
+.dialog-heading > button { display: grid; place-items: center; width: 44px; height: 44px; }
+.dialog-copy { display: block; margin: 4px 0 22px; color: var(--v6-muted); font-size: 13px; line-height: 1.6; }
+.dialog-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.dialog-actions button { min-height: 44px; border-radius: 8px; background: rgba(120,169,207,.15); }
+.dialog-actions .confirm { background: var(--v6-accent); color: #0b2830; }
+.spinning { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 389px) {
+  .model-name { font-size: 43px; }
+  .dial-copy > view text:first-child { font-size: 31px; }
+  .quick-card { padding-left: 11px; padding-right: 11px; }
+  .quick-label { font-size: 13px; }
+  .telemetry-item { padding-right: 4px; padding-left: 4px; }
+  .telemetry-main { gap: 4px; }
+  .metric-icon { width: 27px; height: 27px; }
+  .metric-value text:first-child { font-size: 21px; }
+}
+@media (max-width: 350px) {
+  .hero-scene { height: 102cqw; }
+  .battery-dial { width: 27cqw; height: 26cqw; }
+  .metric-value text:first-child { font-size: 19px; }
+  .metric-icon { width: 23px; height: 23px; }
+  .metric-label { font-size: 10px; }
+  .quick-card { padding-left: 8px; padding-right: 8px; }
+  .quick-card { gap: 8px; }
+  .quick-card .icon-disc { width: 32px; height: 32px; }
+  .ride-entry { padding-left: 12px; padding-right: 12px; }
+}
+.summit-english .metric-label { white-space: normal; min-height: 24px; font-size: 10px; }
+.summit-english .quick-detail { font-size: 10px; }
+.summit-english .quick-label { white-space: normal; }
+.reduce-motion :deep(*) { animation: none !important; transition: none !important; }
+
+/* V7 RAVEN dashboard: an instrument panel rather than an editorial hero. */
+.summit-page { min-height: min(100dvh,932px); color: #f1f4ef; background: #090b0a; }
+.summit-page::before { content: none; }
+.hero-scene { height: 332px; border-bottom: 1px solid rgba(183,194,184,.14); background: #090b0a; }
+.hero-scene::before { right: 11%; bottom: 37px; width: 78%; height: 28px; background: rgba(0,0,0,.72); filter: blur(12px); }
+.hero-scene::after { content: none; }
+.status-bar { right: 16px; left: 16px; height: 30px; font-size: 11px; }
+.brand-logo { top: 40px; left: 50%; width: 86px; height: 24px; transform: translateX(-50%); }
+.vehicle-heading { top: auto; right: 16px; bottom: 12px; left: 16px; max-width: none; }
+.model-name { font-size: 23px; font-style: normal; line-height: 1.15; }
+.model-name i { display: none; }
+.series { justify-content: space-between; margin-top: 3px; color: #6e756f; font-size: 9px; }
+.series > view { width: 22px; height: 22px; border-color: rgba(183,194,184,.18); border-radius: 50%; background: #111411; }
+.connection-pill { top: 41px; right: 14px; left: auto; min-width: 0; height: 23px; padding: 3px 7px; border: 0; border-radius: 2px; background: transparent; color: #a4f45a; font-size: 8px; }
+.connection-pill :deep(svg) { width: 13px; height: 13px; color: #a4f45a; }
+.connection-pill i { display: none; }
+.hero-motorcycle { right: 7%; bottom: 53px; width: 86%; height: 238px; object-position: center center; filter: saturate(.92) contrast(1.08) brightness(.9) drop-shadow(0 15px 13px rgba(0,0,0,.78)); }
+.battery-dial { top: auto; bottom: 69px; left: 15px; width: 79px; height: 51px; border: 1px solid rgba(164,244,90,.35); border-radius: 0; background: rgba(8,11,9,.86); box-shadow: none; }
+.battery-dial > svg { display: none; }
+.dial-copy { inset: 7px 5px; gap: 1px; }
+.dial-copy > view text:first-child { font-size: 22px; }
+.dial-copy > view text:last-child { font-size: 11px; }
+.dial-copy > text { color: #747b75; font-size: 8px; }
+.glass { border: 1px solid rgba(183,194,184,.14); border-radius: 0; background: #0d100e; box-shadow: none; backdrop-filter: none; }
+.telemetry { height: 68px; min-height: 68px; margin: 0 16px; padding: 8px 0; border-width: 0 0 1px; }
+.telemetry-item { padding: 0 8px; }
+.telemetry-item + .telemetry-item { border-left-color: rgba(183,194,184,.13); }
+.telemetry-main { gap: 0; }
+.metric-icon { display: none; }
+.metric-value text:first-child { font-size: 17px; font-weight: 800; }
+.metric-value text:last-child { color: #a8aea8; font-size: 10px; }
+.metric-label { margin-top: 5px; color: #656b66; font-size: 8px; }
+.data-sync { min-height: 33px; margin: 0 16px; padding: 7px 0; border-bottom: 1px solid rgba(183,194,184,.13); color: #646b65; font-size: 8px; }
+.data-sync .live { color: #a4f45a; }
+.dashboard { padding: 0 16px 88px; }
+.quick-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 0; border-bottom: 1px solid rgba(183,194,184,.13); }
+.quick-card { display: flex; min-height: 69px; padding: 8px 3px; flex-direction: column; justify-content: center; gap: 4px; border: 0; text-align: center; }
+.quick-card + .quick-card { border-left: 1px solid rgba(183,194,184,.13); }
+.icon-disc { width: 24px; height: 24px; border: 0; background: transparent !important; color: #b6bcb6; box-shadow: none; }
+.icon-disc :deep(svg) { width: 16px; height: 16px; }
+.quick-copy { width: 100%; }
+.quick-label { justify-content: center; font-size: 9px; }
+.quick-label :deep(svg) { display: none; }
+.quick-detail { display: none; }
+.ride-entry { margin-top: 0; padding: 12px 0; border-width: 0 0 1px; }
+.ride-heading > :deep(svg:first-child) { color: #d8703a; }
+.ride-heading > text { font-size: 11px; }
+.ride-heading > .ride-state { color: #646b65; font-size: 8px; }
+.ride-settings { margin-top: 10px; }
+.ride-settings > view { gap: 4px; }
+.ride-settings text:first-child { color: #646b65; font-size: 8px; }
+.ride-settings text:last-child { font-size: 11px; }
+.firmware-entry { display: none; }
+
+@media (max-width: 350px) {
+  .hero-scene { height: 300px; }
+  .hero-motorcycle { height: 210px; }
+  .battery-dial { width: 72px; }
+}

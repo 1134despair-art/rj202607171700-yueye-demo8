@@ -1,0 +1,4481 @@
+{
+  "version": "2.0.0",
+  "source": "BINSEN VI Design System and 420x932 UI review board",
+  "generatedAt": "2026-07-29T11:11:20.103Z",
+  "scale": "@3x",
+  "iconSystem": "Lucide 2px stroke, deterministic transparent PNG",
+  "tones": {
+    "navy": "#212721",
+    "muted": "#596159",
+    "brand": "#C1E54E",
+    "info": "#315F90",
+    "success": "#227D57",
+    "warning": "#855817",
+    "danger": "#B83A2F",
+    "inverse": "#FFFFFF"
+  },
+  "toneCompatibility": {
+    "navy": "Runtime-compatible name for VI Wilderness Black; source folder is design-system/ui-design/assets/icons/default."
+  },
+  "icons": [
+    {
+      "name": "AlertTriangle",
+      "sourceFile": "alert-triangle.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/alert-triangle.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/alert-triangle.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/alert-triangle.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/alert-triangle.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/alert-triangle.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/alert-triangle.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/alert-triangle.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/alert-triangle.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ArrowLeft",
+      "sourceFile": "arrow-left.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/arrow-left.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/arrow-left.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/arrow-left.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/arrow-left.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/arrow-left.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/arrow-left.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/arrow-left.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/arrow-left.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ArrowRight",
+      "sourceFile": "arrow-right.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/arrow-right.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/arrow-right.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/arrow-right.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/arrow-right.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/arrow-right.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/arrow-right.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/arrow-right.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/arrow-right.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ArrowUpFromLine",
+      "sourceFile": "arrow-up-from-line.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/arrow-up-from-line.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/arrow-up-from-line.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/arrow-up-from-line.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/arrow-up-from-line.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/arrow-up-from-line.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/arrow-up-from-line.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/arrow-up-from-line.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/arrow-up-from-line.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "BatteryCharging",
+      "sourceFile": "battery-charging.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "success",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/battery-charging.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/battery-charging.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/battery-charging.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/battery-charging.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/battery-charging.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/battery-charging.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/battery-charging.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/battery-charging.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "BatteryMedium",
+      "sourceFile": "battery-medium.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/battery-medium.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/battery-medium.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/battery-medium.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/battery-medium.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/battery-medium.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/battery-medium.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/battery-medium.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/battery-medium.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Battery",
+      "sourceFile": "battery.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/battery.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/battery.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/battery.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/battery.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/battery.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/battery.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/battery.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/battery.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Bell",
+      "sourceFile": "bell.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/bell.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/bell.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/bell.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/bell.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/bell.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/bell.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/bell.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/bell.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Bike",
+      "sourceFile": "bike.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "brand",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/bike.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/bike.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/bike.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/bike.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/bike.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/bike.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/bike.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/bike.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "BluetoothConnected",
+      "sourceFile": "bluetooth-connected.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "success",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/bluetooth-connected.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/bluetooth-connected.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/bluetooth-connected.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/bluetooth-connected.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/bluetooth-connected.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/bluetooth-connected.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/bluetooth-connected.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/bluetooth-connected.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "BluetoothOff",
+      "sourceFile": "bluetooth-off.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "danger",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/bluetooth-off.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/bluetooth-off.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/bluetooth-off.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/bluetooth-off.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/bluetooth-off.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/bluetooth-off.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/bluetooth-off.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/bluetooth-off.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "BluetoothSearching",
+      "sourceFile": "bluetooth-searching.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/bluetooth-searching.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/bluetooth-searching.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/bluetooth-searching.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/bluetooth-searching.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/bluetooth-searching.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/bluetooth-searching.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/bluetooth-searching.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/bluetooth-searching.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Bluetooth",
+      "sourceFile": "bluetooth.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/bluetooth.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/bluetooth.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/bluetooth.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/bluetooth.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/bluetooth.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/bluetooth.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/bluetooth.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/bluetooth.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Bug",
+      "sourceFile": "bug.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/bug.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/bug.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/bug.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/bug.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/bug.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/bug.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/bug.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/bug.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CalendarDays",
+      "sourceFile": "calendar-days.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/calendar-days.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/calendar-days.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/calendar-days.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/calendar-days.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/calendar-days.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/calendar-days.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/calendar-days.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/calendar-days.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ChartSpline",
+      "sourceFile": "chart-spline.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/chart-spline.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/chart-spline.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/chart-spline.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/chart-spline.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/chart-spline.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/chart-spline.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/chart-spline.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/chart-spline.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CheckCircle2",
+      "sourceFile": "check-circle2.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/check-circle2.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/check-circle2.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/check-circle2.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/check-circle2.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/check-circle2.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/check-circle2.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/check-circle2.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/check-circle2.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Check",
+      "sourceFile": "check.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "success",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/check.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/check.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/check.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/check.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/check.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/check.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/check.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/check.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ChevronDown",
+      "sourceFile": "chevron-down.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/chevron-down.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/chevron-down.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/chevron-down.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/chevron-down.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/chevron-down.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/chevron-down.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/chevron-down.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/chevron-down.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ChevronLeft",
+      "sourceFile": "chevron-left.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "muted",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/chevron-left.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/chevron-left.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/chevron-left.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/chevron-left.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/chevron-left.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/chevron-left.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/chevron-left.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/chevron-left.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ChevronRight",
+      "sourceFile": "chevron-right.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "muted",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/chevron-right.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/chevron-right.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/chevron-right.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/chevron-right.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/chevron-right.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/chevron-right.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/chevron-right.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/chevron-right.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CircleAlert",
+      "sourceFile": "circle-alert.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/circle-alert.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/circle-alert.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/circle-alert.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/circle-alert.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/circle-alert.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/circle-alert.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/circle-alert.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/circle-alert.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CircleCheckBig",
+      "sourceFile": "circle-check-big.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "success",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/circle-check-big.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/circle-check-big.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/circle-check-big.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/circle-check-big.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/circle-check-big.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/circle-check-big.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/circle-check-big.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/circle-check-big.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CircleCheck",
+      "sourceFile": "circle-check.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "success",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/circle-check.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/circle-check.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/circle-check.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/circle-check.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/circle-check.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/circle-check.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/circle-check.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/circle-check.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CircleDashed",
+      "sourceFile": "circle-dashed.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/circle-dashed.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/circle-dashed.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/circle-dashed.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/circle-dashed.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/circle-dashed.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/circle-dashed.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/circle-dashed.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/circle-dashed.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CircleDot",
+      "sourceFile": "circle-dot.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/circle-dot.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/circle-dot.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/circle-dot.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/circle-dot.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/circle-dot.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/circle-dot.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/circle-dot.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/circle-dot.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CircleGauge",
+      "sourceFile": "circle-gauge.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/circle-gauge.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/circle-gauge.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/circle-gauge.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/circle-gauge.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/circle-gauge.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/circle-gauge.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/circle-gauge.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/circle-gauge.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CircleHelp",
+      "sourceFile": "circle-help.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/circle-help.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/circle-help.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/circle-help.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/circle-help.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/circle-help.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/circle-help.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/circle-help.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/circle-help.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CircleParking",
+      "sourceFile": "circle-parking.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/circle-parking.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/circle-parking.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/circle-parking.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/circle-parking.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/circle-parking.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/circle-parking.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/circle-parking.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/circle-parking.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CircleX",
+      "sourceFile": "circle-x.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "danger",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/circle-x.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/circle-x.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/circle-x.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/circle-x.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/circle-x.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/circle-x.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/circle-x.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/circle-x.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CircuitBoard",
+      "sourceFile": "circuit-board.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/circuit-board.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/circuit-board.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/circuit-board.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/circuit-board.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/circuit-board.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/circuit-board.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/circuit-board.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/circuit-board.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "CloudDownload",
+      "sourceFile": "cloud-download.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "warning",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/cloud-download.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/cloud-download.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/cloud-download.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/cloud-download.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/cloud-download.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/cloud-download.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/cloud-download.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/cloud-download.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Cog",
+      "sourceFile": "cog.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "brand",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/cog.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/cog.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/cog.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/cog.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/cog.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/cog.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/cog.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/cog.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Cpu",
+      "sourceFile": "cpu.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/cpu.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/cpu.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/cpu.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/cpu.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/cpu.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/cpu.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/cpu.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/cpu.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Download",
+      "sourceFile": "download.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/download.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/download.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/download.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/download.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/download.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/download.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/download.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/download.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "EyeOff",
+      "sourceFile": "eye-off.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/eye-off.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/eye-off.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/eye-off.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/eye-off.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/eye-off.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/eye-off.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/eye-off.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/eye-off.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Eye",
+      "sourceFile": "eye.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/eye.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/eye.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/eye.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/eye.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/eye.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/eye.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/eye.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/eye.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "FileSearch",
+      "sourceFile": "file-search.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "muted",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/file-search.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/file-search.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/file-search.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/file-search.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/file-search.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/file-search.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/file-search.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/file-search.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "FileText",
+      "sourceFile": "file-text.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/file-text.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/file-text.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/file-text.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/file-text.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/file-text.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/file-text.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/file-text.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/file-text.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Gauge",
+      "sourceFile": "gauge.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/gauge.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/gauge.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/gauge.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/gauge.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/gauge.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/gauge.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/gauge.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/gauge.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Globe",
+      "sourceFile": "globe.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/globe.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/globe.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/globe.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/globe.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/globe.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/globe.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/globe.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/globe.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Globe2",
+      "sourceFile": "globe2.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/globe2.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/globe2.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/globe2.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/globe2.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/globe2.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/globe2.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/globe2.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/globe2.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Grid2X2",
+      "sourceFile": "grid2-x2.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/grid2-x2.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/grid2-x2.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/grid2-x2.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/grid2-x2.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/grid2-x2.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/grid2-x2.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/grid2-x2.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/grid2-x2.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "HeartPulse",
+      "sourceFile": "heart-pulse.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/heart-pulse.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/heart-pulse.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/heart-pulse.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/heart-pulse.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/heart-pulse.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/heart-pulse.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/heart-pulse.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/heart-pulse.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "History",
+      "sourceFile": "history.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "warning",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/history.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/history.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/history.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/history.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/history.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/history.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/history.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/history.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "House",
+      "sourceFile": "house.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/house.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/house.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/house.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/house.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/house.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/house.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/house.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/house.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Info",
+      "sourceFile": "info.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/info.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/info.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/info.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/info.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/info.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/info.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/info.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/info.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "IosBattery",
+      "sourceFile": "ios-battery.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/ios-battery.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/ios-battery.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/ios-battery.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/ios-battery.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/ios-battery.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/ios-battery.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/ios-battery.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/ios-battery.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "IosCellular",
+      "sourceFile": "ios-cellular.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/ios-cellular.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/ios-cellular.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/ios-cellular.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/ios-cellular.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/ios-cellular.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/ios-cellular.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/ios-cellular.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/ios-cellular.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "KeyRound",
+      "sourceFile": "key-round.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/key-round.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/key-round.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/key-round.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/key-round.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/key-round.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/key-round.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/key-round.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/key-round.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Languages",
+      "sourceFile": "languages.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/languages.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/languages.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/languages.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/languages.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/languages.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/languages.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/languages.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/languages.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "LayoutGrid",
+      "sourceFile": "layout-grid.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/layout-grid.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/layout-grid.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/layout-grid.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/layout-grid.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/layout-grid.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/layout-grid.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/layout-grid.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/layout-grid.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "LoaderCircle",
+      "sourceFile": "loader-circle.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/loader-circle.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/loader-circle.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/loader-circle.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/loader-circle.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/loader-circle.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/loader-circle.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/loader-circle.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/loader-circle.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "LockKeyhole",
+      "sourceFile": "lock-keyhole.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/lock-keyhole.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/lock-keyhole.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/lock-keyhole.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/lock-keyhole.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/lock-keyhole.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/lock-keyhole.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/lock-keyhole.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/lock-keyhole.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "LogIn",
+      "sourceFile": "log-in.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/log-in.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/log-in.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/log-in.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/log-in.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/log-in.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/log-in.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/log-in.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/log-in.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "LogOut",
+      "sourceFile": "log-out.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "danger",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/log-out.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/log-out.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/log-out.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/log-out.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/log-out.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/log-out.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/log-out.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/log-out.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Mail",
+      "sourceFile": "mail.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/mail.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/mail.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/mail.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/mail.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/mail.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/mail.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/mail.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/mail.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "MapPin",
+      "sourceFile": "map-pin.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/map-pin.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/map-pin.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/map-pin.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/map-pin.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/map-pin.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/map-pin.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/map-pin.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/map-pin.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Mountain",
+      "sourceFile": "mountain.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "warning",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/mountain.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/mountain.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/mountain.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/mountain.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/mountain.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/mountain.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/mountain.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/mountain.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "MoveRight",
+      "sourceFile": "move-right.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/move-right.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/move-right.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/move-right.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/move-right.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/move-right.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/move-right.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/move-right.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/move-right.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "PackageCheck",
+      "sourceFile": "package-check.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "success",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/package-check.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/package-check.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/package-check.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/package-check.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/package-check.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/package-check.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/package-check.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/package-check.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "PackageOpen",
+      "sourceFile": "package-open.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "warning",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/package-open.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/package-open.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/package-open.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/package-open.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/package-open.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/package-open.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/package-open.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/package-open.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "PanelTopClose",
+      "sourceFile": "panel-top-close.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/panel-top-close.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/panel-top-close.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/panel-top-close.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/panel-top-close.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/panel-top-close.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/panel-top-close.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/panel-top-close.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/panel-top-close.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Pause",
+      "sourceFile": "pause.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "warning",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/pause.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/pause.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/pause.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/pause.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/pause.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/pause.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/pause.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/pause.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Phone",
+      "sourceFile": "phone.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/phone.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/phone.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/phone.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/phone.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/phone.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/phone.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/phone.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/phone.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Play",
+      "sourceFile": "play.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/play.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/play.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/play.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/play.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/play.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/play.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/play.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/play.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Power",
+      "sourceFile": "power.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "success",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/power.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/power.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/power.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/power.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/power.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/power.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/power.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/power.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "QrCode",
+      "sourceFile": "qr-code.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/qr-code.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/qr-code.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/qr-code.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/qr-code.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/qr-code.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/qr-code.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/qr-code.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/qr-code.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Radio",
+      "sourceFile": "radio.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/radio.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/radio.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/radio.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/radio.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/radio.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/radio.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/radio.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/radio.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "RefreshCw",
+      "sourceFile": "refresh-cw.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/refresh-cw.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/refresh-cw.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/refresh-cw.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/refresh-cw.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/refresh-cw.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/refresh-cw.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/refresh-cw.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/refresh-cw.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "RotateCcw",
+      "sourceFile": "rotate-ccw.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/rotate-ccw.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/rotate-ccw.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/rotate-ccw.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/rotate-ccw.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/rotate-ccw.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/rotate-ccw.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/rotate-ccw.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/rotate-ccw.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Ruler",
+      "sourceFile": "ruler.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/ruler.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/ruler.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/ruler.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/ruler.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/ruler.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/ruler.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/ruler.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/ruler.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Save",
+      "sourceFile": "save.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/save.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/save.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/save.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/save.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/save.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/save.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/save.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/save.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ScanLine",
+      "sourceFile": "scan-line.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/scan-line.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/scan-line.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/scan-line.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/scan-line.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/scan-line.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/scan-line.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/scan-line.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/scan-line.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ScanSearch",
+      "sourceFile": "scan-search.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/scan-search.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/scan-search.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/scan-search.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/scan-search.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/scan-search.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/scan-search.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/scan-search.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/scan-search.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Search",
+      "sourceFile": "search.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/search.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/search.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/search.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/search.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/search.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/search.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/search.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/search.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Settings",
+      "sourceFile": "settings.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "muted",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/settings.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/settings.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/settings.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/settings.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/settings.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/settings.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/settings.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/settings.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Settings2",
+      "sourceFile": "settings2.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/settings2.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/settings2.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/settings2.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/settings2.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/settings2.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/settings2.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/settings2.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/settings2.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ShieldAlert",
+      "sourceFile": "shield-alert.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "brand",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/shield-alert.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/shield-alert.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/shield-alert.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/shield-alert.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/shield-alert.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/shield-alert.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/shield-alert.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/shield-alert.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ShieldCheck",
+      "sourceFile": "shield-check.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "success",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/shield-check.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/shield-check.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/shield-check.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/shield-check.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/shield-check.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/shield-check.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/shield-check.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/shield-check.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ShieldQuestion",
+      "sourceFile": "shield-question.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/shield-question.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/shield-question.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/shield-question.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/shield-question.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/shield-question.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/shield-question.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/shield-question.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/shield-question.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Signal",
+      "sourceFile": "signal.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/signal.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/signal.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/signal.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/signal.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/signal.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/signal.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/signal.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/signal.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "SlidersHorizontal",
+      "sourceFile": "sliders-horizontal.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "brand",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/sliders-horizontal.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/sliders-horizontal.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/sliders-horizontal.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/sliders-horizontal.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/sliders-horizontal.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/sliders-horizontal.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/sliders-horizontal.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/sliders-horizontal.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Smartphone",
+      "sourceFile": "smartphone.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/smartphone.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/smartphone.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/smartphone.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/smartphone.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/smartphone.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/smartphone.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/smartphone.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/smartphone.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Sparkles",
+      "sourceFile": "sparkles.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "warning",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/sparkles.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/sparkles.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/sparkles.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/sparkles.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/sparkles.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/sparkles.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/sparkles.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/sparkles.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Square",
+      "sourceFile": "square.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/square.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/square.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/square.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/square.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/square.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/square.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/square.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/square.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Stethoscope",
+      "sourceFile": "stethoscope.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/stethoscope.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/stethoscope.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/stethoscope.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/stethoscope.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/stethoscope.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/stethoscope.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/stethoscope.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/stethoscope.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "SwitchCamera",
+      "sourceFile": "switch-camera.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/switch-camera.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/switch-camera.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/switch-camera.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/switch-camera.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/switch-camera.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/switch-camera.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/switch-camera.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/switch-camera.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Thermometer",
+      "sourceFile": "thermometer.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/thermometer.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/thermometer.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/thermometer.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/thermometer.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/thermometer.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/thermometer.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/thermometer.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/thermometer.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Trash2",
+      "sourceFile": "trash2.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "danger",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/trash2.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/trash2.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/trash2.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/trash2.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/trash2.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/trash2.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/trash2.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/trash2.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "TriangleAlert",
+      "sourceFile": "triangle-alert.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "warning",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/triangle-alert.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/triangle-alert.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/triangle-alert.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/triangle-alert.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/triangle-alert.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/triangle-alert.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/triangle-alert.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/triangle-alert.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Unplug",
+      "sourceFile": "unplug.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/unplug.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/unplug.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/unplug.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/unplug.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/unplug.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/unplug.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/unplug.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/unplug.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "UserPen",
+      "sourceFile": "user-pen.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "info",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/user-pen.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/user-pen.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/user-pen.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/user-pen.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/user-pen.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/user-pen.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/user-pen.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/user-pen.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "UserPlus",
+      "sourceFile": "user-plus.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "brand",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/user-plus.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/user-plus.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/user-plus.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/user-plus.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/user-plus.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/user-plus.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/user-plus.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/user-plus.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "UserRound",
+      "sourceFile": "user-round.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "muted",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/user-round.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/user-round.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/user-round.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/user-round.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/user-round.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/user-round.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/user-round.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/user-round.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "UsersRound",
+      "sourceFile": "users-round.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/users-round.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/users-round.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/users-round.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/users-round.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/users-round.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/users-round.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/users-round.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/users-round.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "WifiOff",
+      "sourceFile": "wifi-off.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "danger",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/wifi-off.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/wifi-off.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/wifi-off.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/wifi-off.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/wifi-off.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/wifi-off.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/wifi-off.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/wifi-off.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Wifi",
+      "sourceFile": "wifi.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/wifi.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/wifi.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/wifi.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/wifi.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/wifi.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/wifi.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/wifi.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/wifi.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Wrench",
+      "sourceFile": "wrench.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "muted",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/wrench.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/wrench.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/wrench.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/wrench.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/wrench.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/wrench.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/wrench.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/wrench.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "X",
+      "sourceFile": "x.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/x.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/x.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/x.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/x.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/x.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/x.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/x.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/x.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "ZapOff",
+      "sourceFile": "zap-off.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/zap-off.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/zap-off.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/zap-off.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/zap-off.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/zap-off.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/zap-off.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/zap-off.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/zap-off.png",
+          "color": "#FFFFFF"
+        }
+      }
+    },
+    {
+      "name": "Zap",
+      "sourceFile": "zap.png",
+      "width": 72,
+      "height": 72,
+      "transparent": true,
+      "defaultTone": "navy",
+      "variants": {
+        "navy": {
+          "file": "icons/navy/zap.png",
+          "color": "#212721"
+        },
+        "muted": {
+          "file": "icons/muted/zap.png",
+          "color": "#596159"
+        },
+        "brand": {
+          "file": "icons/brand/zap.png",
+          "color": "#C1E54E"
+        },
+        "info": {
+          "file": "icons/info/zap.png",
+          "color": "#315F90"
+        },
+        "success": {
+          "file": "icons/success/zap.png",
+          "color": "#227D57"
+        },
+        "warning": {
+          "file": "icons/warning/zap.png",
+          "color": "#855817"
+        },
+        "danger": {
+          "file": "icons/danger/zap.png",
+          "color": "#B83A2F"
+        },
+        "inverse": {
+          "file": "icons/inverse/zap.png",
+          "color": "#FFFFFF"
+        }
+      }
+    }
+  ],
+  "tabbar": [
+    {
+      "name": "home",
+      "file": "tabbar/home.png",
+      "staticFile": "static/tabbar/home.png",
+      "width": 60,
+      "height": 60,
+      "color": "#596159",
+      "transparent": true
+    },
+    {
+      "name": "home-active",
+      "file": "tabbar/home-active.png",
+      "staticFile": "static/tabbar/home-active.png",
+      "width": 60,
+      "height": 60,
+      "color": "#212721",
+      "transparent": true
+    },
+    {
+      "name": "controls",
+      "file": "tabbar/controls.png",
+      "staticFile": "static/tabbar/controls.png",
+      "width": 60,
+      "height": 60,
+      "color": "#596159",
+      "transparent": true
+    },
+    {
+      "name": "controls-active",
+      "file": "tabbar/controls-active.png",
+      "staticFile": "static/tabbar/controls-active.png",
+      "width": 60,
+      "height": 60,
+      "color": "#212721",
+      "transparent": true
+    },
+    {
+      "name": "service",
+      "file": "tabbar/service.png",
+      "staticFile": "static/tabbar/service.png",
+      "width": 60,
+      "height": 60,
+      "color": "#596159",
+      "transparent": true
+    },
+    {
+      "name": "service-active",
+      "file": "tabbar/service-active.png",
+      "staticFile": "static/tabbar/service-active.png",
+      "width": 60,
+      "height": 60,
+      "color": "#212721",
+      "transparent": true
+    },
+    {
+      "name": "me",
+      "file": "tabbar/me.png",
+      "staticFile": "static/tabbar/me.png",
+      "width": 60,
+      "height": 60,
+      "color": "#596159",
+      "transparent": true
+    },
+    {
+      "name": "me-active",
+      "file": "tabbar/me-active.png",
+      "staticFile": "static/tabbar/me-active.png",
+      "width": 60,
+      "height": 60,
+      "color": "#212721",
+      "transparent": true
+    }
+  ],
+  "rasterAssets": [
+    {
+      "file": "illustrations/raven-offroad@3x.png",
+      "width": 1200,
+      "height": 720,
+      "transparent": true,
+      "sha256": "1d513f98a98818a7b17e7712e8c04b7c87aa043f213d14bda21c31df1c28cde5"
+    },
+    {
+      "file": "illustrations/raven-offroad-thumb@3x.png",
+      "width": 480,
+      "height": 288,
+      "transparent": true,
+      "sha256": "410b1c656dcae05f11c921408895d13a060a38d02722aeef65ecfd841e5ad46c"
+    },
+    {
+      "file": "branding/binsen-wordmark-dark@3x.png",
+      "width": 863,
+      "height": 240,
+      "transparent": true,
+      "sha256": "f47716682963ed7421b173224f64acaca8204bda7e40967044015cf78a51d1b3"
+    },
+    {
+      "file": "branding/binsen-app-mark@3x.png",
+      "width": 384,
+      "height": 384,
+      "transparent": false,
+      "sha256": "bba426ecf877d124d6e20b38ad3988bacc77540045e09b6ad358e915b33bb643"
+    },
+    {
+      "file": "branding/binsen-logo-horizontal-black.png",
+      "width": 863,
+      "height": 240,
+      "transparent": true,
+      "sha256": "f47716682963ed7421b173224f64acaca8204bda7e40967044015cf78a51d1b3"
+    },
+    {
+      "file": "branding/binsen-logo-horizontal-green.png",
+      "width": 863,
+      "height": 240,
+      "transparent": true,
+      "sha256": "b3d5cf17e831a3ae165deced600a4e972ebb8af8bea6256f5313ca75138b4eb8"
+    },
+    {
+      "file": "branding/binsen-logo-horizontal-inverse.png",
+      "width": 863,
+      "height": 240,
+      "transparent": true,
+      "sha256": "883a59c08063fc02fb7740872cd9216db4a3a7095f293da9f8ec6cba54ddd4a3"
+    },
+    {
+      "file": "branding/binsen-logo-vertical-black.png",
+      "width": 539,
+      "height": 322,
+      "transparent": true,
+      "sha256": "5a844e5bca90343ff305306761dd735369bc86f56c5efbfd8e8c4d5db56ac6b9"
+    },
+    {
+      "file": "branding/binsen-logo-vertical-green.png",
+      "width": 539,
+      "height": 322,
+      "transparent": true,
+      "sha256": "a693a399a47c728d5ddb489600c9df7d743187c6c2eb58c4ef778f370205a0ba"
+    },
+    {
+      "file": "branding/binsen-logo-vertical-inverse.png",
+      "width": 539,
+      "height": 322,
+      "transparent": true,
+      "sha256": "1b23ea75bfbe036d0cacd863ac96d428e33bd0350d99bc2d8ef9dd269ff1af3a"
+    },
+    {
+      "file": "backgrounds/vehicle-stage-420x449@3x.png",
+      "width": 1260,
+      "height": 1347,
+      "transparent": false,
+      "sha256": "243ba0e5c111cb65c38de7d2617caa1c9fe4de1a37718c7199f713712d9d6c1e"
+    },
+    {
+      "file": "backgrounds/auth-stage-420x390@3x.png",
+      "width": 1260,
+      "height": 1170,
+      "transparent": false,
+      "sha256": "43ea7a853e49e24c0c8e7d9f3a54ccc4af5b9b2f6b8177400e22f154be83fce0"
+    },
+    {
+      "file": "backgrounds/splash-stage-420x520@3x.png",
+      "width": 1260,
+      "height": 1560,
+      "transparent": false,
+      "sha256": "9923bfae6f53b029446e23c61b869ca5f864b7d8722d50eb28b9d99c9a35691e"
+    }
+  ],
+  "validation": {
+    "iconCount": 102,
+    "iconVariantCount": 816,
+    "tabIconCount": 8,
+    "rasterAssetCount": 13,
+    "transparentIconIssues": 0,
+    "consoleErrorCount": 0
+  }
+}

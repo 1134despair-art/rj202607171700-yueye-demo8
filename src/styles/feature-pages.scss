@@ -1,0 +1,986 @@
+:root {
+  --app-bg: var(--bs-vi-sys-color-background-canvas);
+  --stage-bg: var(--bs-vi-sys-color-background-vehicle-stage);
+  --surface: var(--bs-vi-sys-color-background-surface);
+  --surface-muted: var(--bs-vi-sys-color-background-surface-muted);
+  --ink: var(--bs-vi-sys-color-text-primary);
+  --muted: var(--bs-vi-sys-color-text-secondary);
+  --subtle: var(--bs-vi-sys-color-text-tertiary);
+  --accent: var(--bs-vi-sys-color-action-brand);
+  --accent-soft: var(--bs-vi-sys-color-background-vehicle-stage);
+  --navy: var(--bs-vi-sys-color-text-primary);
+  --primary-action: var(--bs-vi-sys-color-action-primary);
+  --on-primary-action: var(--bs-vi-sys-color-text-on-action-primary);
+  --ride-green: var(--bs-vi-sys-color-action-success);
+  --divider: var(--bs-vi-sys-color-border-subtle);
+  --warning: var(--bs-vi-ref-color-semantic-warning);
+  --signal-red: var(--bs-vi-ref-color-semantic-danger);
+  --asphalt: var(--bs-vi-ref-color-brand-black);
+  --fog: var(--bs-vi-ref-color-neutral-canvas);
+  --outside-bg: #eef0ed;
+  --chrome-bg: rgba(255, 255, 255, .94);
+  --chrome-bg-strong: rgba(255, 255, 255, .98);
+  --surface-translucent: rgba(255, 255, 255, .96);
+  --surface-stage-translucent: rgba(255, 255, 255, .72);
+  --status-neutral-bg: #eff1f4;
+  --status-neutral-text: #5f6670;
+  --progress-track: #e4e7eb;
+  --v5-abyss: #071625;
+  --v5-navy: #0c2134;
+  --v5-navy-soft: #15324a;
+  --v5-glass: rgba(17, 38, 57, .74);
+  --v5-glass-strong: rgba(13, 30, 46, .88);
+  --v5-line: rgba(153, 196, 225, .26);
+  --v5-lime: #7dff78;
+  --v5-white: #f4f8ff;
+  --v5-muted: #a9b8cb;
+}
+
+[data-theme="dark"] {
+  --chrome-bg: rgba(23, 29, 24, .94);
+  --chrome-bg-strong: rgba(23, 29, 24, .98);
+  --surface-translucent: rgba(23, 29, 24, .96);
+  --surface-stage-translucent: rgba(32, 39, 33, .82);
+  --status-neutral-bg: #293129;
+  --status-neutral-text: #b8c1b7;
+  --progress-track: #303a31;
+}
+
+/* #ifdef H5 */
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--outside-bg);
+}
+
+body::after {
+  animation: none !important;
+  background-image: none !important;
+  content: none !important;
+}
+
+#app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+uni-app {
+  position: relative;
+  display: block;
+  width: min(100vw, 420px);
+  height: min(100dvh, 932px);
+  max-width: 420px;
+  max-height: 932px;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background: var(--app-bg);
+  transform: translateZ(0);
+  --status-bar-height: 28px;
+}
+
+uni-app,
+uni-app * {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+uni-app::-webkit-scrollbar,
+uni-app *::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Vite dev keeps the H5 custom element name; production rewrites the button reset automatically. */
+uni-app uni-button {
+  margin: 0;
+  font-family: inherit;
+  font-size: var(--bs-vi-ref-font-size-body);
+  line-height: 1;
+}
+
+uni-app uni-button::after { border: 0; }
+uni-app uni-button[disabled] { opacity: .42; }
+
+uni-page {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+uni-page-wrapper,
+uni-page-body {
+  min-height: 100%;
+}
+
+@media (min-width: 421px) and (min-height: 701px) {
+  uni-app {
+    border: 1px solid var(--bs-vi-sys-color-border-strong);
+    border-radius: 24px;
+    box-shadow: var(--bs-vi-sys-shadow-device);
+  }
+}
+/* #endif */
+
+page {
+  min-height: 100%;
+  background: var(--app-bg);
+  color: var(--ink);
+  font-family: var(--bs-vi-sys-typography-family);
+  font-size: var(--bs-vi-ref-font-size-body);
+}
+
+view,
+text,
+button,
+input,
+textarea,
+slider {
+  box-sizing: border-box;
+}
+
+button {
+  margin: 0;
+  font-family: inherit;
+  font-size: var(--bs-vi-ref-font-size-body);
+  line-height: 1;
+}
+
+button::after { border: 0; }
+
+.page-shell {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100%;
+  margin: 0 auto;
+  background: var(--app-bg);
+  overflow-x: hidden;
+}
+
+.tab-page { padding-bottom: calc(var(--v5-tabbar-height) + 16px); }
+.content { padding: 20px var(--v3-spacing-page) 32px; }
+.content--tight { padding: 16px var(--v3-spacing-page) 24px; }
+
+.brand-font,
+.data-value,
+.screen-title,
+.brand-wordmark {
+  font-family: var(--bs-vi-sys-typography-family);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.brand-wordmark { font-size: 21px; letter-spacing: 0; }
+.screen-title { display: block; font-size: 24px; line-height: 1.2; }
+.screen-subtitle { display: block; margin-top: 9px; color: var(--muted); font-size: 13px; line-height: 1.62; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid rgba(223, 228, 219, .82);
+  border-radius: var(--bs-vi-sys-radius-card);
+  box-shadow: var(--bs-vi-sys-shadow-card);
+}
+
+.page-shell .card { border-radius: 16px; box-shadow: var(--v3-shadow-card); }
+.controls-page .offline-entry,
+.service-page .contact-list { border-radius: 16px; box-shadow: var(--v3-shadow-card); }
+.controls-page .setting-icon,
+.service-page .service-hero__icon,
+.service-page .contact-icon,
+.me-page .row-icon { border-radius: 12px; }
+
+.section-title {
+  display: block;
+  margin: 24px 2px 10px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.primary-button,
+.secondary-button,
+.danger-button,
+.text-button {
+  display: flex;
+  width: 100%;
+  min-height: var(--bs-vi-component-button-height);
+  padding: 0 var(--bs-vi-component-button-padding-inline);
+  align-items: center;
+  justify-content: center;
+  gap: var(--bs-vi-component-button-gap);
+  border-radius: var(--bs-vi-component-button-radius);
+  font-size: var(--bs-vi-ref-font-size-body);
+  line-height: 1;
+  font-weight: 700;
+}
+
+.primary-button { background: var(--primary-action); color: var(--on-primary-action); box-shadow: 0 8px 18px rgba(112, 148, 53, .18); }
+.primary-button--red { background: var(--bs-vi-ref-color-semantic-danger); color: white; }
+.secondary-button { border: 1px solid var(--divider); background: var(--surface); color: var(--ink); box-shadow: 0 3px 12px rgba(52,65,43,.045); }
+.danger-button { border: 1px solid #e3b7b0; background: var(--bs-vi-sys-color-status-danger-background); color: var(--bs-vi-sys-color-text-danger); }
+.text-button { min-height: 42px; background: transparent; color: var(--navy); }
+button[disabled], .is-disabled { opacity: .42; }
+
+.icon-button {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+}
+
+.field { margin-top: 18px; }
+.field-label { display: block; margin-bottom: 8px; color: var(--ink); font-size: 13px; font-weight: 700; }
+.field-input,
+.field-select,
+.field-textarea {
+  width: 100%;
+  min-height: var(--bs-vi-component-input-height);
+  padding: 0 var(--bs-vi-component-input-padding-inline);
+  border: 1px solid var(--bs-vi-sys-color-border-subtle);
+  border-radius: var(--bs-vi-component-input-radius);
+  background: var(--bs-vi-sys-color-background-surface-muted);
+  color: var(--ink);
+  font-size: var(--bs-vi-ref-font-size-body);
+}
+.field-textarea { min-height: 116px; padding-top: 13px; line-height: 1.55; }
+.field-input:focus, .field-textarea:focus { border-color: var(--bs-vi-sys-color-border-focus); background: var(--surface); }
+.field-error { display: block; margin-top: 8px; color: var(--bs-vi-sys-color-text-danger); font-size: 12px; line-height: 1.45; }
+.field-help { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+.status-pill {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 9px;
+  border-radius: 13px;
+  background: var(--status-neutral-bg);
+  color: var(--status-neutral-text);
+  font-size: 11px;
+  font-weight: 700;
+}
+.status-pill--green { background: var(--bs-vi-sys-color-status-success-background); color: var(--bs-vi-sys-color-text-success); }
+.status-pill--red { background: var(--bs-vi-sys-color-status-danger-background); color: var(--bs-vi-sys-color-text-danger); }
+.status-pill--amber { background: var(--bs-vi-sys-color-status-warning-background); color: var(--bs-vi-sys-color-text-warning); }
+
+.progress-track { height: 7px; overflow: hidden; border-radius: 4px; background: var(--progress-track); }
+.progress-fill { height: 100%; background: var(--ride-green); transition: width .22s ease; }
+
+.list-card { overflow: hidden; }
+.list-divider { height: 1px; margin-left: 64px; background: var(--divider); }
+.empty-state { padding: 38px 20px; text-align: center; }
+.empty-title { display: block; margin-top: 14px; font-size: 17px; font-weight: 700; }
+.empty-copy { display: block; max-width: 300px; margin: 8px auto 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+
+.safe-bottom { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+.bottom-action {
+  position: sticky;
+  z-index: 8;
+  bottom: 0;
+  padding: 12px var(--bs-vi-sys-spacing-page-default) calc(12px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--divider);
+  background: var(--surface-translucent);
+}
+
+[data-theme="dark"] .ui-icon--tone-navy .ui-icon__image,
+[data-theme="dark"] .ui-icon--tone-muted .ui-icon__image,
+[data-theme="dark"] .home-logo,
+[data-theme="dark"] .brand-logo,
+[data-theme="dark"] .app-header__logo {
+  filter: invert(1) brightness(1.12);
+}
+
+[data-theme="dark"] .vehicle-stage__background {
+  filter: brightness(.58) saturate(.72);
+}
+
+[data-theme="dark"] .motorcycle-image {
+  filter: brightness(1.12) contrast(.94) drop-shadow(0 18px 14px rgba(0, 0, 0, .42));
+}
+
+
+@media (max-width: 389px) {
+  .content,
+  .content--tight {
+    padding-right: var(--bs-vi-sys-spacing-page-compact);
+    padding-left: var(--bs-vi-sys-spacing-page-compact);
+  }
+  .bottom-action {
+    padding-right: var(--bs-vi-sys-spacing-page-compact);
+    padding-left: var(--bs-vi-sys-spacing-page-compact);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+/* Third-set page harmonization: every non-home route follows the home visual language. */
+.page-shell.page-shell {
+  background: linear-gradient(180deg, var(--v3-hero-start) 0, var(--v3-canvas) 260px);
+}
+
+.page-shell.page-shell:not(.tab-page) .app-header {
+  background: var(--v3-hero-start);
+}
+
+.page-shell.page-shell:not(.tab-page) .content {
+  padding-top: 16px;
+}
+
+.page-shell.page-shell .card,
+.page-shell.page-shell .contact-list,
+.page-shell.page-shell .resource-list {
+  border-color: rgba(223, 228, 219, .82);
+  border-radius: var(--v3-radius-card);
+  background: var(--v3-surface);
+  box-shadow: var(--v3-shadow-card);
+}
+
+.page-shell.page-shell .control-summary,
+.page-shell.page-shell .service-hero,
+.page-shell.page-shell .status-strip,
+.page-shell.page-shell .battery-hero,
+.page-shell.page-shell .diagnosis-hero,
+.page-shell.page-shell .result-hero,
+.page-shell.page-shell .ota-hero,
+.page-shell.page-shell .detail-hero,
+.page-shell.page-shell .firmware-intro,
+.page-shell.page-shell .updates-summary,
+.page-shell.page-shell .app-update-hero,
+.page-shell.page-shell .about-hero,
+.page-shell.page-shell .legal-meta {
+  border-color: var(--v3-divider);
+  background: linear-gradient(180deg, var(--v3-hero-start) 0%, var(--v3-hero-end) 100%);
+}
+
+.page-shell.page-shell .battery-hero,
+.page-shell.page-shell .diagnosis-hero,
+.page-shell.page-shell .result-hero,
+.page-shell.page-shell .ota-hero,
+.page-shell.page-shell .detail-hero,
+.page-shell.page-shell .progress-hero,
+.page-shell.page-shell .firmware-intro,
+.page-shell.page-shell .updates-summary,
+.page-shell.page-shell .app-update-hero,
+.page-shell.page-shell .about-hero,
+.page-shell.page-shell .legal-meta,
+.page-shell.page-shell .debug-warning {
+  width: calc(100% - 40px);
+  margin: 16px 20px 0;
+  border: 1px solid rgba(223, 228, 219, .82);
+  border-radius: var(--v3-radius-card);
+  box-shadow: var(--v3-shadow-card);
+}
+
+.page-shell.page-shell .battery-hero,
+.page-shell.page-shell .diagnosis-hero,
+.page-shell.page-shell .result-hero,
+.page-shell.page-shell .ota-hero,
+.page-shell.page-shell .detail-hero,
+.page-shell.page-shell .app-update-hero {
+  min-height: var(--v3-detail-hero-height);
+}
+
+.page-shell.page-shell .progress-hero {
+  width: calc(100% - 40px);
+  margin: 16px 20px 0;
+  border: 1px solid rgba(223, 228, 219, .82);
+  border-radius: var(--v3-radius-card);
+  background: linear-gradient(180deg, var(--v3-hero-start) 0%, var(--v3-hero-end) 100%);
+  box-shadow: var(--v3-shadow-card);
+}
+
+.page-shell.page-shell .firmware-intro__icon,
+.page-shell.page-shell .resources-intro__icon,
+.page-shell.page-shell .hero-icon,
+.page-shell.page-shell .firmware-chip,
+.page-shell.page-shell .update-icon {
+  width: var(--v3-detail-icon-size);
+  height: var(--v3-detail-icon-size);
+  border-radius: 50%;
+}
+
+.page-shell.page-shell .metric-grid .metric-icon {
+  border-radius: 50%;
+}
+
+.page-shell.page-shell .control-summary,
+.page-shell.page-shell .device-panel {
+  border-radius: var(--v3-radius-card);
+}
+
+.page-shell.page-shell .setting-icon,
+.page-shell.page-shell .service-hero__icon,
+.page-shell.page-shell .contact-icon,
+.page-shell.page-shell .row-icon,
+.page-shell.page-shell .resource-icon,
+.page-shell.page-shell .resources-intro__icon,
+.page-shell.page-shell .metric-icon,
+.page-shell.page-shell .mode-icon,
+.page-shell.page-shell .module-icon,
+.page-shell.page-shell .message-icon,
+.page-shell.page-shell .firmware-intro__icon,
+.page-shell.page-shell .hero-icon,
+.page-shell.page-shell .firmware-chip,
+.page-shell.page-shell .update-icon,
+.page-shell.page-shell .measure-icon {
+  border-radius: 50%;
+}
+
+/* Shared primary-tab rhythm: the home dashboard remains the visual reference. */
+.tab-page .content--tight {
+  padding-bottom: 28px;
+}
+
+.tab-page .section-title {
+  margin-top: 24px;
+  margin-bottom: 10px;
+  padding-left: 2px;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.tab-page .list-card,
+.tab-page .setting-group,
+.tab-page .resource-list,
+.tab-page .contact-list {
+  border-color: rgba(223, 228, 219, .9);
+  box-shadow: 0 5px 18px rgba(52, 65, 43, .07);
+}
+
+.tab-page .list-divider {
+  background: rgba(223, 228, 219, .82);
+}
+
+.page-shell.page-shell .offline-entry,
+.page-shell.page-shell .read-state,
+.page-shell.page-shell .alert-banner,
+.page-shell.page-shell .battery-alert,
+.page-shell.page-shell .warning-note,
+.page-shell.page-shell .wheelie-risk,
+.page-shell.page-shell .safety-message,
+.page-shell.page-shell .debug-warning {
+  border-radius: 12px;
+}
+
+.page-shell.page-shell .state-card,
+.page-shell.page-shell .preparation-card {
+  border-radius: var(--v3-radius-card);
+}
+
+.page-shell.page-shell .choice-grid button,
+.page-shell.page-shell .preset-row button,
+.page-shell.page-shell .point-grid button,
+.page-shell.page-shell .disclaimer-check,
+.page-shell.page-shell .rename-field,
+.page-shell.page-shell .stepper {
+  border-radius: 12px;
+}
+
+.page-shell.page-shell .choice-grid button.active,
+.page-shell.page-shell .preset-row button.active,
+.page-shell.page-shell .point-grid button.active {
+  border-color: var(--v3-accent);
+  background: var(--v3-accent-soft);
+  color: var(--v3-ink);
+  box-shadow: none;
+}
+
+.page-shell.page-shell .primary-button,
+.page-shell.page-shell .secondary-button,
+.page-shell.page-shell .danger-button {
+  min-height: 48px;
+  border-radius: 12px;
+}
+
+.page-shell.page-shell .data-value,
+.page-shell.page-shell .current-value,
+.page-shell.page-shell .battery-soc,
+.page-shell.page-shell .detail-version,
+.page-shell.page-shell .stage-title {
+  letter-spacing: 0;
+}
+
+.page-shell.page-shell .screen-title,
+.page-shell.page-shell .legal-title {
+  font-size: var(--v3-page-title-size);
+}
+
+.page-shell.page-shell .ota-hero .brand-font,
+.page-shell.page-shell .result-hero .brand-font,
+.page-shell.page-shell .stage-title {
+  font-size: var(--v3-hero-title-size);
+}
+
+.page-shell.page-shell .about-brand {
+  font-size: 24px;
+}
+
+@media (max-width: 389px) {
+  .content,
+  .content--tight {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}
+
+/* Fifth-set adventure theme: shared across all tab, detail, modal and sheet surfaces. */
+:root,
+:root[data-theme="dark"],
+:root[data-theme="light"] {
+  --v3-accent: #7dff78;
+  --v3-accent-deep: #72e96e;
+  --v3-accent-soft: rgba(125, 255, 120, .13);
+  --v3-accent-surface: rgba(125, 255, 120, .09);
+  --v3-ink: #f4f8ff;
+  --v3-muted: #a9b8cb;
+  --v3-subtle: #7f93aa;
+  --v3-canvas: #061421;
+  --v3-surface: rgba(19, 42, 62, .92);
+  --v3-surface-soft: rgba(32, 57, 77, .9);
+  --v3-divider: rgba(145, 187, 216, .22);
+  --v3-info: #75b8ff;
+  --v3-info-soft: rgba(84, 153, 221, .14);
+  --v3-success: #7dff78;
+  --v3-success-soft: rgba(125, 255, 120, .13);
+  --v3-warning: #ffbd67;
+  --v3-warning-soft: rgba(255, 180, 79, .14);
+  --v3-temperature-soft: rgba(255, 107, 107, .15);
+  --v3-battery-temperature-soft: rgba(91, 141, 239, .15);
+  --v3-hero-start: #123047;
+  --v3-hero-end: #091a29;
+  --v3-shadow-card: 0 14px 28px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .045);
+  --v3-shadow-raised: 0 24px 54px rgba(0, 0, 0, .42), inset 0 1px 0 rgba(255, 255, 255, .06);
+  --app-bg: #061421;
+  --stage-bg: #0a1c2c;
+  --surface: rgba(19, 42, 62, .92);
+  --surface-muted: rgba(32, 57, 77, .9);
+  --ink: #f4f8ff;
+  --muted: #a9b8cb;
+  --subtle: #7f93aa;
+  --accent: #7dff78;
+  --accent-soft: rgba(125, 255, 120, .13);
+  --navy: #f4f8ff;
+  --primary-action: #7dff78;
+  --on-primary-action: #071625;
+  --ride-green: #7dff78;
+  --divider: rgba(145, 187, 216, .22);
+  --outside-bg: #eef1ee;
+  --chrome-bg: rgba(7, 22, 37, .9);
+  --chrome-bg-strong: rgba(7, 22, 37, .98);
+  --surface-translucent: rgba(12, 31, 48, .94);
+  --surface-stage-translucent: rgba(18, 43, 62, .82);
+  --status-neutral-bg: rgba(125, 147, 170, .16);
+  --status-neutral-text: #b6c4d3;
+  --progress-track: rgba(157, 183, 204, .2);
+  --bs-vi-sys-color-background-canvas: #061421;
+  --bs-vi-sys-color-background-vehicle-stage: #0a1c2c;
+  --bs-vi-sys-color-background-surface: rgba(19, 42, 62, .92);
+  --bs-vi-sys-color-background-surface-muted: rgba(32, 57, 77, .9);
+  --bs-vi-sys-color-text-primary: #f4f8ff;
+  --bs-vi-sys-color-text-secondary: #a9b8cb;
+  --bs-vi-sys-color-text-tertiary: #7f93aa;
+  --bs-vi-sys-color-text-on-action-primary: #071625;
+  --bs-vi-sys-color-action-primary: #7dff78;
+  --bs-vi-sys-color-action-brand: #7dff78;
+  --bs-vi-sys-color-border-subtle: rgba(145, 187, 216, .22);
+  --bs-vi-sys-color-border-strong: rgba(162, 201, 228, .34);
+  --bs-vi-sys-color-border-focus: #7dff78;
+  --bs-vi-sys-color-status-info-background: rgba(84, 153, 221, .14);
+  --bs-vi-sys-color-status-success-background: rgba(125, 255, 120, .13);
+  --bs-vi-sys-color-status-warning-background: rgba(255, 180, 79, .14);
+  --bs-vi-sys-color-status-danger-background: rgba(232, 66, 50, .15);
+  --bs-vi-sys-color-text-info: #75b8ff;
+  --bs-vi-sys-color-text-success: #8dff88;
+  --bs-vi-sys-color-text-warning: #ffc77d;
+  --bs-vi-sys-color-text-danger: #ff8277;
+  --bs-vi-sys-color-background-overlay: rgba(1, 9, 16, .74);
+  --v5-tabbar-height: calc(56px + max(8px, env(safe-area-inset-bottom)));
+  --v5-tabbar-bg: #0a1b2a;
+  --v5-tabbar-border: #263a4b;
+  --v5-tabbar-muted: #a4b3c2;
+  --v5-tabbar-active: #7dff78;
+  --v5-page-fill: linear-gradient(160deg, #0d293f 0%, #081b2b 30%, #061421 62%, #04101b 100%);
+  --v5-scene-end: #0d293f;
+  --v5-header-fill: linear-gradient(110deg, #091c2c, #0e273a);
+  --v5-card-fill: linear-gradient(135deg, #173145, #0c1e2e);
+  --v5-hero-fill: linear-gradient(135deg, #18384d, #081c2c);
+  --v5-control-fill: linear-gradient(135deg, #223d51, #0f2233);
+  --v5-input-fill: #11273a;
+  --v5-selected-fill: linear-gradient(135deg, #28513e, #234843);
+  --v5-selected-text: #dfffdc;
+  --v5-icon-fill: linear-gradient(135deg, #315b77, #18364c);
+  --v5-icon-success-fill: linear-gradient(135deg, #316347, #18413c);
+  --v5-icon-warning-fill: linear-gradient(135deg, #6b593b, #4b3827);
+  --v5-danger-fill: linear-gradient(135deg, #672a2b, #361c23);
+  --v5-icon-filter: invert(1) brightness(1.5) saturate(.45);
+}
+
+page,
+.page-shell.page-shell {
+  color: var(--v5-white);
+  background: var(--v5-page-fill) !important;
+}
+
+.page-shell.page-shell .app-header,
+.page-shell.page-shell:not(.tab-page) .app-header {
+  border-color: rgba(145, 187, 216, .18) !important;
+  background: var(--v5-header-fill) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .12);
+  backdrop-filter: blur(22px) saturate(125%);
+}
+
+.page-shell.page-shell .app-header__title,
+.page-shell.page-shell .screen-title,
+.page-shell.page-shell .section-title,
+.page-shell.page-shell .legal-title { color: var(--v5-white); }
+
+.page-shell.page-shell .app-header__logo { filter: none !important; }
+
+.page-shell.page-shell .app-header--back .icon-button {
+  border: 1px solid rgba(145, 187, 216, .24) !important;
+  background: var(--v5-control-fill) !important;
+  color: var(--v5-white) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05) !important;
+}
+
+.page-shell.page-shell .ui-icon--tone-navy .ui-icon__image {
+  filter: var(--v5-icon-filter);
+}
+
+.page-shell.page-shell .ui-icon--tone-muted .ui-icon__image {
+  filter: var(--v5-icon-filter);
+  opacity: .76;
+}
+
+.page-shell.page-shell .card,
+.page-shell.page-shell .setting-group,
+.page-shell.page-shell .contact-list,
+.page-shell.page-shell .resource-list,
+.page-shell.page-shell .result-sheet,
+.page-shell.page-shell .choice-list {
+  border-color: rgba(145, 187, 216, .25) !important;
+  background: var(--v5-card-fill) !important;
+  box-shadow: var(--v3-shadow-card) !important;
+}
+
+.page-shell.page-shell .control-summary,
+.page-shell.page-shell .service-hero,
+.page-shell.page-shell .status-strip,
+.page-shell.page-shell .battery-hero,
+.page-shell.page-shell .diagnosis-hero,
+.page-shell.page-shell .result-hero,
+.page-shell.page-shell .ota-hero,
+.page-shell.page-shell .detail-hero,
+.page-shell.page-shell .progress-hero,
+.page-shell.page-shell .firmware-intro,
+.page-shell.page-shell .updates-summary,
+.page-shell.page-shell .app-update-hero,
+.page-shell.page-shell .about-hero,
+.page-shell.page-shell .legal-meta,
+.page-shell.page-shell .device-panel,
+.page-shell.page-shell .page-intro {
+  border-color: rgba(145, 187, 216, .27) !important;
+  background: var(--v5-hero-fill) !important;
+  box-shadow: var(--v3-shadow-card) !important;
+}
+
+.page-shell.page-shell .list-row,
+.page-shell.page-shell .toggle-row,
+.page-shell.page-shell .contact-row,
+.page-shell.page-shell .resource-row,
+.page-shell.page-shell .vehicle-row,
+.page-shell.page-shell .choice-row,
+.page-shell.page-shell .module-row {
+  border-color: rgba(145, 187, 216, .18) !important;
+  background: transparent !important;
+  color: var(--v5-white) !important;
+}
+
+.page-shell.page-shell .list-divider,
+.page-shell.page-shell .measure-divider { background: rgba(145, 187, 216, .18) !important; }
+
+.page-shell.page-shell .setting-icon,
+.page-shell.page-shell .service-hero__icon,
+.page-shell.page-shell .contact-icon,
+.page-shell.page-shell .row-icon,
+.page-shell.page-shell .resource-icon,
+.page-shell.page-shell .resources-intro__icon,
+.page-shell.page-shell .metric-icon,
+.page-shell.page-shell .mode-icon,
+.page-shell.page-shell .module-icon,
+.page-shell.page-shell .message-icon,
+.page-shell.page-shell .firmware-intro__icon,
+.page-shell.page-shell .hero-icon,
+.page-shell.page-shell .firmware-chip,
+.page-shell.page-shell .update-icon,
+.page-shell.page-shell .measure-icon,
+.page-shell.page-shell .scan-ring,
+.page-shell.page-shell .signal-icon,
+.page-shell.page-shell .device-mark {
+  border: 1px solid rgba(153, 198, 226, .2);
+  background: var(--v5-icon-fill) !important;
+}
+
+.page-shell.page-shell .setting-icon--green,
+.page-shell.page-shell .row-icon--green,
+.page-shell.page-shell .metric-icon--battery,
+.page-shell.page-shell .status-strip__icon {
+  background: var(--v5-icon-success-fill) !important;
+}
+
+.page-shell.page-shell .setting-icon--amber,
+.page-shell.page-shell .row-icon--amber,
+.page-shell.page-shell .contact-icon--hours,
+.page-shell.page-shell .metric-icon--motor {
+  background: var(--v5-icon-warning-fill) !important;
+}
+
+.page-shell.page-shell .primary-button {
+  border: 1px solid rgba(169, 255, 165, .5);
+  background: linear-gradient(100deg, #a9ff79, #63eca4) !important;
+  color: #071625 !important;
+  box-shadow: 0 10px 24px rgba(89, 231, 145, .18) !important;
+}
+
+.page-shell.page-shell .secondary-button,
+.page-shell.page-shell .danger-button,
+.page-shell.page-shell .text-button,
+.page-shell.page-shell .resource-download {
+  border-color: rgba(145, 187, 216, .27) !important;
+  background: var(--v5-control-fill) !important;
+  color: var(--v5-white) !important;
+}
+
+.page-shell.page-shell .field-input,
+.page-shell.page-shell .field-select,
+.page-shell.page-shell .field-textarea,
+.page-shell.page-shell .rename-field,
+.page-shell.page-shell .stepper,
+.page-shell.page-shell .stepper-input,
+.page-shell.page-shell .choice-grid button,
+.page-shell.page-shell .preset-row button,
+.page-shell.page-shell .point-grid button,
+.page-shell.page-shell .disclaimer-check {
+  border-color: rgba(145, 187, 216, .24) !important;
+  background: var(--v5-input-fill) !important;
+  color: var(--v5-white) !important;
+}
+
+.page-shell.page-shell .choice-grid button.active,
+.page-shell.page-shell .preset-row button.active,
+.page-shell.page-shell .point-grid button.active,
+.page-shell.page-shell .disclaimer-check.checked {
+  border-color: rgba(125, 255, 120, .7) !important;
+  background: var(--v5-selected-fill) !important;
+  color: var(--v5-selected-text) !important;
+  box-shadow: 0 0 0 1px rgba(125, 255, 120, .08), inset 0 1px 0 rgba(255, 255, 255, .05) !important;
+}
+
+.page-shell.page-shell .snapshot-note,
+.page-shell.page-shell .offline-entry,
+.page-shell.page-shell .read-state,
+.page-shell.page-shell .alert-banner,
+.page-shell.page-shell .battery-alert,
+.page-shell.page-shell .warning-note,
+.page-shell.page-shell .wheelie-risk,
+.page-shell.page-shell .safety-message,
+.page-shell.page-shell .debug-warning,
+.page-shell.page-shell .local-note {
+  border: 1px solid rgba(145, 187, 216, .2) !important;
+  background: var(--v5-control-fill) !important;
+  color: var(--v5-muted) !important;
+}
+
+.page-shell.page-shell .progress-track,
+.page-shell.page-shell .sheet-progress { background: rgba(157, 183, 204, .2) !important; }
+.page-shell.page-shell .progress-fill,
+.page-shell.page-shell .sheet-progress view { background: linear-gradient(90deg, #a9ff79, #63eca4) !important; }
+
+.modal-layer .modal-panel,
+.sheet-layer .sheet-panel {
+  border: 1px solid rgba(145, 187, 216, .28) !important;
+  background: var(--v5-hero-fill) !important;
+  color: var(--v5-white) !important;
+  box-shadow: 0 28px 68px rgba(0, 0, 0, .54) !important;
+}
+
+.modal-layer .modal-scrim,
+.sheet-layer .sheet-scrim { background: var(--bs-vi-sys-color-background-overlay) !important; backdrop-filter: blur(8px); }
+
+.sheet-layer .choice-row { background: transparent !important; color: var(--v5-white) !important; }
+.app-toast { border-color: var(--divider) !important; background: var(--surface) !important; color: var(--ink) !important; }
+
+.page-shell.page-shell .status-pill--green {
+  background: var(--bs-vi-sys-color-status-success-background) !important;
+  color: var(--bs-vi-sys-color-text-success) !important;
+}
+
+.page-shell.page-shell .toggle { background: rgba(154, 177, 194, .28); }
+.page-shell.page-shell .toggle--on { background: linear-gradient(90deg, #a9ff79, #63eca4); }
+.page-shell.page-shell .toggle__thumb { background: #f8fbff; }
+
+.page-shell.page-shell .danger-button {
+  border-color: rgba(255, 130, 119, .42) !important;
+  background: var(--v5-danger-fill) !important;
+  color: var(--bs-vi-sys-color-text-danger) !important;
+}
+
+.page-shell.page-shell .primary-button.primary-button--red {
+  border-color: rgba(255, 130, 119, .55) !important;
+  background: linear-gradient(100deg, #ff8277, #d84b54) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px rgba(216, 75, 84, .18) !important;
+}
+
+.page-shell.page-shell .wheelie-risk__review {
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--bs-vi-sys-color-text-danger) !important;
+  box-shadow: none !important;
+}
+
+.page-shell.page-shell .mark-all {
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--v5-lime) !important;
+  box-shadow: none !important;
+}
+
+.page-shell.page-shell .message-card {
+  color: var(--v5-white) !important;
+}
+
+.page-shell.page-shell .curve-chart,
+.page-shell.page-shell .angle-stage,
+.page-shell.page-shell .performance-zone {
+  border-color: rgba(145, 187, 216, .2) !important;
+  background: var(--v5-input-fill) !important;
+}
+
+/* Keep theme overrides global: UniApp can collapse scoped :global selectors onto html. */
+[data-theme="dark"] .angle-stage__grid {
+  opacity: .22;
+  filter: invert(1);
+}
+
+[data-theme="dark"] .angle-stage__ground { background: rgba(255, 255, 255, .035) !important; }
+[data-theme="dark"] .angle-stage__baseline { background: var(--v3-divider) !important; }
+[data-theme="dark"] .angle-stage__brand { color: var(--v3-muted) !important; }
+
+/* Both appearances use the same component fills with independent color values. */
+:root[data-theme="light"] {
+  --v3-ink: #212b30;
+  --v3-muted: #52636b;
+  --v3-subtle: #65757d;
+  --v3-canvas: #f3f6f4;
+  --v3-surface: #ffffff;
+  --v3-surface-soft: #edf2f3;
+  --v3-divider: #d6e0e2;
+  --v3-accent-deep: #168449;
+  --v3-accent-soft: #e4f5e8;
+  --v3-accent-surface: #eff8ef;
+  --v3-info: #315f90;
+  --v3-info-soft: #e9f1fa;
+  --v3-success: #227d57;
+  --v3-success-soft: #e4f5e8;
+  --v3-warning: #855817;
+  --v3-warning-soft: #fff3df;
+  --v3-temperature-soft: #fff0ec;
+  --v3-battery-temperature-soft: #e9f1fa;
+  --v3-hero-start: #e7f0f1;
+  --v3-hero-end: #f8fbfa;
+  --v3-shadow-card: 0 6px 18px rgba(30, 62, 69, .06);
+  --v3-shadow-raised: 0 16px 40px rgba(30, 62, 69, .14);
+  --app-bg: #f3f6f4;
+  --stage-bg: #e7f0f1;
+  --surface: #ffffff;
+  --surface-muted: #edf2f3;
+  --ink: #212b30;
+  --muted: #52636b;
+  --subtle: #65757d;
+  --navy: #212b30;
+  --accent-soft: #e4f5e8;
+  --ride-green: #227d57;
+  --divider: #d6e0e2;
+  --chrome-bg: #f7faf8;
+  --chrome-bg-strong: #ffffff;
+  --surface-translucent: rgba(255, 255, 255, .96);
+  --surface-stage-translucent: #edf4f1;
+  --status-neutral-bg: #e9eef0;
+  --status-neutral-text: #52636b;
+  --progress-track: #dce5e3;
+  --bs-vi-sys-color-background-canvas: #f3f6f4;
+  --bs-vi-sys-color-background-vehicle-stage: #e7f0f1;
+  --bs-vi-sys-color-background-surface: #ffffff;
+  --bs-vi-sys-color-background-surface-muted: #edf2f3;
+  --bs-vi-sys-color-text-primary: #212b30;
+  --bs-vi-sys-color-text-secondary: #52636b;
+  --bs-vi-sys-color-text-tertiary: #65757d;
+  --bs-vi-sys-color-border-subtle: #d6e0e2;
+  --bs-vi-sys-color-border-strong: #bccdce;
+  --bs-vi-sys-color-border-focus: #168449;
+  --bs-vi-sys-color-status-info-background: #e9f1fa;
+  --bs-vi-sys-color-status-success-background: #e4f5e8;
+  --bs-vi-sys-color-status-warning-background: #fff3df;
+  --bs-vi-sys-color-status-danger-background: #fff0ec;
+  --bs-vi-sys-color-text-info: #315f90;
+  --bs-vi-sys-color-text-success: #227d57;
+  --bs-vi-sys-color-text-warning: #855817;
+  --bs-vi-sys-color-text-danger: #b83a2f;
+  --bs-vi-sys-color-background-overlay: rgba(19, 34, 44, .4);
+  --v5-white: #212b30;
+  --v5-muted: #52636b;
+  --v5-line: #d6e0e2;
+  --v5-tabbar-bg: #f7f7f7;
+  --v5-tabbar-border: #dce3e0;
+  --v5-tabbar-muted: #56635d;
+  --v5-tabbar-active: #168449;
+  --v5-page-fill: linear-gradient(160deg, #edf4f5, #f3f6f4 50%, #f7faf8);
+  --v5-scene-end: #edf4f5;
+  --v5-header-fill: linear-gradient(110deg, #ffffff, #f3f8f6);
+  --v5-card-fill: linear-gradient(135deg, #ffffff, #f9fcfb);
+  --v5-hero-fill: linear-gradient(135deg, #e6f0f2, #f8fcfa);
+  --v5-control-fill: linear-gradient(135deg, #f4f8fa, #edf4f1);
+  --v5-input-fill: #f1f6f5;
+  --v5-selected-fill: linear-gradient(135deg, #e0f5df, #e7f7ef);
+  --v5-selected-text: #226b41;
+  --v5-icon-fill: linear-gradient(135deg, #e3edf9, #edf5fa);
+  --v5-icon-success-fill: linear-gradient(135deg, #dcf2de, #edf8ee);
+  --v5-icon-warning-fill: linear-gradient(135deg, #ffefd4, #fff8ec);
+  --v5-danger-fill: linear-gradient(135deg, #fff0ec, #fff8f5);
+  --v5-icon-filter: none;
+}
+
+:root[data-theme="light"] .page-shell .app-header { box-shadow: none; }
+:root[data-theme="light"] .page-shell .mark-all { color: #168449 !important; }
+.modal-layer .ui-icon--tone-navy .ui-icon__image,
+.sheet-layer .ui-icon--tone-navy .ui-icon__image,
+.modal-layer .ui-icon--tone-muted .ui-icon__image,
+.sheet-layer .ui-icon--tone-muted .ui-icon__image { filter: var(--v5-icon-filter); }
+
+[data-theme="dark"] .vehicle-control-icon { filter: brightness(0) invert(1); }
+[data-theme="dark"] .ui-icon--tone-info .ui-icon__image,
+[data-theme="dark"] .ui-icon--tone-success .ui-icon__image,
+[data-theme="dark"] .ui-icon--tone-warning .ui-icon__image,
+[data-theme="dark"] .ui-icon--tone-danger .ui-icon__image { filter: brightness(1.7) saturate(.8); }
+
+/* Keep the desktop surround independent from the mobile appearance. */
+html, body, #app { background: #eef1ee !important; }

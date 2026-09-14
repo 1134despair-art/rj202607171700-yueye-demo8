@@ -1,0 +1,113 @@
+:root {
+  --v3-accent: #9ed94e;
+  --v3-accent-deep: #7cb320;
+  --v3-accent-soft: #e8f5d0;
+  --v3-accent-surface: #edf7dd;
+  --v3-ink: #1a1a1a;
+  --v3-muted: #666666;
+  --v3-subtle: #999999;
+  --v3-canvas: #f5f7f2;
+  --v3-surface: #ffffff;
+  --v3-surface-soft: #f2f4f7;
+  --v3-divider: #eeeeee;
+  --v3-danger: #e84232;
+  --v3-temperature: #ff6b6b;
+  --v3-temperature-soft: #ffeaea;
+  --v3-battery-temperature: #5b8def;
+  --v3-battery-temperature-soft: #e8f0ff;
+  --v3-info: #5b8def;
+  --v3-info-soft: #e8f0ff;
+  --v3-success: #4caf50;
+  --v3-success-soft: #e8f7e8;
+  --v3-warning: #ffb347;
+  --v3-warning-soft: #fff3e0;
+  --v3-shadow-card: 0 4px 16px rgba(52, 65, 43, 0.065);
+  --v3-shadow-raised: 0 8px 24px rgba(52, 65, 43, 0.09);
+  --v3-hero-start: #f1f5eb;
+  --v3-hero-end: #f5f7f2;
+  --v3-radius-card: 16px;
+  --v3-radius-card-large: 16px;
+  --v3-radius-control: 12px;
+  --v3-spacing-page: 20px;
+  --v3-spacing-section: 24px;
+  --v3-spacing-card: 16px;
+  --v3-detail-hero-height: 180px;
+  --v3-detail-icon-size: 52px;
+  --v3-page-title-size: 22px;
+  --v3-hero-title-size: 22px;
+  --v3-font: "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", Arial, sans-serif;
+}
+
+:root:not([data-theme="dark"]) {
+  --bs-vi-ref-color-brand-green: var(--v3-accent);
+  --bs-vi-ref-color-brand-black: var(--v3-ink);
+  --bs-vi-ref-color-neutral-canvas: var(--v3-canvas);
+  --bs-vi-ref-color-neutral-stage: #f1f5eb;
+  --bs-vi-ref-color-neutral-surface-muted: var(--v3-surface-soft);
+  --bs-vi-ref-color-neutral-secondary: var(--v3-muted);
+  --bs-vi-ref-color-neutral-tertiary: var(--v3-subtle);
+  --bs-vi-ref-color-neutral-divider: var(--v3-divider);
+  --bs-vi-ref-color-neutral-divider-strong: #dfe3e7;
+  --bs-vi-ref-color-semantic-info: var(--v3-info);
+  --bs-vi-ref-color-semantic-info-soft: var(--v3-info-soft);
+  --bs-vi-ref-color-semantic-success: var(--v3-success);
+  --bs-vi-ref-color-semantic-success-soft: var(--v3-success-soft);
+  --bs-vi-ref-color-semantic-warning: #c87913;
+  --bs-vi-ref-color-semantic-warning-soft: var(--v3-warning-soft);
+  --bs-vi-ref-color-semantic-danger: var(--v3-danger);
+  --bs-vi-ref-color-semantic-danger-soft: #fff0ee;
+  --bs-vi-ref-radius-lg: 16px;
+  --bs-vi-ref-shadow-card: var(--v3-shadow-card);
+  --bs-vi-sys-color-background-canvas: var(--v3-canvas);
+  --bs-vi-sys-color-background-vehicle-stage: #f1f5eb;
+  --bs-vi-sys-color-background-surface: var(--v3-surface);
+  --bs-vi-sys-color-background-surface-muted: var(--v3-surface-soft);
+  --bs-vi-sys-color-text-primary: var(--v3-ink);
+  --bs-vi-sys-color-text-secondary: var(--v3-muted);
+  --bs-vi-sys-color-text-tertiary: var(--v3-subtle);
+  --bs-vi-sys-color-text-on-action-primary: var(--v3-ink);
+  --bs-vi-sys-color-action-primary: var(--v3-accent);
+  --bs-vi-sys-color-action-brand: var(--v3-accent);
+  --bs-vi-sys-color-border-subtle: var(--v3-divider);
+  --bs-vi-sys-color-border-strong: #dfe3e7;
+  --bs-vi-sys-color-border-focus: var(--v3-accent-deep);
+  --bs-vi-sys-radius-card: 16px;
+  --bs-vi-sys-radius-control: 12px;
+  --bs-vi-sys-radius-compact: 8px;
+  --bs-vi-sys-shadow-card: var(--v3-shadow-card);
+  --bs-vi-component-tab-bar-content-height: 80px;
+  --bs-vi-component-button-radius: 12px;
+  --bs-vi-component-input-radius: 12px;
+  --bs-vi-component-card-radius: 16px;
+  --bs-vi-component-bottom-sheet-radius: 16px;
+  --bs-vi-component-modal-radius: 16px;
+}
+
+[data-theme="dark"] {
+  --v3-ink: #f1f5ef;
+  --v3-muted: #aeb8ad;
+  --v3-subtle: #899489;
+  --v3-canvas: #0e130f;
+  --v3-surface: #171d18;
+  --v3-surface-soft: #202721;
+  --v3-divider: #303a31;
+  --v3-accent-soft: #29361a;
+  --v3-accent-surface: #253219;
+  --v3-hero-start: #1b241c;
+  --v3-hero-end: #0e130f;
+  --v3-info-soft: #182b3d;
+  --v3-success-soft: #173024;
+  --v3-warning-soft: #382b18;
+  --v3-temperature-soft: #3b201d;
+  --v3-battery-temperature-soft: #182b3d;
+  --v3-shadow-card: 0 5px 18px rgba(0, 0, 0, .24);
+  --v3-shadow-raised: 0 7px 24px rgba(0, 0, 0, .28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --v3-motion: 1ms; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root { --v3-motion: 180ms; }
+}

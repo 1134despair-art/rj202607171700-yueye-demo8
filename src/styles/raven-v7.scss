@@ -1,0 +1,170 @@
+/* V7 RAVEN: flat, technical and track focused. */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --app-bg: #090b0a;
+  --stage-bg: #090b0a;
+  --surface: #0d100e;
+  --surface-muted: #121512;
+  --surface-translucent: rgba(13,16,14,.96);
+  --surface-stage-translucent: rgba(13,16,14,.9);
+  --ink: #f1f4ef;
+  --muted: #858c86;
+  --subtle: #626863;
+  --accent: #a4f45a;
+  --primary-action: #a4f45a;
+  --ride-green: #a4f45a;
+  --divider: rgba(183,194,184,.16);
+  --v3-divider: var(--divider);
+  --v3-hero-start: #101411;
+  --v3-surface: #0d100e;
+  --v3-accent-soft: rgba(164,244,90,.1);
+  --v3-accent-deep: #a4f45a;
+  --bs-vi-sys-color-background-canvas: #090b0a;
+  --bs-vi-sys-color-background-surface: #0d100e;
+  --bs-vi-sys-color-background-surface-muted: #121512;
+  --bs-vi-sys-color-background-vehicle-stage: #090b0a;
+  --bs-vi-sys-color-text-primary: #f1f4ef;
+  --bs-vi-sys-color-text-secondary: #858c86;
+  --bs-vi-sys-color-text-tertiary: #626863;
+  --bs-vi-sys-color-action-primary: #a4f45a;
+  --bs-vi-sys-color-action-brand: #a4f45a;
+  --bs-vi-sys-color-action-success: #a4f45a;
+  --bs-vi-sys-color-text-success: #a4f45a;
+  --bs-vi-sys-color-status-success-background: rgba(164,244,90,.1);
+  --bs-vi-sys-color-status-info-background: rgba(53,198,189,.1);
+  --bs-vi-sys-color-status-warning-background: rgba(216,112,58,.1);
+  --bs-vi-sys-color-border-subtle: rgba(183,194,184,.16);
+  --bs-vi-sys-color-border-strong: rgba(183,194,184,.25);
+  --bs-vi-sys-radius-card: 0px;
+  --bs-vi-sys-radius-control: 0px;
+  --bs-vi-sys-shadow-card: none;
+  --bs-vi-sys-shadow-device: 0 18px 54px rgba(20,24,20,.18);
+  --v5-page-fill: #090b0a;
+  --v5-header-fill: rgba(9,11,10,.97);
+  --v5-card-fill: #0d100e;
+  --v5-hero-fill: #0d100e;
+  --v5-control-fill: #121512;
+  --v5-input-fill: #0b0e0c;
+  --v5-selected-fill: rgba(164,244,90,.1);
+  --v5-selected-text: #a4f45a;
+  --v5-icon-fill: #151916;
+  --v5-icon-success-fill: rgba(164,244,90,.1);
+  --v5-icon-warning-fill: rgba(216,112,58,.1);
+}
+
+.page-shell,
+.modal-layer,
+.sheet-layer,
+.app-toast {
+  --v5-white: #f1f4ef;
+  --v5-muted: #858c86;
+  --v5-lime: #a4f45a;
+  --v5-page-fill: #090b0a;
+  --v5-header-fill: rgba(9,11,10,.97);
+  --v5-card-fill: #0d100e;
+  --v5-hero-fill: #0d100e;
+  --v5-control-fill: #121512;
+  --v5-input-fill: #0b0e0c;
+  --v5-selected-fill: rgba(164,244,90,.1);
+  --v5-selected-text: #a4f45a;
+  --v5-icon-fill: #151916;
+  --v5-icon-success-fill: rgba(164,244,90,.1);
+  --v5-icon-warning-fill: rgba(216,112,58,.1);
+  --v5-danger-fill: rgba(216,75,84,.1);
+  --v5-tabbar-bg: #0c0f0d;
+  --v5-tabbar-border: rgba(183,194,184,.16);
+  --v5-tabbar-muted: #656b66;
+  --v5-tabbar-active: #a4f45a;
+}
+
+page,
+.page-shell,
+.controls-page,
+.service-page,
+.me-page { background: #090b0a !important; }
+
+.page-shell::before { content: none !important; }
+
+.page-shell.page-shell :is(.card,.setting-group,.contact-list,.resource-list,.result-sheet,.choice-list,.control-summary,.service-hero,.status-strip,.battery-hero,.diagnosis-hero,.result-hero,.ota-hero,.detail-hero,.progress-hero,.firmware-intro,.updates-summary,.app-update-hero,.about-hero,.legal-meta,.device-panel,.page-intro) {
+  border-color: rgba(183,194,184,.16) !important;
+  border-radius: 0 !important;
+  background: #0d100e !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+}
+
+.page-shell.page-shell :is(.list-card,.setting-group,.resource-list,.contact-list) {
+  border-right: 0 !important;
+  border-left: 0 !important;
+}
+
+.page-shell.page-shell .section-title {
+  padding-left: 0;
+  color: #626863;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+.page-shell.page-shell .section-title::before { content: none; }
+
+.screen-title { font-size: 24px !important; font-weight: 800 !important; }
+.screen-subtitle { color: #737a74 !important; font-size: 11px !important; }
+.content,
+.content--tight { padding-right: 16px !important; padding-left: 16px !important; }
+
+.page-shell.page-shell :is(.setting-icon,.row-icon,.resource-icon,.contact-icon,.mode-icon,.module-icon,.message-icon,.measure-icon) {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border: 1px solid rgba(183,194,184,.16);
+  border-radius: 50%;
+  background: #151916 !important;
+  box-shadow: none;
+}
+.page-shell.page-shell :is(.setting-icon,.row-icon,.resource-icon,.contact-icon,.mode-icon,.module-icon,.message-icon,.measure-icon) :is(.ui-icon,.vehicle-control-icon) {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.page-shell.page-shell .primary-button:not(.primary-button--red),
+.page-shell.page-shell .toggle--on,
+.page-shell.page-shell .progress-fill,
+.page-shell.page-shell .sheet-progress view {
+  border-color: #a4f45a !important;
+  border-radius: 0 !important;
+  background: #a4f45a !important;
+  color: #0a0d0a !important;
+}
+.page-shell.page-shell .primary-button { min-height: 48px; border-radius: 0 !important; box-shadow: none !important; font-size: 12px; font-weight: 800; }
+.page-shell.page-shell .secondary-button { min-height: 46px; border: 1px solid rgba(183,194,184,.22); border-radius: 0 !important; background: #0b0e0c; }
+.page-shell.page-shell :is(.field,.field-input,.field-select,.field-textarea) { border-radius: 0 !important; background: #0b0e0c !important; }
+.page-shell.page-shell :is(.status-pill,.status-pill--green) { border-radius: 2px; color: #a4f45a; background: rgba(164,244,90,.1); }
+.page-shell.page-shell .status-pill--amber { color: #df824e; background: rgba(216,112,58,.1); }
+.page-shell.page-shell .list-divider { background: rgba(183,194,184,.13); }
+
+.modal-layer .modal-panel,
+.sheet-layer .sheet-panel {
+  border: 1px solid rgba(183,194,184,.2) !important;
+  border-radius: 2px !important;
+  background: #101311 !important;
+  box-shadow: 0 22px 50px rgba(0,0,0,.55) !important;
+}
+
+.page-shell.page-shell :is(.choice-grid button.active,.preset-row button.active,.point-grid button.active,.disclaimer-check.checked) {
+  border-color: #a4f45a !important;
+  border-radius: 0 !important;
+  background: rgba(164,244,90,.08) !important;
+  color: #a4f45a !important;
+}
+
+.page-shell.page-shell :is(.warning-note,.danger-note,.disclaimer-card) {
+  border-radius: 0 !important;
+  border-color: rgba(216,112,58,.35) !important;
+  background: rgba(216,112,58,.06) !important;
+}
+
+@media (min-width: 600px) {
+  uni-app { border-radius: 2px !important; }
+}

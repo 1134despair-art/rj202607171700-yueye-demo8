@@ -1,0 +1,145 @@
+// Adapt the inherited feature components without changing the confirmed home theme.
+.page-shell,
+.modal-layer,
+.sheet-layer,
+.app-toast {
+  --v5-white: var(--v6-text);
+  --v5-muted: var(--v6-muted);
+  --v5-lime: var(--v6-accent);
+  --ink: var(--v6-text);
+  --muted: var(--v6-muted);
+  --subtle: #93abc1;
+  --accent: var(--v6-accent);
+  --ride-green: var(--v6-accent);
+  --primary-action: var(--v6-accent);
+  --v3-accent: var(--v6-accent);
+  --v3-accent-deep: #68e4ae;
+  --v3-accent-soft: rgba(119,245,176,.13);
+  --v3-ink: var(--v6-text);
+  --v3-muted: var(--v6-muted);
+  --divider: rgba(139,195,218,.24);
+  --v3-divider: var(--divider);
+  --v3-shadow-card: inset 0 1px 0 rgba(224,240,255,.09), 0 8px 22px rgba(2,13,23,.15);
+  --v5-page-fill: #06141f;
+  --v5-header-fill: linear-gradient(125deg,rgba(13,36,54,.66),rgba(15,39,57,.52));
+  --v5-card-fill: linear-gradient(125deg,rgba(27,58,73,.82),rgba(8,25,42,.87) 50%,rgba(26,51,73,.88));
+  --v5-hero-fill: linear-gradient(125deg,rgba(48,89,97,.66),rgba(8,25,42,.8) 50%,rgba(26,51,73,.84));
+  --v5-control-fill: linear-gradient(135deg,rgba(56,91,113,.48),rgba(14,37,55,.8));
+  --v5-input-fill: rgba(9,28,44,.8);
+  --v5-selected-fill: linear-gradient(135deg,rgba(64,139,112,.46),rgba(16,54,62,.84));
+  --v5-selected-text: #d8ffe9;
+  --v5-icon-fill: linear-gradient(140deg,rgba(98,117,146,.68),rgba(19,54,82,.65));
+  --v5-icon-success-fill: linear-gradient(140deg,rgba(77,145,134,.64),rgba(20,53,82,.7));
+  --v5-icon-warning-fill: linear-gradient(145deg,rgba(125,134,168,.56),rgba(28,46,71,.65));
+  --surface: rgba(17,40,59,.94);
+  --bs-vi-sys-color-text-primary: var(--v6-text);
+  --bs-vi-sys-color-text-secondary: var(--v6-muted);
+  --bs-vi-sys-color-action-primary: var(--v6-accent);
+  --bs-vi-sys-color-action-brand: var(--v6-accent);
+  --bs-vi-sys-color-text-success: #94f7b5;
+  --bs-vi-sys-color-status-success-background: rgba(119,245,176,.13);
+  --bs-vi-sys-color-border-focus: var(--v6-accent);
+}
+
+.page-shell.page-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: min(100dvh,932px);
+}
+
+// A single subdued image continues behind headers and content, including long detail pages.
+.page-shell::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 869 / 1812;
+  background: linear-gradient(to bottom,rgba(6,20,31,.32),rgba(6,20,31,.48) 35%,rgba(6,20,31,.7) 67%,#06141f 100%), url('@/static/images/summit-background-original-20260908.png') center top / 100% auto no-repeat;
+  pointer-events: none;
+}
+
+.page-shell.page-shell .app-header,
+.page-shell.page-shell:not(.tab-page) .app-header {
+  border-color: rgba(139,195,218,.18) !important;
+  box-shadow: none;
+  backdrop-filter: blur(16px);
+}
+
+.page-shell.page-shell .app-header__logo { width: 88px; height: 24px; }
+.page-shell.page-shell .app-header__title { font-weight: 600; }
+
+.page-shell.page-shell :is(.card,.setting-group,.contact-list,.resource-list,.result-sheet,.choice-list,.control-summary,.service-hero,.status-strip,.battery-hero,.diagnosis-hero,.result-hero,.ota-hero,.detail-hero,.progress-hero,.firmware-intro,.updates-summary,.app-update-hero,.about-hero,.legal-meta,.device-panel,.page-intro) {
+  border-color: rgba(139,195,218,.36) !important;
+  backdrop-filter: blur(12px);
+}
+
+.page-shell.page-shell .section-title {
+  position: relative;
+  padding-left: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.page-shell.page-shell .section-title::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 0;
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--v6-accent);
+}
+
+.page-shell.page-shell :is(.setting-icon,.row-icon,.resource-icon,.contact-icon,.mode-icon,.module-icon,.message-icon,.measure-icon) {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border-radius: 50%;
+  border-color: rgba(139,194,226,.3);
+  box-shadow: inset 1px 1px 5px rgba(179,217,235,.06);
+}
+.page-shell.page-shell :is(.setting-icon,.row-icon,.resource-icon,.contact-icon,.mode-icon,.module-icon,.message-icon,.measure-icon) :is(.ui-icon,.vehicle-control-icon) {
+  width: 24px !important;
+  height: 24px !important;
+}
+.page-shell.page-shell :is(.setting-icon,.row-icon,.resource-icon,.contact-icon,.mode-icon,.module-icon,.message-icon,.measure-icon) .ui-icon > svg {
+  width: 24px;
+  height: 24px;
+}
+.page-shell.page-shell .setting-icon--pink {
+  background: linear-gradient(145deg,rgba(125,134,168,.56),rgba(28,46,71,.65)) !important;
+}
+.page-shell.page-shell .ui-icon--tone-info { color: #e1effb; }
+.page-shell.page-shell .ui-icon--tone-success { color: #94f7b5; }
+.page-shell.page-shell .ui-icon--tone-warning { color: #f5cd91; }
+.page-shell.page-shell .ui-icon--tone-danger { color: #ffa99e; }
+
+.page-shell.page-shell .primary-button:not(.primary-button--red),
+.page-shell.page-shell .toggle--on,
+.page-shell.page-shell .progress-fill,
+.page-shell.page-shell .sheet-progress view {
+  background: linear-gradient(100deg,#a7f39c,#77f5b0 60%,#63dccc) !important;
+  border-color: rgba(148,247,181,.5);
+}
+.page-shell.page-shell :is(.choice-grid button.active,.preset-row button.active,.point-grid button.active,.disclaimer-check.checked) {
+  border-color: rgba(119,245,176,.65) !important;
+}
+.page-shell.page-shell .primary-button { box-shadow: 0 6px 18px rgba(89,231,145,.12) !important; }
+
+.modal-layer .modal-panel,
+.sheet-layer .sheet-panel {
+  background: linear-gradient(125deg,rgba(27,58,73,.96),rgba(8,25,42,.97) 50%,rgba(26,51,73,.97)) !important;
+  border-color: rgba(139,195,218,.36) !important;
+  backdrop-filter: blur(20px);
+  box-shadow: inset 0 1px 0 rgba(224,240,255,.09),0 24px 56px rgba(2,13,23,.4) !important;
+}
+
+.modal-layer .modal-icon,
+.sheet-layer .feedback-icon {
+  border: 1px solid rgba(139,194,226,.3);
+  border-radius: 50%;
+  background: var(--v5-icon-fill);
+  box-shadow: inset 1px 1px 5px rgba(179,217,235,.06);
+}
