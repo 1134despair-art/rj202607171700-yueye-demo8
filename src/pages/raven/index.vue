@@ -4,7 +4,7 @@ import { onLoad, onShow } from "@dcloudio/uni-app";
 import { useI18n } from "vue-i18n";
 import {
   Activity, BatteryCharging, Bike, Bluetooth, BookOpen, CalendarDays, Check, ChevronLeft,
-  ChevronRight, CircleGauge, CloudDownload, FileText, Gauge, Globe2, House,
+  ChevronRight, CircleGauge, CloudDownload, Download, FileText, FolderOpen, Gauge, Globe2, House,
   Languages, LoaderCircle, Mail, Minus, Pencil, Phone, Plus, RefreshCw, RotateCcw,
   Save, Search, Settings2, ShieldCheck, SlidersHorizontal, Stethoscope, TriangleAlert,
   Unlink, UserRound, Wrench,
@@ -17,6 +17,7 @@ import { useOtaStore } from "@/stores/ota";
 import { useDiagnosisStore } from "@/stores/diagnosis";
 import { useAppStore } from "@/stores/app";
 import type { ControlSettings, Language, SpeedLimit, WheelieMode } from "@/types";
+import { readStorage, storageKeys, writeStorage } from "@/utils/storage";
 import { WHEEL_CIRCUMFERENCE_MAX, WHEEL_CIRCUMFERENCE_MIN } from "@/utils/wheelCircumference";
 import {
   normalizeWheelieAngle,
@@ -55,7 +56,7 @@ const wheelieDisclaimerAcknowledged = ref(false);
 const pendingWheelieMode = ref<WheelieMode | null>(null);
 const pendingRidePreset = ref<"eco" | "standard" | "sport" | null>(null);
 const downloadingResourceId = ref<string | null>(null);
-const downloadedResourceIds = ref<string[]>([]);
+const downloadedResourceIds = ref<string[]>(readStorage<string[]>(storageKeys.downloadedResources, []));
 type VehicleSearchState = "idle" | "searching" | "results";
 const vehicleSearchState = ref<VehicleSearchState>("idle");
 const renameVehicleOpen = ref(false);
@@ -369,7 +370,10 @@ async function downloadResource(resource: (typeof resources.value)[number]) {
   if (!confirmed) return;
   downloadingResourceId.value = resource.id;
   await new Promise((resolve) => setTimeout(resolve, 1200));
-  if (!downloadedResourceIds.value.includes(resource.id)) downloadedResourceIds.value = [...downloadedResourceIds.value, resource.id];
+  if (!downloadedResourceIds.value.includes(resource.id)) {
+    downloadedResourceIds.value = [...downloadedResourceIds.value, resource.id];
+    writeStorage(storageKeys.downloadedResources, downloadedResourceIds.value);
+  }
   downloadingResourceId.value = null;
   await feedback.confirm({
     title: t("resources.downloadComplete"),
@@ -379,6 +383,22 @@ async function downloadResource(resource: (typeof resources.value)[number]) {
     showCancel: false,
     confirmText: t("common.done"),
   });
+}
+
+async function openResource(resource: (typeof resources.value)[number]) {
+  await feedback.confirm({
+    title: t("resources.openTitle", { name: resource.name }),
+    content: t("resources.openCopy", { format: resource.type, fileName: resource.fileName }),
+    icon: "FileText",
+    tone: "info",
+    showCancel: false,
+    confirmText: t("common.done"),
+  });
+}
+
+function handleResourceAction(resource: (typeof resources.value)[number]) {
+  if (downloadedResourceIds.value.includes(resource.id)) return openResource(resource);
+  return downloadResource(resource);
 }
 
 async function callService() {
@@ -571,11 +591,11 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
         <h1>{{ t('resources.heading') }}</h1><p>{{ t('resources.copy') }}<br/>{{ l('Resources apply across all models', '资料适用于全部车型') }}</p>
         <text class="section-label">{{ t('resources.count', { count: resources.length }) }}</text>
         <view class="line-list resource-list-ref">
-          <button v-for="item in resources" :key="item.id" :disabled="Boolean(downloadingResourceId)" :data-testid="`download-${item.id}`" @click="downloadResource(item)">
+          <button v-for="item in resources" :key="item.id" :class="{ 'is-downloaded': downloadedResourceIds.includes(item.id) }" :disabled="Boolean(downloadingResourceId)" :aria-label="t(downloadedResourceIds.includes(item.id) ? 'resources.openLabel' : 'resources.downloadLabel', { name: item.name })" :data-testid="`download-${item.id}`" @click="handleResourceAction(item)">
             <component :is="item.icon" :size="18"/><view><b>{{ item.name }}</b><small>{{ item.detail }}</small><small class="resource-file">{{ item.fileName }}</small></view>
             <LoaderCircle v-if="downloadingResourceId === item.id" class="spinning resource-state" :size="17" />
-            <Check v-else-if="downloadedResourceIds.includes(item.id)" class="resource-state done" :size="17" />
-            <em v-else>{{ item.type }}</em>
+            <FolderOpen v-else-if="downloadedResourceIds.includes(item.id)" class="resource-state done" :size="19" />
+            <Download v-else class="resource-state" :size="19" />
           </button>
         </view>
         <text class="section-label">{{ t('service.contactTitle') }}</text>
@@ -662,7 +682,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .status-vehicle{padding-top:0}.status-metrics{display:grid;grid-template-columns:1fr 1fr}.status-metrics>view{display:flex;min-height:72px;padding:13px 0;flex-direction:column;gap:8px;border-bottom:1px solid var(--line)}.status-metrics>view:nth-child(odd){border-right:1px solid var(--line)}.status-metrics>view:nth-child(even){padding-left:16px}.status-metrics b{font-size:18px}.module-list>view,.ota-list>button{display:flex;width:100%;min-height:55px;align-items:center;gap:9px;text-align:left}.module-list>view>view:nth-child(2),.ota-list>button>view:nth-child(2){display:flex;flex:1;flex-direction:column;gap:3px}.module-list em,.ota-list em{padding:4px 6px;border-radius:8px;color:var(--lime);background:#172713;font-size:7px;font-style:normal}.module-list em.orange,.ota-list em{color:#df824e;background:#2c1e17}.ota-list em.latest{color:var(--lime);background:#172713}
 .diagnostic-hero,.ota-hero-ref{display:flex;height:150px;flex-direction:column;align-items:center;justify-content:center;text-align:center}.diagnostic-hero h2,.ota-hero-ref h2{margin-top:12px}.progress-circle{display:grid;width:65px;height:65px;place-items:center;align-content:center;border:1px solid #343934;border-radius:50%}.progress-circle b{font-size:21px}.ota-hero-ref>view{display:grid;width:52px;height:52px;place-items:center;border:1px solid rgba(216,112,58,.55);border-radius:50%;color:var(--orange)}.diagnostic-list>view{display:flex;min-height:61px;align-items:center;gap:10px}.diagnostic-list>view>i{width:26px;height:26px;border:1px dashed #555;border-radius:50%}.diagnostic-list>view>i.checking{border-color:var(--orange);animation:spin 1s linear infinite}.diagnostic-list>view>i.ok{border-style:solid;border-color:var(--lime);box-shadow:inset 0 0 0 8px #172713}.diagnostic-list>view>i.warning{border-style:solid;border-color:#df5e52}.diagnostic-list>view>view{display:flex;flex:1;flex-direction:column;gap:3px}.diagnostic-list span{color:#8a908a;font-size:8px}.diagnostic-list span.ok{color:var(--lime)}.diagnostic-list span.warning{color:#df5e52}.outline-action{width:100%;margin-top:16px}
 .vehicle-screen{text-align:center}.vehicle-large{width:86%;height:160px}.vehicle-screen h2{font-size:17px}.vehicle-actions{display:grid;height:50px;margin-top:12px;overflow:hidden;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:8px}.vehicle-actions button{display:flex;align-items:center;justify-content:center;gap:7px;font-size:9px}.vehicle-actions button+button{border-left:1px solid var(--line);color:#df5e52}.vehicle-empty-state{display:flex;min-height:160px;flex-direction:column;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}.vehicle-empty-state>view{display:grid;width:48px;height:48px;margin-bottom:12px;place-items:center;border:1px solid #3b413b;border-radius:50%;color:#858b85}.search-panel{display:flex;padding:20px 0;flex-direction:column;align-items:center;border-bottom:1px solid var(--line)}.search-icon{display:grid;width:42px;height:42px;place-items:center;border:1px solid var(--teal);border-radius:50%;color:var(--teal)}.search-icon.searching{animation:pulse 1s ease-in-out infinite}.search-panel h2{margin-top:10px}.search-panel button{display:flex;width:170px;height:40px;margin-top:12px;align-items:center;justify-content:center;gap:7px;border:1px solid var(--teal);border-radius:8px;color:var(--teal);font-size:9px}.search-panel button:disabled{opacity:.5}.vehicle-result-list>button{display:flex;width:100%;min-height:66px;padding:10px 0;align-items:center;gap:11px;text-align:left}.vehicle-result-list>button>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:4px}.vehicle-result-list>button>svg{color:var(--teal)}.vehicle-result-list em{padding:5px 10px;border-radius:8px;background:#172713;color:var(--lime);font-size:9px;font-style:normal}.bound{padding:4px 8px;border-radius:8px;color:var(--lime);background:#172713;font-size:7px;font-style:normal}
-.service-screen h1{font-size:22px}.service-screen>p{padding-bottom:14px;border-bottom:1px solid var(--line)}.resource-list-ref>button{display:flex;width:100%;min-height:60px;align-items:center;gap:12px;text-align:left}.resource-list-ref>button:disabled{opacity:.6}.resource-list-ref>button>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:4px}.resource-list-ref em{padding:3px 5px;border:1px solid #343934;border-radius:6px;color:#939993;font-size:7px;font-style:normal}.resource-file{overflow:hidden;color:#555b55;text-overflow:ellipsis;white-space:nowrap}.resource-state{flex:0 0 auto;color:var(--orange)}.resource-state.done{color:var(--lime)}.contact-list-ref{overflow:hidden;border:1px solid var(--line);border-radius:8px}.contact-list-ref>button,.contact-list-ref>view{display:flex;width:100%;min-height:65px;padding:10px 12px;align-items:center;gap:11px;text-align:left}.contact-list-ref>*+*{border-top:1px solid var(--line)}.contact-list-ref>button>view,.contact-list-ref>view>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:5px}.contact-list-ref>button>svg:first-child,.contact-list-ref>view>svg:first-child{color:var(--teal)}.contact-list-ref b{overflow-wrap:anywhere}
+.service-screen h1{font-size:22px}.service-screen>p{padding-bottom:14px;border-bottom:1px solid var(--line)}.resource-list-ref>button{display:flex;width:100%;min-height:60px;align-items:center;gap:12px;text-align:left}.resource-list-ref>button:disabled{opacity:.6}.resource-list-ref>button>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:4px}.resource-file{overflow:hidden;color:#555b55;text-overflow:ellipsis;white-space:nowrap}.resource-state{flex:0 0 auto;color:var(--orange)}.resource-state.done{color:var(--lime)}.contact-list-ref{overflow:hidden;border:1px solid var(--line);border-radius:8px}.contact-list-ref>button,.contact-list-ref>view{display:flex;width:100%;min-height:65px;padding:10px 12px;align-items:center;gap:11px;text-align:left}.contact-list-ref>*+*{border-top:1px solid var(--line)}.contact-list-ref>button>view,.contact-list-ref>view>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:5px}.contact-list-ref>button>svg:first-child,.contact-list-ref>view>svg:first-child{color:var(--teal)}.contact-list-ref b{overflow-wrap:anywhere}
 .profile-bike{margin-bottom:16px}.profile-list button{display:flex;width:100%;min-height:53px;align-items:center;gap:10px;text-align:left}.profile-list button b{flex:1;font-size:10px}.profile-list button span{display:flex;align-items:center;gap:6px;color:#858b85;font-size:7px}.profile-list button>svg:last-child{margin-left:auto}.version{margin-top:10px}.local-note-ref{text-align:center!important;margin-top:15px!important}
 .language-modal-list{display:grid;gap:8px;margin-top:18px}
 .raven-app .language-modal-option{display:flex;width:100%;min-height:50px;padding:0 14px;align-items:center;justify-content:space-between;border:1px solid #343a34;border-radius:8px;background:#0f120f;color:#c6cbc5;text-align:left}
@@ -867,7 +887,6 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .service-screen > p { padding-bottom: 16px; }
 .resource-list-ref > button { min-height: 66px; }
 .resource-list-ref > button > view { min-width: 0; }
-.resource-list-ref em { font-size: 9px; }
 .contact-list-ref b { font-size: 12px; }
 
 .custom-wheelie { margin-top: 14px; padding-top: 15px; border-top: 1px solid var(--line); }

@@ -11,6 +11,7 @@ export const storageKeys = {
   telemetryScenario: `${PREFIX}telemetryScenario`,
   wheelCircumferenceConfigVersion: `${PREFIX}wheelCircumferenceConfigVersion`,
   cacheBytes: `${PREFIX}cacheBytes`,
+  downloadedResources: `${PREFIX}downloadedResources`,
 };
 
 export function readStorage<T>(key: string, fallback: T): T {
