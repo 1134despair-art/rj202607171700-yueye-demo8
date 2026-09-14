@@ -49,12 +49,10 @@ const regenLevel = ref(vehicle.controls.regenLevel);
 const wheelieMode = ref<WheelieMode>(vehicle.controls.wheelieMode);
 const wheelieMaxAngle = ref(normalizeWheelieAngle(vehicle.controls.wheelieMaxAngle));
 const speedLimit = ref<SpeedLimit>(vehicle.controls.speedLimit);
-const ridePreset = ref<"eco" | "standard" | "sport">("standard");
 const operation = ref("");
 const wheelieDisclaimerOpen = ref(false);
 const wheelieDisclaimerAcknowledged = ref(false);
 const pendingWheelieMode = ref<WheelieMode | null>(null);
-const pendingRidePreset = ref<"eco" | "standard" | "sport" | null>(null);
 const downloadingResourceId = ref<string | null>(null);
 const downloadedResourceIds = ref<string[]>(readStorage<string[]>(storageKeys.downloadedResources, []));
 type VehicleSearchState = "idle" | "searching" | "results";
@@ -88,6 +86,9 @@ const languageOptions: Array<{ value: Language; labelKey: string }> = [
   { value: "en", labelKey: "me.english" },
 ];
 const currentLanguageLabel = computed(() => t(languageOptions.find((item) => item.value === app.preferences.language)?.labelKey || "me.chinese"));
+const regenLabel = computed(() => [t("common.off"), t("controls.levels.low"), t("controls.levels.medium"), t("controls.levels.high")][regenLevel.value]);
+const wheelieLabel = computed(() => t(`controls.wheelieOptions.${wheelieMode.value}`));
+const speedLimitLabel = computed(() => speedLimit.value ? `${speedLimit.value} km/h` : t("common.off"));
 const diagnosisProgress = computed(() => diagnosis.progress);
 const diagnosticButton = computed(() => diagnosis.running ? t("diagnosis.scanning", { progress: diagnosis.progress }) : diagnosis.latest ? t("diagnosis.rerun") : t("diagnosis.start"));
 const vehicleSearchTitle = computed(() => vehicleSearchState.value === "searching" ? t("bind.searching") : vehicleSearchState.value === "results" ? t("bind.searchComplete") : t("bind.searchNearby"));
@@ -97,7 +98,6 @@ const bottomActions: Partial<Record<Screen, string>> = {
 };
 const bottomAction = computed(() => {
   const actions: Partial<Record<Screen, string>> = {
-    ride: t("controls.saveModes"),
     wheel: t("controls.saveCircumference"),
     status: l("Refresh Vehicle Status", "刷新车辆状态"),
     diagnostics: diagnosticButton.value,
@@ -165,27 +165,54 @@ async function toggleSafety(index: number) {
   finally { operation.value = ""; }
 }
 
-function applyRidePreset(preset: "eco" | "standard" | "sport") {
-  ridePreset.value = preset;
-  if (preset === "eco") { regenLevel.value = 3; wheelieMode.value = "off"; speedLimit.value = 25; }
-  if (preset === "standard") { regenLevel.value = 2; wheelieMode.value = "off"; speedLimit.value = 45; }
-  if (preset === "sport") { regenLevel.value = 1; wheelieMode.value = "advanced"; speedLimit.value = 45; }
+type RideSetting = "regen" | "wheelie" | "wheelieAngle" | "speed";
+
+async function applyRideSetting(
+  setting: RideSetting,
+  label: string,
+  values: Partial<ControlSettings>,
+  apply: () => void,
+  rollback: () => void,
+) {
+  if (!connected.value) {
+    notify(t("controls.connectRequired"), "warning");
+    return;
+  }
+  if (operation.value) return;
+  operation.value = `ride-${setting}`;
+  apply();
+  try {
+    await vehicle.writeControls(values);
+    notify(t("controls.settingApplied", { setting: label }));
+  } catch (reason) {
+    rollback();
+    notify(t("controls.settingApplyFailed", {
+      setting: label,
+      reason: reason instanceof Error ? reason.message : t("controls.writeFailed"),
+    }), "danger");
+  } finally {
+    operation.value = "";
+  }
 }
 
-function showWheelieDisclaimer(mode: WheelieMode | null = null, preset: "eco" | "standard" | "sport" | null = null) {
+function setRegen(level: number) {
+  const previous = regenLevel.value;
+  if (previous === level) return;
+  void applyRideSetting("regen", t("controls.regenLevel"), { regenLevel: level }, () => { regenLevel.value = level; }, () => { regenLevel.value = previous; });
+}
+
+function showWheelieDisclaimer(mode: WheelieMode | null = null) {
   pendingWheelieMode.value = mode;
-  pendingRidePreset.value = preset;
   wheelieDisclaimerAcknowledged.value = mode === null && app.wheelieDisclaimerAccepted;
   wheelieDisclaimerOpen.value = true;
 }
 
-function chooseRidePreset(preset: "eco" | "standard" | "sport") {
-  if (!connected.value || operation.value) return;
-  if (preset === "sport" && !app.wheelieDisclaimerAccepted) {
-    showWheelieDisclaimer("advanced", preset);
-    return;
-  }
-  applyRidePreset(preset);
+function applyWheelieMode(mode: WheelieMode) {
+  const previous = wheelieMode.value;
+  const values: Partial<ControlSettings> = mode === "custom"
+    ? { wheelieMode: mode, wheelieMaxAngle: normalizeWheelieAngle(wheelieMaxAngle.value) }
+    : { wheelieMode: mode };
+  void applyRideSetting("wheelie", t("controls.wheelieMode"), values, () => { wheelieMode.value = mode; }, () => { wheelieMode.value = previous; });
 }
 
 function selectWheelie(mode: WheelieMode) {
@@ -194,24 +221,21 @@ function selectWheelie(mode: WheelieMode) {
     showWheelieDisclaimer(mode);
     return;
   }
-  wheelieMode.value = mode;
+  applyWheelieMode(mode);
 }
 
 function dismissWheelieDisclaimer() {
   wheelieDisclaimerOpen.value = false;
   wheelieDisclaimerAcknowledged.value = false;
   pendingWheelieMode.value = null;
-  pendingRidePreset.value = null;
 }
 
 function acceptWheelieDisclaimer() {
   if (!wheelieDisclaimerAcknowledged.value) return;
   const targetMode = pendingWheelieMode.value;
-  const targetPreset = pendingRidePreset.value;
   app.acceptWheelieDisclaimer();
   dismissWheelieDisclaimer();
-  if (targetPreset) applyRidePreset(targetPreset);
-  else if (targetMode) wheelieMode.value = targetMode;
+  if (targetMode) applyWheelieMode(targetMode);
 }
 
 function previewWheelieAngle(value: number) {
@@ -219,19 +243,18 @@ function previewWheelieAngle(value: number) {
   wheelieMaxAngle.value = normalizeWheelieAngle(value);
 }
 
-async function saveRide() {
-  if (!(await ensureConnected())) return;
-  operation.value = "ride";
-  try {
-    await vehicle.writeControls({ regenLevel: regenLevel.value, wheelieMode: wheelieMode.value, wheelieMaxAngle: wheelieMaxAngle.value, speedLimit: speedLimit.value });
-    syncDrafts();
-    notify(t("controls.modesSaved"));
-  }
-  catch (reason) {
-    syncDrafts();
-    notify(reason instanceof Error ? reason.message : t("common.unableToSave"), "danger");
-  }
-  finally { operation.value = ""; }
+function setWheelieAngle(value: number) {
+  const next = normalizeWheelieAngle(value);
+  const previous = vehicle.controls.wheelieMaxAngle;
+  wheelieMaxAngle.value = next;
+  if (previous === next) return;
+  void applyRideSetting("wheelieAngle", t("controls.wheelieMaxAngle"), { wheelieMaxAngle: next }, () => { wheelieMaxAngle.value = next; }, () => { wheelieMaxAngle.value = previous; });
+}
+
+function setSpeed(limit: SpeedLimit) {
+  const previous = speedLimit.value;
+  if (previous === limit) return;
+  void applyRideSetting("speed", t("controls.speedLimit"), { speedLimit: limit }, () => { speedLimit.value = limit; }, () => { speedLimit.value = previous; });
 }
 
 function setCurvePoint(index: number, value: number) {
@@ -442,7 +465,6 @@ function selectLanguage(option: (typeof languageOptions)[number]) {
 }
 
 async function handleBottomAction() {
-  if (screen.value === "ride") return saveRide();
   if (screen.value === "wheel") return saveCircumference();
   if (screen.value === "status") return refreshVehicle();
   if (screen.value === "diagnostics") return runDiagnostics();
@@ -507,7 +529,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
         <view class="metrics three"><view><b>{{ vehicle.hasTelemetry ? `${telemetry.controllerTemp}°C` : '--' }}</b><span>{{ t('home.controllerTemp') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.voltage}V` : '--' }}</b><span>{{ t('home.voltage') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.batteryTemp}°C` : '--' }}</b><span>{{ t('home.batteryTemp') }}</span></view></view>
         <view class="dashboard-data-grid">
           <button class="dashboard-data-item" @click="open('battery')"><view class="round-icon lime"><BatteryCharging :size="16" /></view><view><small>{{ t('home.soc') }}</small><b>{{ vehicle.hasTelemetry ? `${telemetry.soc}%` : '--' }}</b></view></button>
-          <button class="dashboard-data-item" @click="open('ride')"><view class="round-icon orange"><Gauge :size="16" /></view><view><small>{{ l('Current Ride Mode','当前骑行模式') }}</small><b>{{ l(ridePreset[0].toUpperCase()+ridePreset.slice(1),ridePreset==='eco'?'经济':ridePreset==='sport'?'运动':'标准') }}</b></view></button>
+          <button class="dashboard-data-item" @click="open('ride')"><view class="round-icon orange"><Gauge :size="16" /></view><view><small>{{ t('controls.regenerative') }}</small><b>{{ regenLabel }}</b></view></button>
           <view class="dashboard-data-item"><view class="round-icon teal"><SlidersHorizontal :size="16" /></view><view><small>{{ l('Odometer','累计里程') }}</small><b>3151 km</b></view></view>
           <button class="dashboard-data-item" @click="open('ride')"><view class="round-icon orange"><CircleGauge :size="16" /></view><view><small>{{ l('Speed Limit','车速限制') }}</small><b>{{ speedLimit ? `${speedLimit} km/h` : t('common.off') }}</b></view></button>
         </view>
@@ -519,13 +541,11 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
         <text class="section-label">{{ t('controls.protection') }}</text>
         <view class="line-list controls-list"><view v-for="(item,index) in safetyControls" :key="item.name" class="control-row"><view class="round-icon"><component :is="item.icon" :size="16" /></view><view><b>{{ item.name }}</b><small>{{ item.detail }}</small></view><button class="switch" :class="{ on: toggles[index] }" :disabled="!connected || vehicle.saving" @click="toggleSafety(index)"><i /></button></view></view>
         <text class="section-label">{{ t('controls.rideTuning') }}</text>
-        <view class="line-list tune-list"><button @click="open('ride')"><view><b>{{ t('controls.rideModes') }}</b><small>{{ l('Regen · Wheelie Mode · Speed Limit','能量回收 · 翘头模式 · 车速限制') }}</small></view><span>{{ l(ridePreset[0].toUpperCase()+ridePreset.slice(1),ridePreset==='eco'?'经济':ridePreset==='sport'?'运动':'标准') }} · {{ wheelieMode==='off'?t('common.off'):wheelieMode }} · {{ speedLimit || t('common.off') }} km/h <ChevronRight :size="15" /></span></button><button @click="open('curve')"><view><b>{{ t('controls.powerCurve') }}</b><small>{{ t('controls.powerCurveCopy') }}</small></view><span>{{ l('Custom','自定义') }} <ChevronRight :size="15" /></span></button><button @click="open('wheel')"><view><b>{{ t('controls.wheel') }}</b><small>{{ t('controls.wheelCopy') }}</small></view><span>{{ circumference }} mm <ChevronRight :size="15" /></span></button></view>
+        <view class="line-list tune-list"><button @click="open('ride')"><view><b>{{ t('controls.rideModes') }}</b><small>{{ l('Regen · Wheelie Mode · Speed Limit','能量回收 · 翘头模式 · 车速限制') }}</small></view><span>{{ regenLabel }} · {{ wheelieLabel }} · {{ speedLimitLabel }} <ChevronRight :size="15" /></span></button><button @click="open('curve')"><view><b>{{ t('controls.powerCurve') }}</b><small>{{ t('controls.powerCurveCopy') }}</small></view><span>{{ l('Custom','自定义') }} <ChevronRight :size="15" /></span></button><button @click="open('wheel')"><view><b>{{ t('controls.wheel') }}</b><small>{{ t('controls.wheelCopy') }}</small></view><span>{{ circumference }} mm <ChevronRight :size="15" /></span></button></view>
       </view>
 
       <view v-else-if="screen === 'ride'" class="page-content ride-screen">
-        <view class="mode-tabs"><button :class="{ active: ridePreset==='eco' }" :disabled="!connected || Boolean(operation)" @click="chooseRidePreset('eco')">{{ l('Eco','经济') }}</button><button :class="{ active: ridePreset==='standard' }" :disabled="!connected || Boolean(operation)" @click="chooseRidePreset('standard')">{{ l('Standard','标准') }}</button><button :class="{ active: ridePreset==='sport' }" :disabled="!connected || Boolean(operation)" @click="chooseRidePreset('sport')">{{ l('Sport','运动') }}</button></view>
-        <view class="ride-heading"><view><h1>{{ l(ridePreset.toUpperCase(),ridePreset==='eco'?'经济':ridePreset==='sport'?'运动':'标准') }}</h1><small>{{ ridePreset==='eco'?l('Maximum Range','优先续航'):ridePreset==='sport'?l('Responsive Power','灵敏动力'):l('Balanced Power and Range','兼顾动力与续航') }}</small></view><view class="orange-gauge"><Gauge :size="24" /></view></view>
-        <view class="setting-block"><view class="setting-title"><view><b>{{ t('controls.regenerative') }}</b><small>{{ t('controls.regenerativeCopy') }}</small></view><em>{{ [t('common.off'),t('controls.levels.low'),t('controls.levels.medium'),t('controls.levels.high')][regenLevel] }}</em></view><view class="segment four"><button v-for="(label,index) in [t('common.off'),t('controls.levels.low'),t('controls.levels.medium'),t('controls.levels.high')]" :key="label" :class="{ 'active-orange': regenLevel===index }" :disabled="!connected || Boolean(operation)" @click="regenLevel=index">{{ label }}</button></view></view>
+        <view class="setting-block"><view class="setting-title"><view><b>{{ t('controls.regenerative') }}</b><small>{{ t('controls.regenerativeCopy') }}</small></view><em>{{ regenLabel }}</em></view><view class="segment four"><button v-for="(label,index) in [t('common.off'),t('controls.levels.low'),t('controls.levels.medium'),t('controls.levels.high')]" :key="label" :class="{ 'active-orange': regenLevel===index }" :disabled="!connected || Boolean(operation)" @click="setRegen(index)">{{ label }}</button></view></view>
         <view class="setting-block wheelie-block">
           <view class="setting-title"><view><b>{{ t('controls.wheelieMode') }}</b><small>{{ t('controls.wheelieCopy') }}</small></view><em class="neutral">{{ t(`controls.wheelieOptions.${wheelieMode}`) }}</em></view>
           <button class="risk" data-testid="wheelie-risk-summary" @click="showWheelieDisclaimer()"><TriangleAlert :size="16" /><view><b>{{ t('controls.wheelieRiskTitle') }}</b><small>{{ t('controls.wheelieRiskSummary') }}</small></view><span>{{ t('controls.wheelieDisclaimerReview') }} <ChevronRight :size="14" /></span></button>
@@ -540,11 +560,11 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
               <i />
               <text>RAVEN</text>
             </view>
-            <slider class="wheelie-slider" :value="wheelieMaxAngle" :min="WHEELIE_ANGLE_MIN" :max="WHEELIE_ANGLE_MAX" :step="WHEELIE_ANGLE_STEP" active-color="#d8703a" background-color="#303530" :disabled="!connected || Boolean(operation)" @changing="previewWheelieAngle(Number($event.detail.value))" @change="previewWheelieAngle(Number($event.detail.value))" />
+            <slider class="wheelie-slider" :value="wheelieMaxAngle" :min="WHEELIE_ANGLE_MIN" :max="WHEELIE_ANGLE_MAX" :step="WHEELIE_ANGLE_STEP" active-color="#d8703a" background-color="#303530" :disabled="!connected || Boolean(operation)" @changing="previewWheelieAngle(Number($event.detail.value))" @change="setWheelieAngle(Number($event.detail.value))" />
             <view class="wheelie-ticks"><text v-for="tick in WHEELIE_ANGLE_TICKS" :key="tick">{{ tick }}°</text></view>
           </view>
         </view>
-        <view class="setting-block"><view class="setting-title"><view><b>{{ t('controls.speedLimit') }}</b><small>{{ t('controls.maxSpeedCopy') }}</small></view><em class="neutral">{{ speedLimit ? `${speedLimit} km/h` : t('common.off') }}</em></view><view class="segment three"><button v-for="option in [0,25,45]" :key="option" :class="{ 'active-orange': speedLimit===option }" :disabled="!connected || Boolean(operation)" @click="speedLimit=option as SpeedLimit">{{ option ? `${option} km/h` : t('common.off') }}</button></view></view>
+        <view class="setting-block"><view class="setting-title"><view><b>{{ t('controls.speedLimit') }}</b><small>{{ t('controls.maxSpeedCopy') }}</small></view><em class="neutral">{{ speedLimitLabel }}</em></view><view class="segment three"><button v-for="option in ([0,25,45] as SpeedLimit[])" :key="option" :class="{ 'active-orange': speedLimit===option }" :disabled="!connected || Boolean(operation)" @click="setSpeed(option)">{{ option ? `${option} km/h` : t('common.off') }}</button></view></view>
       </view>
 
       <view v-else-if="screen === 'curve'" class="page-content curve-screen">
@@ -675,7 +695,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .bike-stage{height:184px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}.bike-stage image{width:88%;height:176px}.model-line{display:flex;height:54px;margin:0 16px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.model-line>view{display:flex;flex-direction:column}.model-line .model{font-size:22px;font-weight:800}.model-line>view>text:last-child,.model-line>text{color:var(--muted);font-size:8px}.metrics{display:grid;margin:0 16px;border-bottom:1px solid var(--line)}.metrics.three{grid-template-columns:repeat(3,1fr)}.metrics>view{display:flex;min-height:55px;flex-direction:column;align-items:center;justify-content:center}.metrics>view+view{border-left:1px solid var(--line)}.metrics b{font-size:15px}.metrics span{margin-top:5px;color:var(--muted);font-size:7px}.data-row{display:flex;width:calc(100% - 32px);min-height:49px;margin:0 16px;padding:8px 0;align-items:center;gap:9px;border-bottom:1px solid var(--line);text-align:left}.data-row>view:nth-child(2){display:flex;flex-direction:column;gap:3px}.row-end{margin-left:auto;text-align:right}.quick-strip{display:grid;margin:0 16px;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}.quick-strip button{display:flex;height:47px;align-items:center;justify-content:center;gap:5px;font-size:8px}.quick-strip button+button{border-left:1px solid var(--line)}.quick-strip em{display:grid;width:13px;height:13px;place-items:center;border-radius:50%;background:var(--lime);color:#111;font-size:7px;font-style:normal}
 .dashboard-data-grid{display:grid;margin:0 16px;grid-template-columns:repeat(2,minmax(0,1fr));border-bottom:1px solid var(--line)}.dashboard-data-item{display:flex;min-width:0;min-height:70px;padding:11px 10px;align-items:center;gap:10px;text-align:left}.dashboard-data-item:nth-child(odd){padding-left:0;border-right:1px solid var(--line)}.dashboard-data-item:nth-child(even){padding-right:0;padding-left:14px}.dashboard-data-item:nth-child(-n+2){border-bottom:1px solid var(--line)}.dashboard-data-item>view:last-child{display:flex;min-width:0;flex-direction:column;gap:4px}.dashboard-data-item b{white-space:nowrap}
 .vehicle-summary,.status-vehicle{display:flex;width:100%;min-height:74px;padding:10px 0;align-items:center;gap:10px;border-bottom:1px solid var(--line);text-align:left}.vehicle-summary image,.status-vehicle image{width:92px;height:64px}.vehicle-summary>view,.status-vehicle>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:4px}.vehicle-summary>em,.status-vehicle>em{color:var(--lime);font-size:8px;font-style:normal}.control-row{display:flex;min-height:63px;padding:10px 0;align-items:center;gap:10px}.control-row>view:nth-child(2){flex:1}.switch{position:relative;width:35px;height:20px;border-radius:12px;background:#424742}.switch i{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#e5e8e4}.switch.on{background:var(--lime)}.switch.on i{left:18px;background:#182010}.switch:disabled{opacity:.45}.tune-list button{display:flex;width:100%;min-height:59px;padding:9px 0;align-items:center;text-align:left}.tune-list button>view{display:flex;flex:1;flex-direction:column;gap:4px}.tune-list span{display:flex;align-items:center;gap:5px;color:#a1a7a1;font-size:8px}
-.mode-tabs,.segment{display:grid}.mode-tabs{grid-template-columns:repeat(3,1fr);height:35px;border-bottom:1px solid var(--line)}.mode-tabs button{position:relative;color:#666;font-size:8px}.mode-tabs button:disabled,.segment button:disabled{opacity:.45}.mode-tabs .active{color:var(--orange)}.mode-tabs .active::after{position:absolute;right:20%;bottom:-1px;left:20%;height:2px;background:var(--orange);content:''}.ride-heading{display:flex;padding:22px 0;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.ride-heading h1{margin:0;font-size:25px}.orange-gauge{display:grid;width:54px;height:54px;place-items:center;border:1px solid rgba(216,112,58,.55);border-radius:50%;color:var(--orange)}.setting-block{padding:16px 0;border-bottom:1px solid var(--line)}.setting-title{display:flex;align-items:flex-start;justify-content:space-between}.setting-title>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:4px}.setting-title em{flex:0 0 auto;color:var(--orange);font-size:10px;font-style:normal}.setting-title em.neutral{color:#eee}.segment{height:38px;margin-top:14px;overflow:hidden;border:1px solid var(--line);border-radius:8px}.segment.three{grid-template-columns:repeat(3,1fr)}.segment.four{grid-template-columns:repeat(4,1fr)}.segment.five{grid-template-columns:repeat(5,1fr)}.segment button{min-width:0;border-right:1px solid var(--line);color:#696f69;font-size:7px}.segment button:last-child{border-right:0}.segment .active-orange{color:#df824e;background:#452c22}.risk{display:flex;width:100%;min-height:52px;margin-top:12px;padding:8px 10px;align-items:center;gap:8px;border:1px solid rgba(210,77,64,.42);border-radius:8px;color:#df5e52;font-size:9px;text-align:left}.risk>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:3px}.risk b{color:#ed7669;font-size:11px}.risk small{color:#a87873;font-size:9px}.risk span{display:flex;flex:0 0 auto;align-items:center;gap:2px;font-size:9px}
+.segment{display:grid}.setting-block{padding:16px 0;border-bottom:1px solid var(--line)}.ride-screen .setting-block:first-child{padding-top:4px}.setting-title{display:flex;align-items:flex-start;justify-content:space-between}.setting-title>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:4px}.setting-title em{flex:0 0 auto;color:var(--orange);font-size:10px;font-style:normal}.setting-title em.neutral{color:#eee}.segment{height:38px;margin-top:14px;overflow:hidden;border:1px solid var(--line);border-radius:8px}.segment.three{grid-template-columns:repeat(3,1fr)}.segment.four{grid-template-columns:repeat(4,1fr)}.segment.five{grid-template-columns:repeat(5,1fr)}.segment button{min-width:0;border-right:1px solid var(--line);color:#696f69;font-size:7px}.segment button:last-child{border-right:0}.segment .active-orange{color:#df824e;background:#452c22}.risk{display:flex;width:100%;min-height:52px;margin-top:12px;padding:8px 10px;align-items:center;gap:8px;border:1px solid rgba(210,77,64,.42);border-radius:8px;color:#df5e52;font-size:9px;text-align:left}.risk>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:3px}.risk b{color:#ed7669;font-size:11px}.risk small{color:#a87873;font-size:9px}.risk span{display:flex;flex:0 0 auto;align-items:center;gap:2px;font-size:9px}
 .chart-card{padding:12px;margin-top:10px;border:1px solid #303530}.chart-head{display:flex;justify-content:space-between;font-size:8px}.chart-head span{color:var(--muted)}.chart-card svg{width:100%;height:auto;margin:10px 0;touch-action:none}.point-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.point-grid button{height:39px;border:1px solid #2c312c}.point-grid button.active{border-color:var(--lime);color:var(--lime)}.point-grid b{font-size:11px}.point-grid small{margin-top:2px}.dual-actions{display:grid;margin-top:12px;grid-template-columns:1fr 1fr;gap:8px}.dual-actions button,.outline-action{display:flex;height:43px;align-items:center;justify-content:center;gap:8px;border:1px solid #303530;font-size:10px}.lime-button{border-color:var(--lime)!important;background:var(--lime);color:#111!important}.lime-button:disabled,.fixed-action:disabled{opacity:.45}.note-line{display:flex;width:100%;min-height:54px;padding:11px 0;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);text-align:left}.note-line>view{display:flex;flex-direction:column;gap:4px}.note-line span{color:#969c96;font-size:8px}.result-link{color:#eef2ec}
 .stepper{display:grid;width:78%;height:58px;margin:15px auto 10px;grid-template-columns:50px 1fr 50px;border:1px solid #303530}.stepper button{display:grid;place-items:center}.stepper b{display:flex;align-items:center;justify-content:center;gap:5px;font-size:26px}.stepper small{display:inline;font-size:8px}.preset{display:flex;justify-content:center;gap:10px}.preset button{height:26px;padding:0 14px;border:1px solid #2b302b;color:#686e68;font-size:8px}.preset button.active{border-color:var(--lime);color:var(--lime)}.guide>view{display:flex;min-height:62px;padding:12px 0;align-items:center;gap:10px;border-bottom:1px solid var(--line)}.guide i{display:grid;width:22px;height:22px;place-items:center;border:1px solid #32412a;border-radius:50%;color:var(--lime);font-size:9px;font-style:normal}.guide div{display:flex;flex-direction:column;gap:4px}.warning{display:flex;height:39px;margin-top:16px;padding:0 10px;align-items:center;gap:6px;border:1px solid rgba(210,77,64,.4);color:#df5e52;font-size:8px}
 .battery-hero-ref{display:flex;height:180px;flex-direction:column;align-items:center;justify-content:center;gap:12px}.battery-outline{position:relative;display:grid;width:156px;height:76px;place-items:center;border:4px solid #f0f2ee}.battery-outline::after{position:absolute;right:-9px;width:6px;height:24px;background:#f0f2ee;content:''}.battery-outline b{font-size:30px}.battery-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}.battery-grid>view{position:relative;display:flex;min-height:73px;padding:13px 0;flex-direction:column;gap:9px;border-bottom:1px solid var(--line)}.battery-grid>view:nth-child(odd){padding-right:12px;border-right:1px solid var(--line)}.battery-grid>view:nth-child(even){padding-left:12px}.battery-grid b{font-size:17px}.battery-grid b em{font-size:8px;font-style:normal}.lime-text{color:var(--lime)}.battery-grid>view>i{position:absolute;right:12px;bottom:8px;left:0;height:3px;background:#303530}.battery-grid>view>i span{display:block;width:96%;height:100%;background:var(--lime)}
@@ -782,8 +802,6 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .tune-list button > view { min-width: 0; }
 .tune-list span { max-width: 52%; justify-content: flex-end; font-size: 10px; text-align: right; }
 
-.mode-tabs { height: 40px; }
-.mode-tabs button,
 .segment button,
 .preset button,
 .modal-secondary,
@@ -794,19 +812,8 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
   justify-content: center;
   text-align: center;
 }
-.mode-tabs button { font-size: 10px; }
-.mode-tabs .active::after {
-  top: auto;
-  width: auto;
-  height: 2px;
-  border-radius: 0;
-  transform: none;
-  transform-origin: center;
-}
-.ride-heading { padding: 24px 0; }
-.ride-heading h1 { font-size: 26px; }
-.orange-gauge { width: 58px; height: 58px; }
 .setting-block { padding: 18px 0; }
+.ride-screen .setting-block:first-child { padding-top: 4px; }
 .setting-title > view { min-width: 0; padding-right: 12px; gap: 5px; }
 .setting-title em { flex: 0 0 auto; font-size: 11px; }
 .segment { height: 42px; margin-top: 15px; }
