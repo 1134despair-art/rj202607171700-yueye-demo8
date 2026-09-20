@@ -16,21 +16,18 @@ import { useVehicleStore } from "@/stores/vehicle";
 import { useOtaStore } from "@/stores/ota";
 import { useDiagnosisStore } from "@/stores/diagnosis";
 import { useAppStore } from "@/stores/app";
-import type { ControlSettings, Language, SpeedLimit, WheelieMode } from "@/types";
+import type { ChargingPower, ControlSettings, Language, SpeedLimit, WheelieMode } from "@/types";
 import { readStorage, storageKeys, writeStorage } from "@/utils/storage";
 import { WHEEL_CIRCUMFERENCE_MAX, WHEEL_CIRCUMFERENCE_MIN } from "@/utils/wheelCircumference";
 import {
   normalizeWheelieAngle,
-  WHEELIE_ANGLE_MAX,
-  WHEELIE_ANGLE_MIN,
-  WHEELIE_ANGLE_STEP,
   WHEELIE_ANGLE_TICKS,
 } from "@/utils/wheelieAngle";
 import bikeImage from "@/assets/ui/illustrations/binsen-x5-product-right@3x.png";
 import wheelieVehicleImage from "@/assets/ui/illustrations/binsen-x5-real-wheelie@3x.png";
 import logoImage from "@/assets/ui/branding/binsen-logo-horizontal-inverse.png";
 
-type Screen = "dashboard" | "controls" | "ride" | "curve" | "wheel" | "battery" |
+type Screen = "dashboard" | "controls" | "general" | "ride" | "m-mode" | "curve" | "wheel" | "battery" |
   "status" | "diagnostics" | "ota" | "vehicle" | "service" | "profile";
 
 const screen = ref<Screen>("dashboard");
@@ -45,10 +42,12 @@ const toggles = ref([vehicle.controls.autoPark, vehicle.controls.tipOverCutoff, 
 const circumference = ref(vehicle.controls.wheelCircumference);
 const activeCurve = ref(4);
 const curveValues = ref([...vehicle.controls.powerCurve]);
+const curveProfile = ref<"general" | "m">("general");
 const regenLevel = ref(vehicle.controls.regenLevel);
 const wheelieMode = ref<WheelieMode>(vehicle.controls.wheelieMode);
 const wheelieMaxAngle = ref(normalizeWheelieAngle(vehicle.controls.wheelieMaxAngle));
 const speedLimit = ref<SpeedLimit>(vehicle.controls.speedLimit);
+const chargingPowerOptions: ChargingPower[] = [400, 600, 800, 1000, 1200, 1400, 1600, 1800, "max"];
 const operation = ref("");
 const wheelieDisclaimerOpen = ref(false);
 const wheelieDisclaimerAcknowledged = ref(false);
@@ -69,9 +68,10 @@ const SERVICE_EMAIL = "service@binsen.com";
 const isZh = computed(() => app.preferences.language === "zh");
 const l = (english: string, chinese: string) => isZh.value ? chinese : english;
 const title = computed(() => ({
-  dashboard: "", controls: t("controls.title"), ride: t("controls.rideModes"), curve: t("controls.curveTitle"),
+  dashboard: "", controls: t("controls.title"), general: l("General Settings", "通用设置"), ride: l("Wheelie Settings", "翘头设置"),
+  "m-mode": l("M Mode Settings", "M档设置"), curve: t("controls.curveTitle"),
   wheel: t("controls.wheelTitle"), battery: t("service.batteryTitle"), status: t("service.statusTitle"),
-  diagnostics: t("diagnosis.title"), ota: t("ota.title"), vehicle: vehicle.isBound ? t("bind.manager") : t("bind.title"),
+  diagnostics: l("Vehicle Check", "车况检测"), ota: t("ota.title"), vehicle: vehicle.isBound ? t("bind.manager") : t("bind.title"),
   service: t("service.title"), profile: t("me.title"),
 })[screen.value]);
 const showTabs = computed(() => ["dashboard", "controls", "service", "profile"].includes(screen.value));
@@ -89,6 +89,13 @@ const currentLanguageLabel = computed(() => t(languageOptions.find((item) => ite
 const regenLabel = computed(() => [t("common.off"), t("controls.levels.low"), t("controls.levels.medium"), t("controls.levels.high")][regenLevel.value]);
 const wheelieLabel = computed(() => t(`controls.wheelieOptions.${wheelieMode.value}`));
 const speedLimitLabel = computed(() => speedLimit.value ? `${speedLimit.value} km/h` : t("common.off"));
+const selectedCurveMinimum = computed(() => activeCurve.value === 0 ? 0 : curveValues.value[activeCurve.value - 1]);
+const selectedCurveMaximum = computed(() => activeCurve.value === curveValues.value.length - 1 ? 100 : curveValues.value[activeCurve.value + 1]);
+const gearLabel = computed(() => ({
+  eco: l("ECO", "经济"), sport: l("SPORT", "运动"), m: "M", creep: l("CREEP", "蠕行"),
+})[telemetry.value.rideGear]);
+const levelLabel = (level: number) => level === 0 ? t("common.off") : l(`Level ${level}`, `${level}档`);
+const chargingPowerLabel = (value: ChargingPower) => value === "max" ? "MAX" : `${value} W`;
 const diagnosisProgress = computed(() => diagnosis.progress);
 const diagnosticButton = computed(() => diagnosis.running ? t("diagnosis.scanning", { progress: diagnosis.progress }) : diagnosis.latest ? t("diagnosis.rerun") : t("diagnosis.start"));
 const vehicleSearchTitle = computed(() => vehicleSearchState.value === "searching" ? t("bind.searching") : vehicleSearchState.value === "results" ? t("bind.searchComplete") : t("bind.searchNearby"));
@@ -112,6 +119,7 @@ const safetyControls = computed(() => [
   { icon: Gauge, name: t("controls.hillDescent"), detail: t("controls.hillDescentCopy") },
 ]);
 const modules = computed(() => [l("Vehicle Controller ECU", "车辆控制器 ECU"), l("Battery Management BMS", "电池管理 BMS"), l("Motor", "电机"), l("Main Controller", "主控制器")]);
+const diagnosticModules = computed(() => [l("Battery Check", "电池检测"), l("Controller (MCU) Check", "控制器（MCU）检测"), l("Instrument Check", "仪表检测")]);
 const resources = computed(() => [
   { id: "repair-manual", fileName: "binsen-repair-manual.pdf", icon: BookOpen, name: t("resources.items.repairManual"), detail: t("resources.details.repairManual"), type: "PDF" },
   { id: "fault-code-table", fileName: "binsen-fault-code-table.pdf", icon: Activity, name: t("resources.items.faultCodes"), detail: t("resources.details.faultCodes"), type: "PDF" },
@@ -129,6 +137,30 @@ function syncDrafts() {
   wheelieMode.value = vehicle.controls.wheelieMode;
   wheelieMaxAngle.value = normalizeWheelieAngle(vehicle.controls.wheelieMaxAngle);
   speedLimit.value = vehicle.controls.speedLimit;
+}
+
+async function applyControl<K extends keyof ControlSettings>(key: K, value: ControlSettings[K], label: string) {
+  if (!(await ensureConnected()) || vehicle.saving || operation.value) return;
+  operation.value = String(key);
+  try {
+    await vehicle.writeControl(key, value);
+    notify(l(`${label} updated`, `${label}已更新`));
+  } catch (reason) {
+    notify(reason instanceof Error ? reason.message : t("common.unableToSave"), "danger");
+  } finally {
+    operation.value = "";
+  }
+}
+
+function toggleControl<K extends keyof ControlSettings>(key: K, label: string) {
+  void applyControl(key, !Boolean(vehicle.controls[key]) as ControlSettings[K], label);
+}
+
+function openCurve(profile: "general" | "m") {
+  curveProfile.value = profile;
+  curveValues.value = [...(profile === "m" ? vehicle.controls.mPowerCurve : vehicle.controls.powerCurve)];
+  activeCurve.value = 4;
+  open("curve");
 }
 
 function notify(message: string, tone: "success" | "warning" | "danger" | "info" = "success") {
@@ -238,11 +270,6 @@ function acceptWheelieDisclaimer() {
   if (targetMode) applyWheelieMode(targetMode);
 }
 
-function previewWheelieAngle(value: number) {
-  if (!connected.value || operation.value) return;
-  wheelieMaxAngle.value = normalizeWheelieAngle(value);
-}
-
 function setWheelieAngle(value: number) {
   const next = normalizeWheelieAngle(value);
   const previous = vehicle.controls.wheelieMaxAngle;
@@ -263,21 +290,27 @@ function setCurvePoint(index: number, value: number) {
   curveValues.value[index] = Math.max(minimum, Math.min(maximum, Math.round(value)));
 }
 
-function dragCurvePoint(index: number, event: TouchEvent) {
-  if (!connected.value || vehicle.saving) return;
-  const touch = event.touches[0];
-  if (!touch) return;
-  activeCurve.value = index;
-  uni.createSelectorQuery().select(".curve-chart-svg").boundingClientRect((rect: any) => {
-    if (rect) setCurvePoint(index, 100 - ((touch.clientY - rect.top) / rect.height) * 100);
-  }).exec();
+function adjustCurvePoint(delta: number) {
+  setCurvePoint(activeCurve.value, curveValues.value[activeCurve.value] + delta);
+}
+
+type NumericControlKey = "mPowerPercent" | "mTorquePercent" | "mSpeedLimit";
+function adjustNumericControl(key: NumericControlKey, delta: number, minimum: number, maximum: number, label: string) {
+  const next = Math.max(minimum, Math.min(maximum, Number(vehicle.controls[key]) + delta));
+  if (next !== vehicle.controls[key]) void applyControl(key, next, label);
 }
 
 function resetCurve() { curveValues.value = [8, 17, 27, 39, 52, 64, 74, 83, 92, 100]; }
 async function saveCurve() {
   if (!(await ensureConnected())) return;
   operation.value = "curve";
-  try { await vehicle.writePowerCurve(curveValues.value); syncDrafts(); notify(t("controls.curveSaved")); }
+  try {
+    if (curveProfile.value === "m") await vehicle.writeMPowerCurve(curveValues.value);
+    else await vehicle.writePowerCurve(curveValues.value);
+    if (curveProfile.value === "m") curveValues.value = [...vehicle.controls.mPowerCurve];
+    else curveValues.value = [...vehicle.controls.powerCurve];
+    notify(t("controls.curveSaved"));
+  }
   catch (reason) { notify(reason instanceof Error ? reason.message : t("common.unableToSave"), "danger"); }
   finally { operation.value = ""; }
 }
@@ -471,7 +504,7 @@ async function handleBottomAction() {
 }
 
 const primaryScreens: Screen[] = ["dashboard", "controls", "service", "profile"];
-const validScreens: Screen[] = ["dashboard", "controls", "ride", "curve", "wheel", "battery", "status", "diagnostics", "ota", "vehicle", "service", "profile"];
+const validScreens: Screen[] = ["dashboard", "controls", "general", "ride", "m-mode", "curve", "wheel", "battery", "status", "diagnostics", "ota", "vehicle", "service", "profile"];
 
 function open(next: Screen) {
   if (next === screen.value) return;
@@ -482,7 +515,7 @@ function open(next: Screen) {
 function back() {
   const previous = screenHistory.value.pop();
   if (previous) screen.value = previous;
-  else if (["ride", "curve", "wheel"].includes(screen.value)) screen.value = "controls";
+  else if (["general", "ride", "m-mode", "curve", "wheel"].includes(screen.value)) screen.value = "controls";
   else screen.value = "dashboard";
 }
 function tab(next: "dashboard" | "controls" | "service" | "profile") {
@@ -526,30 +559,51 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
       <view v-if="screen === 'dashboard'" class="dashboard-screen">
         <view class="bike-stage"><image :src="bikeImage" mode="aspectFit" /></view>
         <button class="model-line" @click="open('vehicle')"><view><text class="model">{{ vehicleName }}</text><text>{{ vehicle.isBound ? l('Off-road Series · CN','越野系列 · CN') : t('bind.waiting') }}</text></view><text>{{ vehicle.vehicle?.model || t('bind.title') }}</text></button>
-        <view class="metrics three"><view><b>{{ vehicle.hasTelemetry ? `${telemetry.controllerTemp}°C` : '--' }}</b><span>{{ t('home.controllerTemp') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.voltage}V` : '--' }}</b><span>{{ t('home.voltage') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.batteryTemp}°C` : '--' }}</b><span>{{ t('home.batteryTemp') }}</span></view></view>
-        <view class="dashboard-data-grid">
-          <button class="dashboard-data-item dashboard-data-item--compact" @click="open('battery')"><view class="round-icon lime"><BatteryCharging :size="16" /></view><view><small>{{ t('home.soc') }}</small><b>{{ vehicle.hasTelemetry ? `${telemetry.soc}%` : '--' }}</b></view></button>
-          <button class="dashboard-data-item dashboard-data-item--compact" @click="open('ride')"><view class="round-icon orange"><Gauge :size="16" /></view><view><small>{{ t('controls.regenerative') }}</small><b>{{ regenLabel }}</b></view></button>
-          <button class="dashboard-data-item dashboard-data-item--compact" @click="open('ride')"><view class="round-icon orange"><CircleGauge :size="16" /></view><view><small>{{ l('Speed Limit','车速限制') }}</small><b>{{ speedLimitLabel }}</b></view></button>
-          <view class="dashboard-data-item dashboard-data-item--odometer"><view class="round-icon teal"><SlidersHorizontal :size="16" /></view><view><small>{{ l('Odometer','累计里程') }}</small><b>3151 km</b></view></view>
+        <view class="connection-gear-strip">
+          <button @click="toggleConnection"><Bluetooth :size="15" /><span>{{ l('Bluetooth', '蓝牙') }}</span><b :class="{ offline: !connected }">{{ connectionText }}</b></button>
+          <view><Gauge :size="15" /><span>{{ l('Current Gear', '当前档位') }}</span><b>{{ vehicle.hasTelemetry ? gearLabel : '--' }}</b></view>
+        </view>
+        <view class="metrics three"><view><b>{{ vehicle.hasTelemetry ? `${telemetry.batteryTemp}°C` : '--' }}</b><span>{{ t('home.batteryTemp') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.motorTemp}°C` : '--' }}</b><span>{{ t('service.motorTemp') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.controllerTemp}°C` : '--' }}</b><span>{{ l('Controller (MCU) Temp','控制器（MCU）温度') }}</span></view></view>
+        <view class="dashboard-data-grid telemetry-cards">
+          <button class="dashboard-data-item" @click="open('battery')"><view class="round-icon lime"><BatteryCharging :size="16" /></view><view><small>{{ l('Battery', '电量') }}</small><b>{{ vehicle.hasTelemetry ? `${telemetry.soc}%` : '--' }}</b></view></button>
+          <view class="dashboard-data-item"><view class="round-icon teal"><SlidersHorizontal :size="16" /></view><view><small>{{ l('Total Mileage','总里程') }}</small><b>{{ vehicle.hasTelemetry ? `${telemetry.totalMileage} km` : '--' }}</b></view></view>
         </view>
         <view class="quick-strip"><button @click="open('status')"><Activity :size="17" />{{ t('home.status') }}</button><button @click="open('diagnostics')"><Stethoscope :size="17" />{{ t('home.diagnose') }}</button><button @click="open('ota')"><CloudDownload :size="17" />OTA <em v-if="ota.updateCount">{{ ota.updateCount }}</em></button></view>
       </view>
 
       <view v-else-if="screen === 'controls'" class="page-content controls-screen">
         <view class="vehicle-summary"><image :src="bikeImage" mode="aspectFit" /><view><b>{{ vehicleName }}</b><small>{{ vehicle.isBound ? `X1 ${l('Off-road Series','越野系列')} · ${vehicle.vehicle?.model || '--'}` : t('bind.waiting') }}</small><small>{{ connected ? t('controls.connectedCopy') : t('controls.offlineCopy') }}</small></view><em>{{ connected ? t('controls.live') : vehicle.isBound ? t('common.offline') : t('bind.unbound') }}</em></view>
-        <text class="section-label">{{ t('controls.protection') }}</text>
-        <view class="line-list controls-list"><view v-for="(item,index) in safetyControls" :key="item.name" class="control-row"><view class="round-icon"><component :is="item.icon" :size="16" /></view><view><b>{{ item.name }}</b><small>{{ item.detail }}</small></view><button class="switch" :class="{ on: toggles[index] }" :disabled="!connected || vehicle.saving" @click="toggleSafety(index)"><i /></button></view></view>
-        <text class="section-label">{{ t('controls.rideTuning') }}</text>
-        <view class="line-list tune-list"><button @click="open('ride')"><view><b>{{ t('controls.rideModes') }}</b><small>{{ l('Regen · Wheelie Mode · Speed Limit','能量回收 · 翘头模式 · 车速限制') }}</small></view><span>{{ regenLabel }} · {{ wheelieLabel }} · {{ speedLimitLabel }} <ChevronRight :size="15" /></span></button><button @click="open('curve')"><view><b>{{ t('controls.powerCurve') }}</b><small>{{ t('controls.powerCurveCopy') }}</small></view><span>{{ l('Custom','自定义') }} <ChevronRight :size="15" /></span></button><button @click="open('wheel')"><view><b>{{ t('controls.wheel') }}</b><small>{{ t('controls.wheelCopy') }}</small></view><span>{{ circumference }} mm <ChevronRight :size="15" /></span></button></view>
+        <text class="section-label">{{ l('RIDING SETTINGS', '骑行设置') }}</text>
+        <view class="line-list tune-list settings-entry-list">
+          <button @click="open('general')"><view class="round-icon lime"><Settings2 :size="16" /></view><view><b>{{ l('General Settings', '通用设置') }}</b><small>{{ l('Energy recovery, TCS, safety and charging', '动能回收、TCS、安全保护与充电') }}</small></view><span><ChevronRight :size="16" /></span></button>
+          <button @click="open('ride')"><view class="round-icon orange"><Bike :size="16" /></view><view><b>{{ l('Wheelie Settings', '翘头设置') }}</b><small>{{ l('Control, mode and target angle', '控制开关、模式与角度选择') }}</small></view><span>{{ vehicle.controls.wheelieEnabled ? wheelieLabel : t('common.off') }} <ChevronRight :size="16" /></span></button>
+          <button @click="open('m-mode')"><view class="round-icon teal"><Gauge :size="16" /></view><view><b>{{ l('M Mode Settings', 'M档设置') }}</b><small>{{ l('Power, torque, speed and throttle curve', '功率、扭矩、车速与转把行程') }}</small></view><span>{{ vehicle.controls.mPowerPercent }}% <ChevronRight :size="16" /></span></button>
+        </view>
+        <text class="section-label">{{ l('VEHICLE PARAMETERS', '车辆参数') }}</text>
+        <view class="line-list tune-list"><button @click="open('wheel')"><view><b>{{ t('controls.wheel') }}</b><small>{{ l('Used for speed and mileage calculations', '用于车速与里程计算') }}</small></view><span>{{ circumference }} mm <ChevronRight :size="15" /></span></button></view>
+      </view>
+
+      <view v-else-if="screen === 'general'" class="page-content settings-screen">
+        <text class="settings-intro">{{ l('Configure shared riding behavior. Changes are written to the connected vehicle immediately.', '配置所有档位共用的骑行行为，调整后将立即写入已连接车辆。') }}</text>
+        <view class="setting-block"><view class="setting-title"><view><b>{{ l('Brake Energy Recovery', '制动动能回收') }}</b><small>{{ l('Recovery strength while braking', '制动时的能量回收强度') }}</small></view><em>{{ levelLabel(vehicle.controls.brakeRegenLevel) }}</em></view><view class="segment four"><button v-for="level in [0,1,2,3]" :key="level" :class="{ 'active-orange': vehicle.controls.brakeRegenLevel===level }" :disabled="!connected || Boolean(operation)" @click="applyControl('brakeRegenLevel', level, l('Brake recovery','制动动能回收'))">{{ levelLabel(level) }}</button></view></view>
+        <view class="setting-block"><view class="setting-title"><view><b>{{ l('Coasting Energy Recovery', '滑动动能回收') }}</b><small>{{ l('Recovery strength when the throttle is released', '松开转把后的能量回收强度') }}</small></view><em>{{ levelLabel(vehicle.controls.coastingRegenLevel) }}</em></view><view class="segment four"><button v-for="level in [0,1,2,3]" :key="level" :class="{ 'active-orange': vehicle.controls.coastingRegenLevel===level }" :disabled="!connected || Boolean(operation)" @click="applyControl('coastingRegenLevel', level, l('Coasting recovery','滑动动能回收'))">{{ levelLabel(level) }}</button></view></view>
+        <view class="setting-block"><view class="setting-title"><view><b>{{ l('TCS Level', 'TCS挡位设置') }}</b><small>{{ l('Traction control intervention level', '牵引力控制介入强度') }}</small></view><em>{{ levelLabel(vehicle.controls.tcsLevel) }}</em></view><view class="segment four"><button v-for="level in [0,1,2,3]" :key="level" :class="{ 'active-orange': vehicle.controls.tcsLevel===level }" :disabled="!connected || Boolean(operation)" @click="applyControl('tcsLevel', level, 'TCS')">{{ levelLabel(level) }}</button></view></view>
+        <view class="setting-block inline-toggle"><view class="setting-title"><view><b>{{ l('Brake Power Cut-off', '刹车断电开关') }}</b><small>{{ l('Cut motor output while braking', '制动时切断电机动力输出') }}</small></view><button class="switch" :class="{ on: vehicle.controls.brakeCutoff }" :disabled="!connected || Boolean(operation)" @click="toggleControl('brakeCutoff', l('Brake cut-off','刹车断电'))"><i /></button></view></view>
+        <view class="setting-block inline-toggle"><view class="setting-title"><view><b>{{ l('Tip-over Protection', '倾倒保护设置') }}</b><small>{{ l('Disable drive output after a fall', '车辆倾倒后停止动力输出') }}</small></view><button class="switch" :class="{ on: vehicle.controls.tipOverCutoff }" :disabled="!connected || Boolean(operation)" @click="toggleControl('tipOverCutoff', l('Tip-over protection','倾倒保护'))"><i /></button></view></view>
+        <view class="setting-block inline-toggle"><view class="setting-title"><view><b>{{ l('Electronic Parking', '电子驻车设置') }}</b><small>{{ l('Enable electronic parking assist', '启用电子驻车辅助') }}</small></view><button class="switch" :class="{ on: vehicle.controls.electronicParking }" :disabled="!connected || Boolean(operation)" @click="toggleControl('electronicParking', l('Electronic parking','电子驻车'))"><i /></button></view></view>
+        <button class="setting-link" @click="openCurve('general')"><view><b>{{ l('Throttle Travel Curve', '转把行程设置') }}</b><small>{{ l('10 × 10 throttle opening / acceleration curve', '10 × 10 转把开度 / 加速度曲线') }}</small></view><span>{{ l('Configure', '设置') }} <ChevronRight :size="15" /></span></button>
+        <view class="setting-block"><view class="setting-title"><view><b>{{ l('Creep Level', '蠕行挡位设置') }}</b><small>{{ l('Low-speed creep output level', '低速蠕行的动力输出强度') }}</small></view><em>{{ levelLabel(vehicle.controls.creepLevel) }}</em></view><view class="segment four"><button v-for="level in [0,1,2,3]" :key="level" :class="{ 'active-orange': vehicle.controls.creepLevel===level }" :disabled="!connected || Boolean(operation)" @click="applyControl('creepLevel', level, l('Creep level','蠕行挡位'))">{{ levelLabel(level) }}</button></view></view>
+        <view class="setting-block"><view class="setting-title"><view><b>{{ l('Charging Power', '充电功率设置') }}</b><small>{{ l('Nine levels from 400 W to charger maximum', '从 400W 到充电器最大输出，共 9 挡') }}</small></view><em>{{ chargingPowerLabel(vehicle.controls.chargingPower) }}</em></view><view class="power-grid"><button v-for="power in chargingPowerOptions" :key="power" :class="{ active: vehicle.controls.chargingPower===power }" :disabled="!connected || Boolean(operation)" @click="applyControl('chargingPower', power, l('Charging power','充电功率'))">{{ chargingPowerLabel(power) }}</button></view></view>
+        <view class="setting-block inline-toggle"><view class="setting-title"><view><b>{{ l('Drift Mode', '滑胎模式') }}</b><small>{{ l('Allow controlled rear-wheel slip', '允许后轮受控滑动') }}</small></view><button class="switch" :class="{ on: vehicle.controls.driftMode }" :disabled="!connected || Boolean(operation)" @click="toggleControl('driftMode', l('Drift mode','滑胎模式'))"><i /></button></view></view>
+        <view class="setting-block inline-toggle"><view class="setting-title"><view><b>{{ l('Emergency Charging Mode', '应急充电模式') }}</b><small>{{ l('Use only when standard charging is unavailable', '仅在常规充电不可用时启用') }}</small></view><button class="switch" :class="{ on: vehicle.controls.emergencyCharging }" :disabled="!connected || Boolean(operation)" @click="toggleControl('emergencyCharging', l('Emergency charging','应急充电模式'))"><i /></button></view></view>
       </view>
 
       <view v-else-if="screen === 'ride'" class="page-content ride-screen">
-        <view class="setting-block"><view class="setting-title"><view><b>{{ t('controls.regenerative') }}</b><small>{{ t('controls.regenerativeCopy') }}</small></view><em>{{ regenLabel }}</em></view><view class="segment four"><button v-for="(label,index) in [t('common.off'),t('controls.levels.low'),t('controls.levels.medium'),t('controls.levels.high')]" :key="label" :class="{ 'active-orange': regenLevel===index }" :disabled="!connected || Boolean(operation)" @click="setRegen(index)">{{ label }}</button></view></view>
+        <view class="setting-block inline-toggle"><view class="setting-title"><view><b>{{ l('Wheelie Control', '翘头控制开关') }}</b><small>{{ l('Master switch for wheelie assistance', '翘头辅助功能总开关') }}</small></view><button class="switch" :class="{ on: vehicle.controls.wheelieEnabled }" :disabled="!connected || Boolean(operation)" @click="toggleControl('wheelieEnabled', l('Wheelie control','翘头控制'))"><i /></button></view></view>
         <view class="setting-block wheelie-block">
-          <view class="setting-title"><view><b>{{ t('controls.wheelieMode') }}</b><small>{{ t('controls.wheelieCopy') }}</small></view><em class="neutral">{{ t(`controls.wheelieOptions.${wheelieMode}`) }}</em></view>
+          <view class="setting-title"><view><b>{{ l('Mode Selection', '模式选择') }}</b><small>{{ t('controls.wheelieCopy') }}</small></view><em class="neutral">{{ t(`controls.wheelieOptions.${wheelieMode}`) }}</em></view>
           <button class="risk" data-testid="wheelie-risk-summary" @click="showWheelieDisclaimer()"><TriangleAlert :size="16" /><view><b>{{ t('controls.wheelieRiskTitle') }}</b><small>{{ t('controls.wheelieRiskSummary') }}</small></view><span>{{ t('controls.wheelieDisclaimerReview') }} <ChevronRight :size="14" /></span></button>
-          <view class="segment five"><button v-for="option in (['off','practice','advanced','master','custom'] as WheelieMode[])" :key="option" :class="{ 'active-orange': wheelieMode===option }" :disabled="!connected || Boolean(operation)" @click="selectWheelie(option)">{{ t(`controls.wheelieOptions.${option}`) }}</button></view>
+          <view class="segment five"><button v-for="option in (['off','practice','advanced','master','custom'] as WheelieMode[])" :key="option" :class="{ 'active-orange': wheelieMode===option }" :disabled="!connected || !vehicle.controls.wheelieEnabled || Boolean(operation)" @click="selectWheelie(option)">{{ t(`controls.wheelieOptions.${option}`) }}</button></view>
           <view v-if="wheelieMode === 'custom'" class="custom-wheelie" :aria-label="t('controls.wheelieAnglePreview', { angle: wheelieMaxAngle })">
             <view class="custom-wheelie-head"><b>{{ t('controls.wheelieMaxAngle') }}</b><strong>{{ wheelieMaxAngle }}°</strong></view>
             <view class="wheelie-stage" :style="{ '--wheelie-angle': `${wheelieMaxAngle}deg` }">
@@ -560,18 +614,28 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
               <i />
               <text>RAVEN</text>
             </view>
-            <slider class="wheelie-slider" :value="wheelieMaxAngle" :min="WHEELIE_ANGLE_MIN" :max="WHEELIE_ANGLE_MAX" :step="WHEELIE_ANGLE_STEP" active-color="#d8703a" background-color="#303530" :disabled="!connected || Boolean(operation)" @changing="previewWheelieAngle(Number($event.detail.value))" @change="setWheelieAngle(Number($event.detail.value))" />
-            <view class="wheelie-ticks"><text v-for="tick in WHEELIE_ANGLE_TICKS" :key="tick">{{ tick }}°</text></view>
+            <view class="segment six angle-options"><button v-for="tick in WHEELIE_ANGLE_TICKS" :key="tick" :class="{ 'active-orange': wheelieMaxAngle===tick }" :disabled="!connected || Boolean(operation)" @click="setWheelieAngle(tick)">{{ tick }}°</button></view>
           </view>
         </view>
-        <view class="setting-block"><view class="setting-title"><view><b>{{ t('controls.speedLimit') }}</b><small>{{ t('controls.maxSpeedCopy') }}</small></view><em class="neutral">{{ speedLimitLabel }}</em></view><view class="segment three"><button v-for="option in ([0,25,45] as SpeedLimit[])" :key="option" :class="{ 'active-orange': speedLimit===option }" :disabled="!connected || Boolean(operation)" @click="setSpeed(option)">{{ option ? `${option} km/h` : t('common.off') }}</button></view></view>
+      </view>
+
+      <view v-else-if="screen === 'm-mode'" class="page-content settings-screen m-mode-screen">
+        <text class="settings-intro">{{ l('M mode applies its own power, torque, speed and safety profile.', 'M 档使用独立的功率、扭矩、车速与安全配置。') }}</text>
+        <view class="setting-block range-setting"><view class="setting-title"><view><b>{{ l('Power Output', '功率设置') }}</b><small>30% - MAX (100%)</small></view></view><view class="tap-stepper"><button :aria-label="l('Decrease power','降低功率')" :disabled="!connected || Boolean(operation) || vehicle.controls.mPowerPercent<=30" @click="adjustNumericControl('mPowerPercent', -5, 30, 100, l('Power output','功率设置'))"><Minus :size="19" /></button><strong>{{ vehicle.controls.mPowerPercent === 100 ? 'MAX' : `${vehicle.controls.mPowerPercent}%` }}</strong><button :aria-label="l('Increase power','提高功率')" :disabled="!connected || Boolean(operation) || vehicle.controls.mPowerPercent>=100" @click="adjustNumericControl('mPowerPercent', 5, 30, 100, l('Power output','功率设置'))"><Plus :size="19" /></button></view></view>
+        <view class="setting-block range-setting"><view class="setting-title"><view><b>{{ l('Torque Output', '扭矩设置') }}</b><small>30% - MAX (100%)</small></view></view><view class="tap-stepper"><button :aria-label="l('Decrease torque','降低扭矩')" :disabled="!connected || Boolean(operation) || vehicle.controls.mTorquePercent<=30" @click="adjustNumericControl('mTorquePercent', -5, 30, 100, l('Torque output','扭矩设置'))"><Minus :size="19" /></button><strong>{{ vehicle.controls.mTorquePercent === 100 ? 'MAX' : `${vehicle.controls.mTorquePercent}%` }}</strong><button :aria-label="l('Increase torque','提高扭矩')" :disabled="!connected || Boolean(operation) || vehicle.controls.mTorquePercent>=100" @click="adjustNumericControl('mTorquePercent', 5, 30, 100, l('Torque output','扭矩设置'))"><Plus :size="19" /></button></view></view>
+        <view class="setting-block range-setting"><view class="setting-title"><view><b>{{ l('Speed Limit', '车速限制') }}</b><small>{{ l('30 km/h to vehicle maximum', '30km/h 至车辆最高车速') }}</small></view></view><view class="tap-stepper"><button :aria-label="l('Decrease speed limit','降低限速')" :disabled="!connected || Boolean(operation) || vehicle.controls.mSpeedLimit<=30" @click="adjustNumericControl('mSpeedLimit', -5, 30, 100, l('Speed limit','车速限制'))"><Minus :size="19" /></button><strong>{{ vehicle.controls.mSpeedLimit >= 100 ? 'MAX' : `${vehicle.controls.mSpeedLimit} km/h` }}</strong><button :aria-label="l('Increase speed limit','提高限速')" :disabled="!connected || Boolean(operation) || vehicle.controls.mSpeedLimit>=100" @click="adjustNumericControl('mSpeedLimit', 5, 30, 100, l('Speed limit','车速限制'))"><Plus :size="19" /></button></view></view>
+        <button class="setting-link" @click="openCurve('m')"><view><b>{{ l('Throttle Travel Curve', '转把行程设置') }}</b><small>{{ l('Independent 10 × 10 opening / acceleration curve', 'M 档独立 10 × 10 开度 / 加速度曲线') }}</small></view><span>{{ l('Configure', '设置') }} <ChevronRight :size="15" /></span></button>
+        <view class="setting-block"><view class="setting-title"><view><b>{{ l('Coasting Energy Recovery', '滑动动能回收') }}</b></view><em>{{ levelLabel(vehicle.controls.mCoastingRegenLevel) }}</em></view><view class="segment four"><button v-for="level in [0,1,2,3]" :key="level" :class="{ 'active-orange': vehicle.controls.mCoastingRegenLevel===level }" :disabled="!connected || Boolean(operation)" @click="applyControl('mCoastingRegenLevel', level, l('M mode coasting recovery','M档滑动动能回收'))">{{ levelLabel(level) }}</button></view></view>
+        <view class="setting-block"><view class="setting-title"><view><b>{{ l('Brake Energy Recovery', '制动动能回收') }}</b></view><em>{{ levelLabel(vehicle.controls.mBrakeRegenLevel) }}</em></view><view class="segment four"><button v-for="level in [0,1,2,3]" :key="level" :class="{ 'active-orange': vehicle.controls.mBrakeRegenLevel===level }" :disabled="!connected || Boolean(operation)" @click="applyControl('mBrakeRegenLevel', level, l('M mode brake recovery','M档制动动能回收'))">{{ levelLabel(level) }}</button></view></view>
+        <view class="setting-block inline-toggle"><view class="setting-title"><view><b>{{ l('Brake Power Cut-off', '刹车断电设置') }}</b><small>{{ l('M mode brake cut-off', 'M 档独立刹车断电设置') }}</small></view><button class="switch" :class="{ on: vehicle.controls.mBrakeCutoff }" :disabled="!connected || Boolean(operation)" @click="toggleControl('mBrakeCutoff', l('M mode brake cut-off','M档刹车断电'))"><i /></button></view></view>
+        <view class="setting-block inline-toggle"><view class="setting-title"><view><b>{{ l('Tip-over Protection', '倾倒保护设置') }}</b><small>{{ l('M mode tip-over protection', 'M 档独立倾倒保护设置') }}</small></view><button class="switch" :class="{ on: vehicle.controls.mTipOverCutoff }" :disabled="!connected || Boolean(operation)" @click="toggleControl('mTipOverCutoff', l('M mode tip-over protection','M档倾倒保护'))"><i /></button></view></view>
       </view>
 
       <view v-else-if="screen === 'curve'" class="page-content curve-screen">
-        <text class="eyebrow">{{ t('controls.curveOutput') }} · {{ connected?t('common.connected'):t('common.offline') }}</text><h1>{{ t('controls.powerCurve') }}</h1>
-        <view class="chart-card"><view class="chart-head"><b>{{ t('controls.curveChartTitle') }}</b><span>{{ t('controls.curveDrag') }}</span></view><svg class="curve-chart-svg" viewBox="0 0 320 190" :aria-label="t('controls.curveTitle')"><defs><linearGradient id="zone" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#25301e"/><stop offset="1" stop-color="#101510"/></linearGradient></defs><path d="M10 20H310M10 60H310M10 100H310M10 140H310M10 180H310M10 20V180M50 20V180M90 20V180M130 20V180M170 20V180M210 20V180M250 20V180M290 20V180" stroke="#242824" stroke-width="1"/><path d="M10 20L310 180H10Z" fill="url(#zone)"/><polyline :points="curveValues.map((value,index)=>`${10+index*(300/9)},${180-value*1.6}`).join(' ')" fill="none" stroke="#a4f45a" stroke-width="2"/><g fill="#0b0d0b" stroke="#e9eee8" stroke-width="2"><circle v-for="(value,index) in curveValues" :key="index" :cx="10+index*(300/9)" :cy="180-value*1.6" :r="activeCurve===index?6:5" :fill="activeCurve===index?'#a4f45a':'#0b0d0b'" @touchstart.prevent="dragCurvePoint(index,$event as any)" @touchmove.prevent="dragCurvePoint(index,$event as any)" @click="activeCurve=index"/></g></svg><view class="point-grid"><button v-for="(value,index) in curveValues" :key="index" :class="{ active: activeCurve===index }" @click="activeCurve=index"><b>{{ value }}%</b><small>P{{ index+1 }}</small></button></view></view>
+        <text class="eyebrow">{{ curveProfile === 'm' ? l('M MODE PROFILE','M档独立曲线') : l('GENERAL PROFILE','通用曲线') }} · {{ connected?t('common.connected'):t('common.offline') }}</text><h1>{{ l('Throttle Travel Curve', '转把行程设置') }}</h1>
+        <view class="chart-card"><view class="chart-head"><b>10 × 10</b><span>{{ t('controls.curveDrag') }}</span></view><view class="curve-axis curve-axis-y">{{ l('Acceleration','加速度') }}</view><svg class="curve-chart-svg" viewBox="0 0 320 190" :aria-label="t('controls.curveTitle')"><defs><linearGradient id="zone" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#25301e"/><stop offset="1" stop-color="#101510"/></linearGradient></defs><g stroke="#242824" stroke-width="1"><line v-for="step in 11" :key="`h-${step}`" x1="10" x2="310" :y1="20+(step-1)*16" :y2="20+(step-1)*16"/><line v-for="step in 11" :key="`v-${step}`" y1="20" y2="180" :x1="10+(step-1)*30" :x2="10+(step-1)*30"/></g><path d="M10 20L310 180H10Z" fill="url(#zone)"/><polyline :points="curveValues.map((value,index)=>`${10+index*(300/9)},${180-value*1.6}`).join(' ')" fill="none" stroke="#a4f45a" stroke-width="2"/><g fill="#0b0d0b" stroke="#e9eee8" stroke-width="2"><circle v-for="(value,index) in curveValues" :key="index" :cx="10+index*(300/9)" :cy="180-value*1.6" :r="activeCurve===index?6:5" :fill="activeCurve===index?'#a4f45a':'#0b0d0b'" @click="activeCurve=index"/></g></svg><view class="curve-axis curve-axis-x">{{ l('Throttle Opening','转把开度') }} (%)</view><view class="point-grid"><button v-for="(value,index) in curveValues" :key="index" :class="{ active: activeCurve===index }" @click="activeCurve=index"><b>{{ value }}%</b><small>P{{ index+1 }}</small></button></view><view class="curve-point-editor"><view><small>{{ l('Selected Point','当前控制点') }}</small><b>P{{ activeCurve+1 }}</b></view><view class="tap-stepper curve-stepper"><button :aria-label="l('Decrease output','降低输出')" :disabled="curveValues[activeCurve]<=selectedCurveMinimum" @click="adjustCurvePoint(-1)"><Minus :size="19" /></button><strong>{{ curveValues[activeCurve] }}%</strong><button :aria-label="l('Increase output','提高输出')" :disabled="curveValues[activeCurve]>=selectedCurveMaximum" @click="adjustCurvePoint(1)"><Plus :size="19" /></button></view></view></view>
         <view class="dual-actions"><button :disabled="operation==='curve'" @click="resetCurve"><RotateCcw :size="16" />{{ t('controls.resetCurve') }}</button><button class="lime-button" :disabled="!connected || operation==='curve'" @click="saveCurve"><LoaderCircle v-if="operation==='curve'" class="spinning" :size="16"/><Save v-else :size="16" />{{ t('controls.saveCurve') }}</button></view>
-        <text class="section-label">{{ l('CURVE NOTES','曲线说明') }}</text><view class="note-line"><view><b>{{ l('Current Profile','当前曲线') }}</b><small>{{ l('Smooth launch, progressive midrange, full top-end power','平顺起步、渐进中段、保留全功率输出') }}</small></view><span>{{ l('Custom','自定义') }}</span></view>
+        <text class="section-label">{{ l('CURVE NOTES','曲线说明') }}</text><view class="note-line"><view><b>{{ l('Horizontal / Vertical', '横轴 / 纵轴') }}</b><small>{{ l('Throttle opening / acceleration, provisional unit', '转把开度 / 加速度，单位暂定') }}</small></view><span>10 × 10</span></view>
       </view>
 
       <view v-else-if="screen === 'wheel'" class="page-content wheel-screen">
@@ -588,7 +652,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
       </view>
 
       <view v-else-if="screen === 'diagnostics'" class="page-content diagnostics-screen">
-        <view class="diagnostic-hero"><view class="progress-circle"><b>{{ diagnosisProgress }}%</b><small>{{ t('diagnosis.complete') }}</small></view><h2>{{ t('diagnosis.fourModule') }}</h2><p>{{ t('diagnosis.copy') }}</p></view><view class="line-list diagnostic-list"><view v-for="(item,index) in diagnosis.items" :key="item.id"><i :class="item.status" /><view><b>{{ modules[index] }}</b><small>{{ item.code || (item.status==='checking'?l('Scanning module','正在扫描模块'):item.status==='ok'?t('diagnosis.messages.ok'):t('diagnosis.waiting')) }}</small></view><span :class="item.status">{{ item.status==='pending'?t('diagnosis.status.pending'):item.status==='checking'?t('diagnosis.status.checking'):item.status==='ok'?t('diagnosis.status.ok'):t('diagnosis.status.warning') }}</span></view></view><text class="section-label">{{ l('DIAGNOSTIC INFO', '诊断说明') }}</text><button v-if="diagnosis.latest" class="note-line result-link" @click="navigate('/pages/service/diagnosis-result')"><view><b>{{ t('diagnosis.viewLatest') }}</b><small>{{ l('Fault codes, descriptions and recommended actions', '查看故障码、故障说明和处理建议') }}</small></view><ChevronRight :size="15" /></button><view v-else class="note-line"><view><b>{{ l('A full scan takes about 30 seconds', '完整扫描大约需要 30 秒') }}</b><small>{{ l('Keep the bike stationary and Bluetooth connected during the scan', '扫描期间请保持车辆静止并维持蓝牙连接') }}</small></view></view>
+        <view class="diagnostic-hero"><view class="progress-circle"><b>{{ diagnosisProgress }}%</b><small>{{ t('diagnosis.complete') }}</small></view><h2>{{ l('Three Vehicle Checks', '三项车况检测') }}</h2><p>{{ l('Battery, controller MCU and instrument cluster', '检测电池、控制器（MCU）与仪表') }}</p></view><view class="line-list diagnostic-list"><view v-for="(item,index) in diagnosis.items" :key="item.id"><i :class="item.status" /><view><b>{{ diagnosticModules[index] }}</b><small>{{ item.code || (item.status==='checking'?l('Scanning module','正在扫描模块'):item.status==='ok'?t('diagnosis.messages.ok'):t('diagnosis.waiting')) }}</small></view><span :class="item.status">{{ item.status==='pending'?t('diagnosis.status.pending'):item.status==='checking'?t('diagnosis.status.checking'):item.status==='ok'?t('diagnosis.status.ok'):t('diagnosis.status.warning') }}</span></view></view><text class="section-label">{{ l('DIAGNOSTIC INFO', '诊断说明') }}</text><button v-if="diagnosis.latest" class="note-line result-link" @click="navigate('/pages/service/diagnosis-result')"><view><b>{{ t('diagnosis.viewLatest') }}</b><small>{{ l('Fault codes, descriptions and recommended actions', '查看故障码、故障说明和处理建议') }}</small></view><ChevronRight :size="15" /></button><view v-else class="note-line"><view><b>{{ l('A full scan takes about 30 seconds', '完整扫描大约需要 30 秒') }}</b><small>{{ l('Keep the bike stationary and Bluetooth connected during the scan', '扫描期间请保持车辆静止并维持蓝牙连接') }}</small></view></view>
       </view>
 
       <view v-else-if="screen === 'ota'" class="page-content ota-screen">
@@ -696,7 +760,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .dashboard-data-grid{display:grid;margin:0 16px;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.dashboard-data-item{display:flex;min-width:0;min-height:70px;padding:11px 10px;align-items:center;gap:10px;text-align:left}.dashboard-data-item--compact{flex-direction:column;align-items:flex-start;justify-content:center}.dashboard-data-item--odometer{grid-column:1/-1}.dashboard-data-item>view:last-child{display:flex;min-width:0;flex-direction:column;gap:4px}.dashboard-data-item b{white-space:nowrap}
 .vehicle-summary,.status-vehicle{display:flex;width:100%;min-height:74px;padding:10px 0;align-items:center;gap:10px;border-bottom:1px solid var(--line);text-align:left}.vehicle-summary image,.status-vehicle image{width:92px;height:64px}.vehicle-summary>view,.status-vehicle>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:4px}.vehicle-summary>em,.status-vehicle>em{color:var(--lime);font-size:8px;font-style:normal}.control-row{display:flex;min-height:63px;padding:10px 0;align-items:center;gap:10px}.control-row>view:nth-child(2){flex:1}.switch{position:relative;width:35px;height:20px;border-radius:12px;background:#424742}.switch i{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#e5e8e4}.switch.on{background:var(--lime)}.switch.on i{left:18px;background:#182010}.switch:disabled{opacity:.45}.tune-list button{display:flex;width:100%;min-height:59px;padding:9px 0;align-items:center;text-align:left}.tune-list button>view{display:flex;flex:1;flex-direction:column;gap:4px}.tune-list span{display:flex;align-items:center;gap:5px;color:#a1a7a1;font-size:8px}
 .segment{display:grid}.setting-block{padding:16px 0;border-bottom:1px solid var(--line)}.ride-screen .setting-block:first-child{padding-top:4px}.setting-title{display:flex;align-items:flex-start;justify-content:space-between}.setting-title>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:4px}.setting-title em{flex:0 0 auto;color:var(--orange);font-size:10px;font-style:normal}.setting-title em.neutral{color:#eee}.segment{height:38px;margin-top:14px;overflow:hidden;border:1px solid var(--line);border-radius:8px}.segment.three{grid-template-columns:repeat(3,1fr)}.segment.four{grid-template-columns:repeat(4,1fr)}.segment.five{grid-template-columns:repeat(5,1fr)}.segment button{min-width:0;border-right:1px solid var(--line);color:#696f69;font-size:7px}.segment button:last-child{border-right:0}.segment .active-orange{color:#df824e;background:#452c22}.risk{display:flex;width:100%;min-height:52px;margin-top:12px;padding:8px 10px;align-items:center;gap:8px;border:1px solid rgba(210,77,64,.42);border-radius:8px;color:#df5e52;font-size:9px;text-align:left}.risk>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:3px}.risk b{color:#ed7669;font-size:11px}.risk small{color:#a87873;font-size:9px}.risk span{display:flex;flex:0 0 auto;align-items:center;gap:2px;font-size:9px}
-.chart-card{padding:12px;margin-top:10px;border:1px solid #303530}.chart-head{display:flex;justify-content:space-between;font-size:8px}.chart-head span{color:var(--muted)}.chart-card svg{width:100%;height:auto;margin:10px 0;touch-action:none}.point-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.point-grid button{height:39px;border:1px solid #2c312c}.point-grid button.active{border-color:var(--lime);color:var(--lime)}.point-grid b{font-size:11px}.point-grid small{margin-top:2px}.dual-actions{display:grid;margin-top:12px;grid-template-columns:1fr 1fr;gap:8px}.dual-actions button,.outline-action{display:flex;height:43px;align-items:center;justify-content:center;gap:8px;border:1px solid #303530;font-size:10px}.lime-button{border-color:var(--lime)!important;background:var(--lime);color:#111!important}.lime-button:disabled,.fixed-action:disabled{opacity:.45}.note-line{display:flex;width:100%;min-height:54px;padding:11px 0;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);text-align:left}.note-line>view{display:flex;flex-direction:column;gap:4px}.note-line span{color:#969c96;font-size:8px}.result-link{color:#eef2ec}
+.chart-card{padding:12px;margin-top:10px;border:1px solid #303530}.chart-head{display:flex;justify-content:space-between;font-size:8px}.chart-head span{color:var(--muted)}.chart-card svg{width:100%;height:auto;margin:10px 0}.point-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.point-grid button{height:39px;border:1px solid #2c312c}.point-grid button.active{border-color:var(--lime);color:var(--lime)}.point-grid b{font-size:11px}.point-grid small{margin-top:2px}.dual-actions{display:grid;margin-top:12px;grid-template-columns:1fr 1fr;gap:8px}.dual-actions button,.outline-action{display:flex;height:43px;align-items:center;justify-content:center;gap:8px;border:1px solid #303530;font-size:10px}.lime-button{border-color:var(--lime)!important;background:var(--lime);color:#111!important}.lime-button:disabled,.fixed-action:disabled{opacity:.45}.note-line{display:flex;width:100%;min-height:54px;padding:11px 0;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);text-align:left}.note-line>view{display:flex;flex-direction:column;gap:4px}.note-line span{color:#969c96;font-size:8px}.result-link{color:#eef2ec}
 .stepper{display:grid;width:78%;height:58px;margin:15px auto 10px;grid-template-columns:50px 1fr 50px;border:1px solid #303530}.stepper button{display:grid;place-items:center}.stepper b{display:flex;align-items:center;justify-content:center;gap:5px;font-size:26px}.stepper small{display:inline;font-size:8px}.preset{display:flex;justify-content:center;gap:10px}.preset button{height:26px;padding:0 14px;border:1px solid #2b302b;color:#686e68;font-size:8px}.preset button.active{border-color:var(--lime);color:var(--lime)}.guide>view{display:flex;min-height:62px;padding:12px 0;align-items:center;gap:10px;border-bottom:1px solid var(--line)}.guide i{display:grid;width:22px;height:22px;place-items:center;border:1px solid #32412a;border-radius:50%;color:var(--lime);font-size:9px;font-style:normal}.guide div{display:flex;flex-direction:column;gap:4px}.warning{display:flex;height:39px;margin-top:16px;padding:0 10px;align-items:center;gap:6px;border:1px solid rgba(210,77,64,.4);color:#df5e52;font-size:8px}
 .battery-hero-ref{display:flex;height:180px;flex-direction:column;align-items:center;justify-content:center;gap:12px}.battery-outline{position:relative;display:grid;width:156px;height:76px;place-items:center;border:4px solid #f0f2ee}.battery-outline::after{position:absolute;right:-9px;width:6px;height:24px;background:#f0f2ee;content:''}.battery-outline b{font-size:30px}.battery-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}.battery-grid>view{position:relative;display:flex;min-height:73px;padding:13px 0;flex-direction:column;gap:9px;border-bottom:1px solid var(--line)}.battery-grid>view:nth-child(odd){padding-right:12px;border-right:1px solid var(--line)}.battery-grid>view:nth-child(even){padding-left:12px}.battery-grid b{font-size:17px}.battery-grid b em{font-size:8px;font-style:normal}.lime-text{color:var(--lime)}.battery-grid>view>i{position:absolute;right:12px;bottom:8px;left:0;height:3px;background:#303530}.battery-grid>view>i span{display:block;width:96%;height:100%;background:var(--lime)}
 .status-vehicle{padding-top:0}.status-metrics{display:grid;grid-template-columns:1fr 1fr}.status-metrics>view{display:flex;min-height:72px;padding:13px 0;flex-direction:column;gap:8px;border-bottom:1px solid var(--line)}.status-metrics>view:nth-child(odd){border-right:1px solid var(--line)}.status-metrics>view:nth-child(even){padding-left:16px}.status-metrics b{font-size:18px}.module-list>view,.ota-list>button{display:flex;width:100%;min-height:55px;align-items:center;gap:9px;text-align:left}.module-list>view>view:nth-child(2),.ota-list>button>view:nth-child(2){display:flex;flex:1;flex-direction:column;gap:3px}.module-list em,.ota-list em{padding:4px 6px;border-radius:8px;color:var(--lime);background:#172713;font-size:7px;font-style:normal}.module-list em.orange,.ota-list em{color:#df824e;background:#2c1e17}.ota-list em.latest{color:var(--lime);background:#172713}
@@ -940,8 +1004,55 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .bottom-tabs { height: 70px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .bottom-tabs button { min-width: 0; font-size: 10px; text-align: center; }
 .bottom-tabs button.active::before { left: 50%; width: 32px; transform: translateX(-50%); }
+.connection-gear-strip { display:grid; margin:0 20px; grid-template-columns:repeat(2,minmax(0,1fr)); border-bottom:1px solid var(--line); }
+.connection-gear-strip > button,
+.connection-gear-strip > view { display:grid; min-width:0; min-height:58px; padding:9px 10px; align-items:center; grid-template-columns:auto minmax(0,1fr); gap:2px 7px; text-align:left; }
+.connection-gear-strip > * + * { border-left:1px solid var(--line); }
+.connection-gear-strip svg { grid-row:1 / 3; color:var(--teal); }
+.connection-gear-strip span { color:var(--muted); font-size:9px; }
+.connection-gear-strip b { overflow:hidden; color:var(--lime); font-size:11px; text-overflow:ellipsis; white-space:nowrap; }
+.connection-gear-strip b.offline { color:var(--muted); }
+.raven-app .dashboard-screen .telemetry-cards { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.raven-app .dashboard-screen .telemetry-cards .dashboard-data-item { min-height:74px; flex-direction:row; align-items:center; gap:10px; }
+.telemetry-cards .dashboard-data-item > view:last-child { min-width:0; }
+.telemetry-cards .dashboard-data-item b { font-size:15px; }
+.settings-entry-list button { gap:10px; }
+.settings-entry-list button > .round-icon { flex:0 0 30px; }
+.settings-entry-list button > view:nth-child(2) { display:flex; min-width:0; flex:1; flex-direction:column; gap:4px; }
+.settings-entry-list button > span { flex:0 0 auto; }
+.tune-list button > view { min-width:0; padding-right:10px; }
+.tune-list button > view small { display:-webkit-box; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+.tune-list button > span { flex:0 0 auto; max-width:42%; white-space:nowrap; }
+.settings-intro { display:block; margin:0 0 8px; padding:12px; border-left:2px solid var(--teal); background:#101411; color:#929992; font-size:10px; line-height:1.55; }
+.inline-toggle .setting-title { align-items:center; }
+.inline-toggle .switch { flex:0 0 38px; }
+.setting-link { display:flex; width:100%; min-height:68px; padding:12px 0; align-items:center; justify-content:space-between; gap:12px; border-bottom:1px solid var(--line)!important; text-align:left; }
+.setting-link > view { display:flex; min-width:0; flex:1; flex-direction:column; gap:5px; }
+.setting-link > span { display:flex; flex:0 0 auto; align-items:center; gap:3px; color:var(--lime); font-size:10px; }
+.power-grid { display:grid; margin-top:15px; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+.power-grid button { display:flex; min-width:0; height:39px; padding:0; align-items:center; justify-content:center; border:1px solid #303530!important; border-radius:5px; color:#858b85; font-size:9px; line-height:1; text-align:center; }
+.power-grid button.active { border-color:var(--orange)!important; background:#452c22; color:#ef965f; }
+.range-setting slider { margin:14px 0 0; }
+.range-setting .setting-title em { min-width:62px; text-align:right; }
+.curve-axis { color:#737a73; font-size:9px; }
+.curve-axis-y { margin-top:10px; }
+.curve-axis-x { margin:-6px 0 10px; text-align:center; }
+.segment button:disabled,
+.power-grid button:disabled { opacity:.45; }
+.segment.six { grid-template-columns:repeat(6,minmax(0,1fr)); }
+.angle-options { margin-top:14px; }
+.tap-stepper { display:grid; width:100%; height:48px; margin-top:14px; overflow:hidden; grid-template-columns:48px minmax(0,1fr) 48px; border:1px solid #343a34; border-radius:7px; background:#0c0f0d; }
+.tap-stepper button { display:grid; place-items:center; color:var(--lime); }
+.tap-stepper button:first-child { border-right:1px solid #343a34; }
+.tap-stepper button:last-child { border-left:1px solid #343a34; }
+.tap-stepper button:disabled { opacity:.28; }
+.tap-stepper strong { display:flex; min-width:0; align-items:center; justify-content:center; color:#f2f4f0; font-size:18px; font-variant-numeric:tabular-nums; }
+.curve-point-editor { display:flex; min-height:64px; margin-top:12px; padding-top:12px; align-items:center; justify-content:space-between; gap:10px; border-top:1px solid var(--line); }
+.curve-point-editor > view:first-child { display:flex; min-width:50px; flex-direction:column; gap:4px; }
+.curve-point-editor > view:first-child b { color:var(--lime); font-size:15px; }
+.curve-point-editor > .curve-stepper { width:210px; margin-top:0; }
 .spinning{animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{50%{opacity:.55;transform:scale(.92)}}
-@media(max-width:350px){.page-content{padding-right:14px;padding-left:14px}.bike-stage{height:168px}.bike-stage image{height:160px}.model-line,.data-row{width:calc(100% - 28px);margin-right:14px;margin-left:14px}.metrics,.quick-strip{margin-right:14px;margin-left:14px}.battery-hero-ref{height:154px}.point-grid{gap:3px}.tune-list span,.profile-list button span{max-width:48%;font-size:9px}}
+@media(max-width:350px){.page-content{padding-right:14px;padding-left:14px}.bike-stage{height:168px}.bike-stage image{height:160px}.model-line,.data-row{width:calc(100% - 28px);margin-right:14px;margin-left:14px}.metrics,.quick-strip,.connection-gear-strip{margin-right:14px;margin-left:14px}.battery-hero-ref{height:154px}.point-grid{gap:3px}.tune-list span,.profile-list button span{max-width:48%;font-size:9px}}
 @media(max-width:350px){.raven-app .dashboard-screen .dashboard-data-grid{margin-right:14px;margin-left:14px;gap:6px}.raven-app .dashboard-screen .dashboard-data-item--compact{min-height:94px;padding:9px}.raven-app .dashboard-screen .dashboard-data-item--odometer{min-height:64px;padding:10px}}
 </style>

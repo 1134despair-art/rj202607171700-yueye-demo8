@@ -6,8 +6,14 @@ let diagnosisTimer: ReturnType<typeof setTimeout> | undefined;
 let diagnosisResolve: (() => void) | undefined;
 let runToken = 0;
 
-const blankItems = (): DiagnosisItem[] => ["ECU", "BMS", "Motor", "Controller"].map((module, index) => ({
-  id: `module-${index}`,
+const diagnosisModules: Array<{ id: string; module: DiagnosisItem["module"] }> = [
+  { id: "bms", module: "BMS" },
+  { id: "mcu", module: "MCU" },
+  { id: "display", module: "Display" },
+];
+
+const blankItems = (): DiagnosisItem[] => diagnosisModules.map(({ id, module }) => ({
+  id,
   module: module as DiagnosisItem["module"],
   status: "pending",
 }));
@@ -25,9 +31,9 @@ function restoredResult() {
 }
 
 function faultFor(scenario: DiagnosisScenario, index: number): Partial<DiagnosisItem> | null {
-  if (scenario === "motor-sensor" && index === 2) return { status: "warning", code: "MTR-P021", message: "diagnosis.messages.motorSensor", advice: "diagnosis.advice.motorSensor" };
-  if (scenario === "bms-overheat" && index === 1) return { status: "warning", code: "BMS-T068", message: "diagnosis.messages.bmsOverheat", advice: "diagnosis.advice.bmsOverheat" };
-  if (scenario === "unknown" && index === 0) return { status: "warning", code: "ECU-U000", message: "diagnosis.messages.unknown", advice: "diagnosis.advice.unknown" };
+  if (scenario === "motor-sensor" && index === 1) return { status: "warning", code: "MCU-P021", message: "diagnosis.messages.motorSensor", advice: "diagnosis.advice.motorSensor" };
+  if (scenario === "bms-overheat" && index === 0) return { status: "warning", code: "BMS-T068", message: "diagnosis.messages.bmsOverheat", advice: "diagnosis.advice.bmsOverheat" };
+  if (scenario === "unknown" && index === 2) return { status: "warning", code: "DSP-U000", message: "diagnosis.messages.unknown", advice: "diagnosis.advice.unknown" };
   return null;
 }
 
@@ -47,7 +53,7 @@ export const useDiagnosisStore = defineStore("diagnosis", {
         if (token !== runToken) return null;
         const fault = faultFor(scenario, index);
         this.items[index] = fault ? { ...this.items[index], ...fault } as DiagnosisItem : { ...this.items[index], status: "ok", message: "diagnosis.messages.ok" };
-        this.progress = (index + 1) * 25;
+        this.progress = Math.round(((index + 1) / this.items.length) * 100);
       }
       this.running = false;
       this.latest = {

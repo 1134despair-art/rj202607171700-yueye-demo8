@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { tr } from "@/i18n";
-import type { BleState, ControlReadState, ControlSettings, ModuleRuntimeStatus, SpeedLimit, Telemetry, TelemetryScenario, Vehicle, WheelieMode } from "@/types";
+import type { BleState, ChargingPower, ControlReadState, ControlSettings, ModuleRuntimeStatus, SpeedLimit, Telemetry, TelemetryScenario, Vehicle, WheelieMode } from "@/types";
 import { availableVehicles, defaultControls, defaultTelemetry } from "@/mock/seed";
 import { createMockVehicleFrame, parseMockVehicleFrame } from "@/mock/vehicleProtocol";
 import { readStorage, storageKeys, writeStorage } from "@/utils/storage";
@@ -28,6 +28,8 @@ function restoredControls(): ControlSettings {
     : (["off", "practice", "advanced", "master", "custom"].includes(String(stored.wheelieMode)) ? stored.wheelieMode as WheelieMode : defaultControls.wheelieMode);
   const speedLimit: SpeedLimit = [0, 25, 45].includes(Number(stored.speedLimit)) ? Number(stored.speedLimit) as SpeedLimit : 45;
   const powerCurve = Array.isArray(stored.powerCurve) && stored.powerCurve.length === 10 ? [...stored.powerCurve] : [...defaultControls.powerCurve];
+  const mPowerCurve = Array.isArray(stored.mPowerCurve) && stored.mPowerCurve.length === 10 ? [...stored.mPowerCurve] : [...defaultControls.mPowerCurve];
+  const chargingPowerOptions: ChargingPower[] = [400, 600, 800, 1000, 1200, 1400, 1600, 1800, "max"];
   const controls: ControlSettings = {
     ...defaultControls,
     ...storedControls,
@@ -36,8 +38,10 @@ function restoredControls(): ControlSettings {
       ? WHEELIE_ANGLE_DEFAULT
       : normalizeWheelieAngle(stored.wheelieMaxAngle),
     speedLimit,
+    chargingPower: chargingPowerOptions.includes(stored.chargingPower as ChargingPower) ? stored.chargingPower as ChargingPower : defaultControls.chargingPower,
     wheelCircumference: migrateWheelCircumference(stored.wheelCircumference, wheelCircumferenceConfigVersion),
     powerCurve,
+    mPowerCurve,
   };
   writeStorage(storageKeys.wheelCircumferenceConfigVersion, WHEEL_CIRCUMFERENCE_CONFIG_VERSION);
   writeStorage(storageKeys.controls, controls);
@@ -226,7 +230,12 @@ export const useVehicleStore = defineStore("vehicle", {
       if (values.wheelCircumference !== undefined) {
         normalizedValues.wheelCircumference = normalizeWheelCircumference(values.wheelCircumference);
       }
-      this.controls = { ...this.controls, ...normalizedValues, powerCurve: values.powerCurve ? [...values.powerCurve] : this.controls.powerCurve };
+      this.controls = {
+        ...this.controls,
+        ...normalizedValues,
+        powerCurve: values.powerCurve ? [...values.powerCurve] : this.controls.powerCurve,
+        mPowerCurve: values.mPowerCurve ? [...values.mPowerCurve] : this.controls.mPowerCurve,
+      };
       this.persistControls();
       this.saving = false;
     },
@@ -236,6 +245,13 @@ export const useVehicleStore = defineStore("vehicle", {
         return Math.max(minimum, Math.min(100, Math.round(value)));
       });
       await this.writeControls({ powerCurve: clamped });
+    },
+    async writeMPowerCurve(values: number[]) {
+      const clamped = values.map((value, index) => {
+        const minimum = index === 0 ? 0 : values[index - 1];
+        return Math.max(minimum, Math.min(100, Math.round(value)));
+      });
+      await this.writeControls({ mPowerCurve: clamped });
     },
     persistControls() {
       writeStorage(storageKeys.controls, this.controls);
@@ -256,7 +272,7 @@ export const useVehicleStore = defineStore("vehicle", {
       this.clearTimers();
       this.vehicle = null;
       this.bleState = "idle";
-      this.controls = { ...defaultControls, powerCurve: [...defaultControls.powerCurve] };
+      this.controls = { ...defaultControls, powerCurve: [...defaultControls.powerCurve], mPowerCurve: [...defaultControls.mPowerCurve] };
       this.telemetry = { ...defaultTelemetry };
       this.telemetryAvailable = false;
       this.telemetryScenario = "normal";

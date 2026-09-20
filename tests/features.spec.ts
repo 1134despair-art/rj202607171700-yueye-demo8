@@ -19,7 +19,7 @@ async function connectedVehicle() {
   return vehicle;
 }
 
-describe('sixth suite feature parity', () => {
+describe('seventh suite feature parity', () => {
   it('registers the seventh-suite entry, preserves every fifth-suite route and keeps each page local', () => {
     const current = JSON.parse(readFileSync(resolve('src/pages.json'),'utf8'));
     const expected = ['home/index','controls/index','service/index','me/index','me/update-messages','me/firmware-updates','onboarding/bind','controls/ride-modes','controls/power-curve','controls/wheel','service/status','service/battery','service/resources','service/diagnosis','service/diagnosis-result','service/ota','service/ota-detail','service/ota-progress','me/app-update','me/legal','me/about','me/debug'];
@@ -51,6 +51,52 @@ describe('sixth suite feature parity', () => {
     await vi.runAllTimersAsync(); await saving;
     setActivePinia(createPinia());
     expect(useVehicleStore().controls).toMatchObject({regenLevel:1,wheelieMode:'custom',wheelieMaxAngle:55,speedLimit:25});
+  });
+  it('persists the customer general and M-mode settings with separate throttle curves', async () => {
+    const vehicle = await connectedVehicle();
+    const generalCurve = [5, 12, 22, 34, 47, 61, 74, 85, 94, 100];
+    const mCurve = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+    const saving = vehicle.writeControls({
+      brakeRegenLevel: 3,
+      coastingRegenLevel: 2,
+      tcsLevel: 1,
+      brakeCutoff: false,
+      electronicParking: false,
+      creepLevel: 3,
+      chargingPower: 'max',
+      driftMode: true,
+      emergencyCharging: true,
+      wheelieEnabled: true,
+      mPowerPercent: 95,
+      mTorquePercent: 90,
+      mSpeedLimit: 85,
+      mCoastingRegenLevel: 2,
+      mBrakeRegenLevel: 3,
+      mBrakeCutoff: false,
+      mTipOverCutoff: true,
+      powerCurve: generalCurve,
+      mPowerCurve: mCurve,
+    });
+    await vi.runAllTimersAsync(); await saving;
+    setActivePinia(createPinia());
+    expect(useVehicleStore().controls).toMatchObject({
+      brakeRegenLevel: 3,
+      chargingPower: 'max',
+      wheelieEnabled: true,
+      mPowerPercent: 95,
+      mSpeedLimit: 85,
+      powerCurve: generalCurve,
+      mPowerCurve: mCurve,
+    });
+  });
+  it('uses tap controls instead of drag-only controls for customer settings', () => {
+    const ravenSource = readFileSync(resolve('src/pages/raven/index.vue'), 'utf8');
+    expect(ravenSource).not.toContain('@touchmove');
+    expect(ravenSource).not.toContain('@touchstart');
+    expect(ravenSource).not.toContain('<slider');
+    expect(ravenSource).not.toContain('dragCurvePoint');
+    expect(ravenSource).toContain('curve-point-editor');
+    expect(ravenSource).toContain('tap-stepper');
   });
   it('rejects disconnected writes and does not persist failed writes', async () => {
     const vehicle = useVehicleStore();
@@ -130,7 +176,9 @@ describe('sixth suite feature parity', () => {
     const faulty = diagnosis.run('motor-sensor');
     await vi.runAllTimersAsync(); expect((await faulty)?.healthy).toBe(false);
     setActivePinia(createPinia());
-    expect(useDiagnosisStore().latest?.items.some(item => item.code === 'MTR-P021')).toBe(true);
+    expect(useDiagnosisStore().latest?.items).toHaveLength(3);
+    expect(useDiagnosisStore().latest?.items.map(item => item.module)).toEqual(['BMS', 'MCU', 'Display']);
+    expect(useDiagnosisStore().latest?.items.some(item => item.code === 'MCU-P021')).toBe(true);
   });
   it('requires verification and updates the shared firmware count after install', async () => {
     const ota = useOtaStore();

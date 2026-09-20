@@ -5,6 +5,8 @@ export type BleState = "idle" | "scanning" | "connecting" | "connected" | "faile
 export type OtaStage = "idle" | "checking" | "available" | "downloading" | "verifying" | "transferring" | "paused" | "installing" | "restarting" | "success" | "failed" | "rollback";
 export type WheelieMode = "off" | "practice" | "advanced" | "master" | "custom";
 export type SpeedLimit = 0 | 25 | 45;
+export type RideGear = "eco" | "sport" | "m" | "creep";
+export type ChargingPower = 400 | 600 | 800 | 1000 | 1200 | 1400 | 1600 | 1800 | "max";
 export type TelemetryScenario = "normal" | "overheat" | "overvoltage" | "no-data";
 export type ModuleRuntimeStatus = "normal" | "warning" | "no-data";
 export type ControlReadState = "idle" | "loading" | "success" | "failed";
@@ -34,14 +36,34 @@ export interface ControlSettings {
   sideStandSensor: boolean;
   hillDescent: boolean;
   regenLevel: number;
+  brakeRegenLevel: number;
+  coastingRegenLevel: number;
+  tcsLevel: number;
+  brakeCutoff: boolean;
+  electronicParking: boolean;
+  creepLevel: number;
+  chargingPower: ChargingPower;
+  driftMode: boolean;
+  emergencyCharging: boolean;
+  wheelieEnabled: boolean;
   wheelieMode: WheelieMode;
   wheelieMaxAngle: number;
   speedLimit: SpeedLimit;
+  mPowerPercent: number;
+  mTorquePercent: number;
+  mSpeedLimit: number;
+  mCoastingRegenLevel: number;
+  mBrakeRegenLevel: number;
+  mBrakeCutoff: boolean;
+  mTipOverCutoff: boolean;
   wheelCircumference: number;
   powerCurve: number[];
+  mPowerCurve: number[];
 }
 
 export interface Telemetry {
+  totalMileage: number;
+  rideGear: RideGear;
   soc: number;
   soh: number;
   voltage: number;
@@ -56,7 +78,7 @@ export interface Telemetry {
 
 export interface DiagnosisItem {
   id: string;
-  module: "ECU" | "BMS" | "Motor" | "Controller";
+  module: "BMS" | "MCU" | "Display";
   status: "pending" | "checking" | "ok" | "warning";
   code?: string;
   message?: string;
