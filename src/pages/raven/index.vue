@@ -133,7 +133,7 @@ const safetyControls = computed(() => [
   { icon: Gauge, name: t("controls.hillDescent"), detail: t("controls.hillDescentCopy") },
 ]);
 const modules = computed(() => [l("Vehicle Controller ECU", "车辆控制器 ECU"), l("Battery Management BMS", "电池管理 BMS"), l("Motor", "电机"), l("Main Controller", "主控制器")]);
-const diagnosticModules = computed(() => [l("Battery Check", "电池检测"), l("Controller (MCU) Check", "控制器（MCU）检测"), l("Instrument Check", "仪表检测")]);
+const diagnosticModules = computed(() => [l("Battery Check", "电池检测"), l("Controller Check", "控制器检测"), l("Instrument Check", "仪表检测")]);
 const resources = computed(() => [
   { id: "repair-manual", fileName: "binsen-repair-manual.pdf", icon: BookOpen, name: t("resources.items.repairManual"), detail: t("resources.details.repairManual"), type: "PDF" },
   { id: "fault-code-table", fileName: "binsen-fault-code-table.pdf", icon: Activity, name: t("resources.items.faultCodes"), detail: t("resources.details.faultCodes"), type: "PDF" },
@@ -672,7 +672,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
           <button @click="toggleConnection"><Bluetooth :size="15" /><span>{{ l('Bluetooth', '蓝牙') }}</span><b :class="{ offline: !connected }">{{ connectionText }}</b></button>
           <button data-testid="gear-select-trigger" :aria-expanded="gearModalOpen" aria-haspopup="dialog" :disabled="!connected || Boolean(operation)" @click="openGearModal"><Gauge :size="15" /><span>{{ l('Current Gear', '当前档位') }}</span><b>{{ vehicle.hasTelemetry ? gearLabel : '--' }}</b></button>
         </view>
-        <view class="metrics three"><view><b>{{ vehicle.hasTelemetry ? `${telemetry.batteryTemp}°C` : '--' }}</b><span>{{ t('home.batteryTemp') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.motorTemp}°C` : '--' }}</b><span>{{ t('service.motorTemp') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.controllerTemp}°C` : '--' }}</b><span>{{ l('Controller (MCU) Temp','控制器（MCU）温度') }}</span></view></view>
+        <view class="metrics three"><view><b>{{ vehicle.hasTelemetry ? `${telemetry.batteryTemp}°C` : '--' }}</b><span>{{ t('home.batteryTemp') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.motorTemp}°C` : '--' }}</b><span>{{ t('service.motorTemp') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.controllerTemp}°C` : '--' }}</b><span>{{ l('Controller Temp','控制器温度') }}</span></view></view>
         <view class="dashboard-data-grid telemetry-cards">
           <button class="dashboard-data-item" @click="open('battery')"><view class="round-icon lime"><BatteryCharging :size="16" /></view><view><small>{{ l('Battery', '电量') }}</small><b>{{ vehicle.hasTelemetry ? `${telemetry.soc}%` : '--' }}</b></view></button>
           <view class="dashboard-data-item"><view class="round-icon teal"><SlidersHorizontal :size="16" /></view><view><small>{{ l('Total Mileage','总里程') }}</small><b>{{ vehicle.hasTelemetry ? `${telemetry.totalMileage} km` : '--' }}</b></view></view>
@@ -754,7 +754,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
       </view>
 
       <view v-else-if="screen === 'diagnostics'" class="page-content diagnostics-screen">
-        <view class="diagnostic-hero"><view class="progress-circle"><b>{{ diagnosisProgress }}%</b><small>{{ t('diagnosis.complete') }}</small></view><h2>{{ l('Three Vehicle Checks', '三项车况检测') }}</h2><p>{{ l('Battery, controller MCU and instrument cluster', '检测电池、控制器（MCU）与仪表') }}</p></view><view class="line-list diagnostic-list"><view v-for="(item,index) in diagnosis.items" :key="item.id"><i :class="item.status" /><view><b>{{ diagnosticModules[index] }}</b><small>{{ item.code || (item.status==='checking'?l('Scanning module','正在扫描模块'):item.status==='ok'?t('diagnosis.messages.ok'):t('diagnosis.waiting')) }}</small></view><span :class="item.status">{{ item.status==='pending'?t('diagnosis.status.pending'):item.status==='checking'?t('diagnosis.status.checking'):item.status==='ok'?t('diagnosis.status.ok'):t('diagnosis.status.warning') }}</span></view></view><text class="section-label">{{ l('DIAGNOSTIC INFO', '诊断说明') }}</text><button v-if="diagnosis.latest" class="note-line result-link" @click="navigate('/pages/service/diagnosis-result')"><view><b>{{ t('diagnosis.viewLatest') }}</b><small>{{ l('Fault codes, descriptions and recommended actions', '查看故障码、故障说明和处理建议') }}</small></view><ChevronRight :size="15" /></button><view v-else class="note-line"><view><b>{{ l('A full scan takes about 30 seconds', '完整扫描大约需要 30 秒') }}</b><small>{{ l('Keep the bike stationary and Bluetooth connected during the scan', '扫描期间请保持车辆静止并维持蓝牙连接') }}</small></view></view>
+        <view class="diagnostic-hero"><view class="progress-circle"><b>{{ diagnosisProgress }}%</b><small>{{ t('diagnosis.complete') }}</small></view><h2>{{ l('Three Vehicle Checks', '三项车况检测') }}</h2><p>{{ l('Battery, controller and instrument cluster', '检测电池、控制器与仪表') }}</p></view><view class="line-list diagnostic-list"><view v-for="(item,index) in diagnosis.items" :key="item.id"><i :class="item.status" /><view><b>{{ diagnosticModules[index] }}</b><small>{{ item.code || (item.status==='checking'?l('Scanning module','正在扫描模块'):item.status==='ok'?t('diagnosis.messages.ok'):t('diagnosis.waiting')) }}</small></view><span :class="item.status">{{ item.status==='pending'?t('diagnosis.status.pending'):item.status==='checking'?t('diagnosis.status.checking'):item.status==='ok'?t('diagnosis.status.ok'):t('diagnosis.status.warning') }}</span></view></view><text class="section-label">{{ l('DIAGNOSTIC INFO', '诊断说明') }}</text><button v-if="diagnosis.latest" class="note-line result-link" @click="navigate('/pages/service/diagnosis-result')"><view><b>{{ t('diagnosis.viewLatest') }}</b><small>{{ l('Fault codes, descriptions and recommended actions', '查看故障码、故障说明和处理建议') }}</small></view><ChevronRight :size="15" /></button><view v-else class="note-line"><view><b>{{ l('A full scan takes about 30 seconds', '完整扫描大约需要 30 秒') }}</b><small>{{ l('Keep the bike stationary and Bluetooth connected during the scan', '扫描期间请保持车辆静止并维持蓝牙连接') }}</small></view></view>
       </view>
 
       <view v-else-if="screen === 'ota'" class="page-content ota-screen">
@@ -869,7 +869,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 </template>
 
 <style scoped lang="scss">
-.raven-app { --lime:#a4f45a; --orange:#d8703a; --teal:#35c6bd; --line:#242824; --muted:#747a74; --surface:#141714; --ink:#f2f4f0; --v3-divider:#303530; --v3-shadow-raised:0 18px 48px rgba(0,0,0,.55); --bs-vi-sys-color-background-overlay:rgba(0,0,0,.76); --bs-vi-sys-color-status-danger-background:#2e1715; height: min(100dvh,932px); display:flex; flex-direction:column; overflow:hidden; color:#f2f4f0; background:#080a09; font-family:Arial,"PingFang SC",sans-serif; }
+.raven-app { --lime:#a4f45a; --orange:#d8703a; --teal:#35c6bd; --line:#242824; --muted:#747a74; --surface:#141714; --ink:#f2f4f0; --v3-divider:#303530; --v3-shadow-raised:0 18px 48px rgba(0,0,0,.55); --bs-vi-sys-color-background-overlay:rgba(0,0,0,.42); --bs-vi-sys-color-status-danger-background:#2e1715; height: min(100dvh,932px); display:flex; flex-direction:column; overflow:hidden; color:#f2f4f0; background:#080a09; font-family:Arial,"PingFang SC",sans-serif; }
 .raven-app button { border:0; background:transparent; color:inherit; font:inherit; line-height:normal; letter-spacing:0; }
 .raven-app button::after { border:0; }
 .raven-app button[disabled] { color:inherit; }
@@ -1115,6 +1115,8 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .modal-primary { display:flex; padding:0; align-items:center; justify-content:center; border-color:var(--lime)!important; background:var(--lime)!important; color:#101510!important; }
 .rename-vehicle-field{display:flex;height:48px;margin-top:18px;padding:0 11px;align-items:center;gap:8px;border:1px solid #383e38;border-radius:8px;background:#0f120f}.rename-vehicle-field input{min-width:0;height:46px;flex:1;color:#f2f4f0;font-size:15px;text-align:left}.rename-vehicle-field text{flex:0 0 auto;color:#707770;font-size:10px}
 .raven-app :deep(.modal-panel) { max-height: calc(100dvh - 40px); overflow-y: auto; border-radius: 8px; background:#141714; }
+.raven-app :deep(.modal-scrim),
+.raven-app :deep(.sheet-scrim) { background:rgba(0,0,0,.42); backdrop-filter:blur(2px); }
 .raven-app :deep(.modal-title) { color:#f2f4f0; }
 .raven-app :deep(.modal-icon) { border-radius:8px; background:#2e1715; }
 .profile-bike { margin-bottom: 18px; }
