@@ -31,6 +31,7 @@ export interface Vehicle {
 }
 
 export interface ControlSettings {
+  rideGear: RideGear;
   autoPark: boolean;
   tipOverCutoff: boolean;
   sideStandSensor: boolean;

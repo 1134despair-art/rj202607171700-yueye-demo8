@@ -16,9 +16,8 @@ import { useVehicleStore } from "@/stores/vehicle";
 import { useOtaStore } from "@/stores/ota";
 import { useDiagnosisStore } from "@/stores/diagnosis";
 import { useAppStore } from "@/stores/app";
-import type { ChargingPower, ControlSettings, Language, SpeedLimit, WheelieMode } from "@/types";
+import type { ChargingPower, ControlSettings, Language, RideGear, SpeedLimit, WheelieMode } from "@/types";
 import { readStorage, storageKeys, writeStorage } from "@/utils/storage";
-import { WHEEL_CIRCUMFERENCE_MAX, WHEEL_CIRCUMFERENCE_MIN } from "@/utils/wheelCircumference";
 import {
   normalizeWheelieAngle,
   WHEELIE_ANGLE_TICKS,
@@ -27,7 +26,7 @@ import bikeImage from "@/assets/ui/illustrations/binsen-x5-product-right@3x.png"
 import wheelieVehicleImage from "@/assets/ui/illustrations/binsen-x5-real-wheelie@3x.png";
 import logoImage from "@/assets/ui/branding/binsen-logo-horizontal-inverse.png";
 
-type Screen = "dashboard" | "controls" | "general" | "ride" | "m-mode" | "curve" | "wheel" | "battery" |
+type Screen = "dashboard" | "controls" | "general" | "ride" | "m-mode" | "curve" | "battery" |
   "status" | "diagnostics" | "ota" | "vehicle" | "service" | "profile";
 
 const screen = ref<Screen>("dashboard");
@@ -39,10 +38,15 @@ const app = useAppStore();
 const feedback = useFeedback();
 const { t } = useI18n();
 const toggles = ref([vehicle.controls.autoPark, vehicle.controls.tipOverCutoff, vehicle.controls.sideStandSensor, vehicle.controls.hillDescent]);
-const circumference = ref(vehicle.controls.wheelCircumference);
 const activeCurve = ref(4);
 const curveValues = ref([...vehicle.controls.powerCurve]);
+const curveDragging = ref(false);
 const curveProfile = ref<"general" | "m">("general");
+const mRangeDrafts = ref({
+  mPowerPercent: vehicle.controls.mPowerPercent,
+  mTorquePercent: vehicle.controls.mTorquePercent,
+  mSpeedLimit: vehicle.controls.mSpeedLimit,
+});
 const regenLevel = ref(vehicle.controls.regenLevel);
 const wheelieMode = ref<WheelieMode>(vehicle.controls.wheelieMode);
 const wheelieMaxAngle = ref(normalizeWheelieAngle(vehicle.controls.wheelieMaxAngle));
@@ -59,6 +63,8 @@ const vehicleSearchState = ref<VehicleSearchState>("idle");
 const renameVehicleOpen = ref(false);
 const vehicleNameDraft = ref("");
 const languageModalOpen = ref(false);
+const gearModalOpen = ref(false);
+const pendingGear = ref<RideGear | null>(null);
 let vehicleSearchTimer: ReturnType<typeof setTimeout> | undefined;
 
 const SERVICE_PHONE = "+86 400 000 2026";
@@ -70,7 +76,7 @@ const l = (english: string, chinese: string) => isZh.value ? chinese : english;
 const title = computed(() => ({
   dashboard: "", controls: t("controls.title"), general: l("General Settings", "通用设置"), ride: l("Wheelie Settings", "翘头设置"),
   "m-mode": l("M Mode Settings", "M档设置"), curve: t("controls.curveTitle"),
-  wheel: t("controls.wheelTitle"), battery: t("service.batteryTitle"), status: t("service.statusTitle"),
+  battery: t("service.batteryTitle"), status: t("service.statusTitle"),
   diagnostics: l("Vehicle Check", "车况检测"), ota: t("ota.title"), vehicle: vehicle.isBound ? t("bind.manager") : t("bind.title"),
   service: t("service.title"), profile: t("me.title"),
 })[screen.value]);
@@ -94,6 +100,12 @@ const selectedCurveMaximum = computed(() => activeCurve.value === curveValues.va
 const gearLabel = computed(() => ({
   eco: l("ECO", "经济"), sport: l("SPORT", "运动"), m: "M", creep: l("CREEP", "蠕行"),
 })[telemetry.value.rideGear]);
+const gearOptions = computed<Array<{ value: RideGear; label: string; detail: string }>>(() => [
+  { value: "eco", label: l("ECO", "经济"), detail: l("Smooth output and longer range", "动力平顺，兼顾续航") },
+  { value: "sport", label: l("SPORT", "运动"), detail: l("Faster throttle response", "动力响应更迅速") },
+  { value: "m", label: "M", detail: l("Uses the custom M-mode profile", "使用 M 档自定义参数") },
+  { value: "creep", label: l("CREEP", "蠕行"), detail: l("Low-speed assisted movement", "低速辅助行驶") },
+]);
 const levelLabel = (level: number) => level === 0 ? t("common.off") : l(`Level ${level}`, `${level}档`);
 const chargingPowerLabel = (value: ChargingPower) => value === "max" ? "MAX" : `${value} W`;
 const diagnosisProgress = computed(() => diagnosis.progress);
@@ -105,7 +117,6 @@ const bottomActions: Partial<Record<Screen, string>> = {
 };
 const bottomAction = computed(() => {
   const actions: Partial<Record<Screen, string>> = {
-    wheel: t("controls.saveCircumference"),
     status: l("Refresh Vehicle Status", "刷新车辆状态"),
     diagnostics: diagnosticButton.value,
   };
@@ -131,8 +142,12 @@ const safetyKeys: Array<keyof ControlSettings> = ["autoPark", "tipOverCutoff", "
 
 function syncDrafts() {
   toggles.value = [vehicle.controls.autoPark, vehicle.controls.tipOverCutoff, vehicle.controls.sideStandSensor, vehicle.controls.hillDescent];
-  circumference.value = vehicle.controls.wheelCircumference;
   curveValues.value = [...vehicle.controls.powerCurve];
+  mRangeDrafts.value = {
+    mPowerPercent: vehicle.controls.mPowerPercent,
+    mTorquePercent: vehicle.controls.mTorquePercent,
+    mSpeedLimit: vehicle.controls.mSpeedLimit,
+  };
   regenLevel.value = vehicle.controls.regenLevel;
   wheelieMode.value = vehicle.controls.wheelieMode;
   wheelieMaxAngle.value = normalizeWheelieAngle(vehicle.controls.wheelieMaxAngle);
@@ -295,9 +310,57 @@ function adjustCurvePoint(delta: number) {
 }
 
 type NumericControlKey = "mPowerPercent" | "mTorquePercent" | "mSpeedLimit";
-function adjustNumericControl(key: NumericControlKey, delta: number, minimum: number, maximum: number, label: string) {
-  const next = Math.max(minimum, Math.min(maximum, Number(vehicle.controls[key]) + delta));
-  if (next !== vehicle.controls[key]) void applyControl(key, next, label);
+function previewMRange(key: NumericControlKey, value: number) {
+  mRangeDrafts.value[key] = Math.max(30, Math.min(100, Math.round(value)));
+}
+
+async function commitMRange(key: NumericControlKey, value: number, label: string) {
+  const previous = vehicle.controls[key];
+  const next = Math.max(30, Math.min(100, Math.round(value)));
+  mRangeDrafts.value[key] = next;
+  if (next === previous || !connected.value || operation.value) return;
+  operation.value = key;
+  try {
+    await vehicle.writeControl(key, next);
+    mRangeDrafts.value[key] = vehicle.controls[key];
+    notify(l(`${label} updated`, `${label}已更新`));
+  } catch (reason) {
+    mRangeDrafts.value[key] = previous;
+    notify(reason instanceof Error ? reason.message : t("common.unableToSave"), "danger");
+  } finally {
+    operation.value = "";
+  }
+}
+
+function updateCurveFromPointer(event: PointerEvent) {
+  event.preventDefault();
+  const chart = event.currentTarget as SVGSVGElement;
+  const bounds = chart.getBoundingClientRect();
+  if (!bounds.width || !bounds.height) return;
+  const chartX = ((event.clientX - bounds.left) / bounds.width) * 320;
+  const chartY = ((event.clientY - bounds.top) / bounds.height) * 190;
+  const index = Math.max(0, Math.min(9, Math.round((chartX - 10) / (300 / 9))));
+  const value = Math.max(0, Math.min(100, Math.round((180 - chartY) / 1.6)));
+  activeCurve.value = index;
+  setCurvePoint(index, value);
+}
+
+function startCurveDrag(event: PointerEvent) {
+  if (event.pointerType === "mouse" && event.button !== 0) return;
+  curveDragging.value = true;
+  (event.currentTarget as SVGSVGElement).setPointerCapture?.(event.pointerId);
+  updateCurveFromPointer(event);
+}
+
+function dragCurvePoint(event: PointerEvent) {
+  if (curveDragging.value) updateCurveFromPointer(event);
+}
+
+function stopCurveDrag(event: PointerEvent) {
+  if (!curveDragging.value) return;
+  curveDragging.value = false;
+  const chart = event.currentTarget as SVGSVGElement;
+  if (chart.hasPointerCapture?.(event.pointerId)) chart.releasePointerCapture(event.pointerId);
 }
 
 function resetCurve() { curveValues.value = [8, 17, 27, 39, 52, 64, 74, 83, 92, 100]; }
@@ -311,15 +374,6 @@ async function saveCurve() {
     else curveValues.value = [...vehicle.controls.powerCurve];
     notify(t("controls.curveSaved"));
   }
-  catch (reason) { notify(reason instanceof Error ? reason.message : t("common.unableToSave"), "danger"); }
-  finally { operation.value = ""; }
-}
-
-function adjustCircumference(delta: number) { circumference.value = Math.max(WHEEL_CIRCUMFERENCE_MIN, Math.min(WHEEL_CIRCUMFERENCE_MAX, circumference.value + delta)); }
-async function saveCircumference() {
-  if (!(await ensureConnected())) return;
-  operation.value = "wheel";
-  try { await vehicle.writeControl("wheelCircumference", circumference.value); notify(t("controls.wheelSaved")); }
   catch (reason) { notify(reason instanceof Error ? reason.message : t("common.unableToSave"), "danger"); }
   finally { operation.value = ""; }
 }
@@ -496,15 +550,40 @@ function selectLanguage(option: (typeof languageOptions)[number]) {
   app.setLanguage(option.value);
   notify(t("me.languageChanged", { language: t(option.labelKey) }));
 }
+function openGearModal() {
+  if (!connected.value || operation.value) {
+    if (!connected.value) notify(t("controls.connectRequired"), "warning");
+    return;
+  }
+  gearModalOpen.value = true;
+}
+function closeGearModal() { gearModalOpen.value = false; }
+async function selectGear(gear: RideGear) {
+  if (gear === vehicle.controls.rideGear) {
+    closeGearModal();
+    return;
+  }
+  operation.value = "rideGear";
+  pendingGear.value = gear;
+  try {
+    await vehicle.writeControl("rideGear", gear);
+    closeGearModal();
+    notify(l("Ride gear updated", "当前档位已切换"));
+  } catch (reason) {
+    notify(reason instanceof Error ? reason.message : t("common.unableToSave"), "danger");
+  } finally {
+    operation.value = "";
+    pendingGear.value = null;
+  }
+}
 
 async function handleBottomAction() {
-  if (screen.value === "wheel") return saveCircumference();
   if (screen.value === "status") return refreshVehicle();
   if (screen.value === "diagnostics") return runDiagnostics();
 }
 
 const primaryScreens: Screen[] = ["dashboard", "controls", "service", "profile"];
-const validScreens: Screen[] = ["dashboard", "controls", "general", "ride", "m-mode", "curve", "wheel", "battery", "status", "diagnostics", "ota", "vehicle", "service", "profile"];
+const validScreens: Screen[] = ["dashboard", "controls", "general", "ride", "m-mode", "curve", "battery", "status", "diagnostics", "ota", "vehicle", "service", "profile"];
 
 function open(next: Screen) {
   if (next === screen.value) return;
@@ -515,7 +594,7 @@ function open(next: Screen) {
 function back() {
   const previous = screenHistory.value.pop();
   if (previous) screen.value = previous;
-  else if (["general", "ride", "m-mode", "curve", "wheel"].includes(screen.value)) screen.value = "controls";
+  else if (["general", "ride", "m-mode", "curve"].includes(screen.value)) screen.value = "controls";
   else screen.value = "dashboard";
 }
 function tab(next: "dashboard" | "controls" | "service" | "profile") {
@@ -561,7 +640,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
         <button class="model-line" @click="open('vehicle')"><view><text class="model">{{ vehicleName }}</text><text>{{ vehicle.isBound ? l('Off-road Series · CN','越野系列 · CN') : t('bind.waiting') }}</text></view><text>{{ vehicle.vehicle?.model || t('bind.title') }}</text></button>
         <view class="connection-gear-strip">
           <button @click="toggleConnection"><Bluetooth :size="15" /><span>{{ l('Bluetooth', '蓝牙') }}</span><b :class="{ offline: !connected }">{{ connectionText }}</b></button>
-          <view><Gauge :size="15" /><span>{{ l('Current Gear', '当前档位') }}</span><b>{{ vehicle.hasTelemetry ? gearLabel : '--' }}</b></view>
+          <button data-testid="gear-select-trigger" :aria-expanded="gearModalOpen" aria-haspopup="dialog" :disabled="!connected || Boolean(operation)" @click="openGearModal"><Gauge :size="15" /><span>{{ l('Current Gear', '当前档位') }}</span><b>{{ vehicle.hasTelemetry ? gearLabel : '--' }}</b></button>
         </view>
         <view class="metrics three"><view><b>{{ vehicle.hasTelemetry ? `${telemetry.batteryTemp}°C` : '--' }}</b><span>{{ t('home.batteryTemp') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.motorTemp}°C` : '--' }}</b><span>{{ t('service.motorTemp') }}</span></view><view><b>{{ vehicle.hasTelemetry ? `${telemetry.controllerTemp}°C` : '--' }}</b><span>{{ l('Controller (MCU) Temp','控制器（MCU）温度') }}</span></view></view>
         <view class="dashboard-data-grid telemetry-cards">
@@ -579,8 +658,6 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
           <button @click="open('ride')"><view class="round-icon orange"><Bike :size="16" /></view><view><b>{{ l('Wheelie Settings', '翘头设置') }}</b><small>{{ l('Control, mode and target angle', '控制开关、模式与角度选择') }}</small></view><span>{{ vehicle.controls.wheelieEnabled ? wheelieLabel : t('common.off') }} <ChevronRight :size="16" /></span></button>
           <button @click="open('m-mode')"><view class="round-icon teal"><Gauge :size="16" /></view><view><b>{{ l('M Mode Settings', 'M档设置') }}</b><small>{{ l('Power, torque, speed and throttle curve', '功率、扭矩、车速与转把行程') }}</small></view><span>{{ vehicle.controls.mPowerPercent }}% <ChevronRight :size="16" /></span></button>
         </view>
-        <text class="section-label">{{ l('VEHICLE PARAMETERS', '车辆参数') }}</text>
-        <view class="line-list tune-list"><button @click="open('wheel')"><view><b>{{ t('controls.wheel') }}</b><small>{{ l('Used for speed and mileage calculations', '用于车速与里程计算') }}</small></view><span>{{ circumference }} mm <ChevronRight :size="15" /></span></button></view>
       </view>
 
       <view v-else-if="screen === 'general'" class="page-content settings-screen">
@@ -621,9 +698,9 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 
       <view v-else-if="screen === 'm-mode'" class="page-content settings-screen m-mode-screen">
         <text class="settings-intro">{{ l('M mode applies its own power, torque, speed and safety profile.', 'M 档使用独立的功率、扭矩、车速与安全配置。') }}</text>
-        <view class="setting-block range-setting"><view class="setting-title"><view><b>{{ l('Power Output', '功率设置') }}</b><small>30% - MAX (100%)</small></view></view><view class="tap-stepper"><button :aria-label="l('Decrease power','降低功率')" :disabled="!connected || Boolean(operation) || vehicle.controls.mPowerPercent<=30" @click="adjustNumericControl('mPowerPercent', -5, 30, 100, l('Power output','功率设置'))"><Minus :size="19" /></button><strong>{{ vehicle.controls.mPowerPercent === 100 ? 'MAX' : `${vehicle.controls.mPowerPercent}%` }}</strong><button :aria-label="l('Increase power','提高功率')" :disabled="!connected || Boolean(operation) || vehicle.controls.mPowerPercent>=100" @click="adjustNumericControl('mPowerPercent', 5, 30, 100, l('Power output','功率设置'))"><Plus :size="19" /></button></view></view>
-        <view class="setting-block range-setting"><view class="setting-title"><view><b>{{ l('Torque Output', '扭矩设置') }}</b><small>30% - MAX (100%)</small></view></view><view class="tap-stepper"><button :aria-label="l('Decrease torque','降低扭矩')" :disabled="!connected || Boolean(operation) || vehicle.controls.mTorquePercent<=30" @click="adjustNumericControl('mTorquePercent', -5, 30, 100, l('Torque output','扭矩设置'))"><Minus :size="19" /></button><strong>{{ vehicle.controls.mTorquePercent === 100 ? 'MAX' : `${vehicle.controls.mTorquePercent}%` }}</strong><button :aria-label="l('Increase torque','提高扭矩')" :disabled="!connected || Boolean(operation) || vehicle.controls.mTorquePercent>=100" @click="adjustNumericControl('mTorquePercent', 5, 30, 100, l('Torque output','扭矩设置'))"><Plus :size="19" /></button></view></view>
-        <view class="setting-block range-setting"><view class="setting-title"><view><b>{{ l('Speed Limit', '车速限制') }}</b><small>{{ l('30 km/h to vehicle maximum', '30km/h 至车辆最高车速') }}</small></view></view><view class="tap-stepper"><button :aria-label="l('Decrease speed limit','降低限速')" :disabled="!connected || Boolean(operation) || vehicle.controls.mSpeedLimit<=30" @click="adjustNumericControl('mSpeedLimit', -5, 30, 100, l('Speed limit','车速限制'))"><Minus :size="19" /></button><strong>{{ vehicle.controls.mSpeedLimit >= 100 ? 'MAX' : `${vehicle.controls.mSpeedLimit} km/h` }}</strong><button :aria-label="l('Increase speed limit','提高限速')" :disabled="!connected || Boolean(operation) || vehicle.controls.mSpeedLimit>=100" @click="adjustNumericControl('mSpeedLimit', 5, 30, 100, l('Speed limit','车速限制'))"><Plus :size="19" /></button></view></view>
+        <view class="setting-block range-setting"><view class="setting-title"><view><b>{{ l('Power Output', '功率设置') }}</b><small>30% - MAX (100%)</small></view><em>{{ mRangeDrafts.mPowerPercent === 100 ? 'MAX' : `${mRangeDrafts.mPowerPercent}%` }}</em></view><slider data-testid="m-power-slider" :value="mRangeDrafts.mPowerPercent" :min="30" :max="100" :step="1" active-color="#a4f45a" background-color="#303530" block-color="#a4f45a" :block-size="22" :disabled="!connected || Boolean(operation)" @changing="previewMRange('mPowerPercent', Number($event.detail.value))" @change="commitMRange('mPowerPercent', Number($event.detail.value), l('Power output','功率设置'))"/><view class="range-scale"><span>30%</span><span>MAX</span></view></view>
+        <view class="setting-block range-setting"><view class="setting-title"><view><b>{{ l('Torque Output', '扭矩设置') }}</b><small>30% - MAX (100%)</small></view><em>{{ mRangeDrafts.mTorquePercent === 100 ? 'MAX' : `${mRangeDrafts.mTorquePercent}%` }}</em></view><slider data-testid="m-torque-slider" :value="mRangeDrafts.mTorquePercent" :min="30" :max="100" :step="1" active-color="#a4f45a" background-color="#303530" block-color="#a4f45a" :block-size="22" :disabled="!connected || Boolean(operation)" @changing="previewMRange('mTorquePercent', Number($event.detail.value))" @change="commitMRange('mTorquePercent', Number($event.detail.value), l('Torque output','扭矩设置'))"/><view class="range-scale"><span>30%</span><span>MAX</span></view></view>
+        <view class="setting-block range-setting"><view class="setting-title"><view><b>{{ l('Speed Limit', '车速限制') }}</b><small>{{ l('30 km/h to vehicle maximum', '30km/h 至车辆最高车速') }}</small></view><em>{{ mRangeDrafts.mSpeedLimit >= 100 ? 'MAX' : `${mRangeDrafts.mSpeedLimit} km/h` }}</em></view><slider data-testid="m-speed-slider" :value="mRangeDrafts.mSpeedLimit" :min="30" :max="100" :step="1" active-color="#a4f45a" background-color="#303530" block-color="#a4f45a" :block-size="22" :disabled="!connected || Boolean(operation)" @changing="previewMRange('mSpeedLimit', Number($event.detail.value))" @change="commitMRange('mSpeedLimit', Number($event.detail.value), l('Speed limit','车速限制'))"/><view class="range-scale"><span>30 km/h</span><span>MAX</span></view></view>
         <button class="setting-link" @click="openCurve('m')"><view><b>{{ l('Throttle Travel Curve', '转把行程设置') }}</b><small>{{ l('Independent 10 × 10 opening / acceleration curve', 'M 档独立 10 × 10 开度 / 加速度曲线') }}</small></view><span>{{ l('Configure', '设置') }} <ChevronRight :size="15" /></span></button>
         <view class="setting-block"><view class="setting-title"><view><b>{{ l('Coasting Energy Recovery', '滑动动能回收') }}</b></view><em>{{ levelLabel(vehicle.controls.mCoastingRegenLevel) }}</em></view><view class="segment four"><button v-for="level in [0,1,2,3]" :key="level" :class="{ 'active-orange': vehicle.controls.mCoastingRegenLevel===level }" :disabled="!connected || Boolean(operation)" @click="applyControl('mCoastingRegenLevel', level, l('M mode coasting recovery','M档滑动动能回收'))">{{ levelLabel(level) }}</button></view></view>
         <view class="setting-block"><view class="setting-title"><view><b>{{ l('Brake Energy Recovery', '制动动能回收') }}</b></view><em>{{ levelLabel(vehicle.controls.mBrakeRegenLevel) }}</em></view><view class="segment four"><button v-for="level in [0,1,2,3]" :key="level" :class="{ 'active-orange': vehicle.controls.mBrakeRegenLevel===level }" :disabled="!connected || Boolean(operation)" @click="applyControl('mBrakeRegenLevel', level, l('M mode brake recovery','M档制动动能回收'))">{{ levelLabel(level) }}</button></view></view>
@@ -633,14 +710,9 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 
       <view v-else-if="screen === 'curve'" class="page-content curve-screen">
         <text class="eyebrow">{{ curveProfile === 'm' ? l('M MODE PROFILE','M档独立曲线') : l('GENERAL PROFILE','通用曲线') }} · {{ connected?t('common.connected'):t('common.offline') }}</text><h1>{{ l('Throttle Travel Curve', '转把行程设置') }}</h1>
-        <view class="chart-card"><view class="chart-head"><b>10 × 10</b><span>{{ t('controls.curveDrag') }}</span></view><view class="curve-axis curve-axis-y">{{ l('Acceleration','加速度') }}</view><svg class="curve-chart-svg" viewBox="0 0 320 190" :aria-label="t('controls.curveTitle')"><defs><linearGradient id="zone" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#25301e"/><stop offset="1" stop-color="#101510"/></linearGradient></defs><g stroke="#242824" stroke-width="1"><line v-for="step in 11" :key="`h-${step}`" x1="10" x2="310" :y1="20+(step-1)*16" :y2="20+(step-1)*16"/><line v-for="step in 11" :key="`v-${step}`" y1="20" y2="180" :x1="10+(step-1)*30" :x2="10+(step-1)*30"/></g><path d="M10 20L310 180H10Z" fill="url(#zone)"/><polyline :points="curveValues.map((value,index)=>`${10+index*(300/9)},${180-value*1.6}`).join(' ')" fill="none" stroke="#a4f45a" stroke-width="2"/><g fill="#0b0d0b" stroke="#e9eee8" stroke-width="2"><circle v-for="(value,index) in curveValues" :key="index" :cx="10+index*(300/9)" :cy="180-value*1.6" :r="activeCurve===index?6:5" :fill="activeCurve===index?'#a4f45a':'#0b0d0b'" @click="activeCurve=index"/></g></svg><view class="curve-axis curve-axis-x">{{ l('Throttle Opening','转把开度') }} (%)</view><view class="point-grid"><button v-for="(value,index) in curveValues" :key="index" :class="{ active: activeCurve===index }" @click="activeCurve=index"><b>{{ value }}%</b><small>P{{ index+1 }}</small></button></view><view class="curve-point-editor"><view><small>{{ l('Selected Point','当前控制点') }}</small><b>P{{ activeCurve+1 }}</b></view><view class="tap-stepper curve-stepper"><button :aria-label="l('Decrease output','降低输出')" :disabled="curveValues[activeCurve]<=selectedCurveMinimum" @click="adjustCurvePoint(-1)"><Minus :size="19" /></button><strong>{{ curveValues[activeCurve] }}%</strong><button :aria-label="l('Increase output','提高输出')" :disabled="curveValues[activeCurve]>=selectedCurveMaximum" @click="adjustCurvePoint(1)"><Plus :size="19" /></button></view></view></view>
+        <view class="chart-card"><view class="chart-head"><b>10 × 10</b><span>{{ t('controls.curveDrag') }}</span></view><view class="curve-axis curve-axis-y">{{ l('Acceleration','加速度') }}</view><svg data-testid="curve-drag-chart" class="curve-chart-svg" :class="{ dragging: curveDragging }" viewBox="0 0 320 190" :aria-label="t('controls.curveTitle')" @pointerdown="startCurveDrag" @pointermove="dragCurvePoint" @pointerup="stopCurveDrag" @pointercancel="stopCurveDrag"><defs><linearGradient id="zone" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#25301e"/><stop offset="1" stop-color="#101510"/></linearGradient></defs><g stroke="#242824" stroke-width="1"><line v-for="step in 11" :key="`h-${step}`" x1="10" x2="310" :y1="20+(step-1)*16" :y2="20+(step-1)*16"/><line v-for="step in 11" :key="`v-${step}`" y1="20" y2="180" :x1="10+(step-1)*30" :x2="10+(step-1)*30"/></g><path d="M10 20L310 180H10Z" fill="url(#zone)"/><polyline :points="curveValues.map((value,index)=>`${10+index*(300/9)},${180-value*1.6}`).join(' ')" fill="none" stroke="#a4f45a" stroke-width="2"/><g fill="#0b0d0b" stroke="#e9eee8" stroke-width="2"><circle v-for="(value,index) in curveValues" :key="index" :cx="10+index*(300/9)" :cy="180-value*1.6" :r="activeCurve===index?7:6" :fill="activeCurve===index?'#a4f45a':'#0b0d0b'"/></g></svg><view class="curve-axis curve-axis-x">{{ l('Throttle Opening','转把开度') }} (%)</view><view class="point-grid"><button v-for="(value,index) in curveValues" :key="index" :class="{ active: activeCurve===index }" @click="activeCurve=index"><b>{{ value }}%</b><small>P{{ index+1 }}</small></button></view><view class="curve-point-editor"><view><small>{{ l('Selected Point','当前控制点') }}</small><b>P{{ activeCurve+1 }}</b></view><view class="tap-stepper curve-stepper"><button :aria-label="l('Decrease output','降低输出')" :disabled="curveValues[activeCurve]<=selectedCurveMinimum" @click="adjustCurvePoint(-1)"><Minus :size="19" /></button><strong>{{ curveValues[activeCurve] }}%</strong><button :aria-label="l('Increase output','提高输出')" :disabled="curveValues[activeCurve]>=selectedCurveMaximum" @click="adjustCurvePoint(1)"><Plus :size="19" /></button></view></view></view>
         <view class="dual-actions"><button :disabled="operation==='curve'" @click="resetCurve"><RotateCcw :size="16" />{{ t('controls.resetCurve') }}</button><button class="lime-button" :disabled="!connected || operation==='curve'" @click="saveCurve"><LoaderCircle v-if="operation==='curve'" class="spinning" :size="16"/><Save v-else :size="16" />{{ t('controls.saveCurve') }}</button></view>
         <text class="section-label">{{ l('CURVE NOTES','曲线说明') }}</text><view class="note-line"><view><b>{{ l('Horizontal / Vertical', '横轴 / 纵轴') }}</b><small>{{ l('Throttle opening / acceleration, provisional unit', '转把开度 / 加速度，单位暂定') }}</small></view><span>10 × 10</span></view>
-      </view>
-
-      <view v-else-if="screen === 'wheel'" class="page-content wheel-screen">
-        <view class="wheel-control-panel"><text class="center-label">{{ t('controls.wheelCurrent') }}</text><view class="stepper"><button @click="adjustCircumference(-5)"><Minus :size="20" /></button><b>{{ circumference }} <small>mm</small></b><button @click="adjustCircumference(5)"><Plus :size="20" /></button></view><view class="preset"><button :class="{ active:circumference===1684 }" @click="circumference=1684">{{ t('controls.wheelPreset14') }}</button><button :class="{ active:circumference===2001 }" @click="circumference=2001">{{ t('controls.wheelPreset18') }}</button></view></view>
-        <text class="section-label">{{ t('controls.wheelMeasureTitle') }}</text><view class="guide"><view><i>1</i><div><b>{{ t('controls.wheelMark') }}</b><small>{{ t('controls.wheelMarkCopy') }}</small></div></view><view><i>2</i><div><b>{{ t('controls.wheelRoll') }}</b><small>{{ t('controls.wheelRollCopy') }}</small></div></view><view><i>3</i><div><b>{{ t('controls.wheelMeasure') }}</b><small>{{ t('controls.wheelMeasureCopy') }}</small></div></view></view><view class="warning"><Activity :size="15" />{{ t('controls.wheelWarning') }}</view><text class="section-label">{{ t('controls.wheelRecommended') }}</text><view class="note-line"><view><b>{{ l('Input Range','输入范围') }}</b><small>{{ l('Measure using the actual tire specification','请按轮胎规格或实际测量值填写') }}</small></view><span>{{ WHEEL_CIRCUMFERENCE_MIN }}—{{ WHEEL_CIRCUMFERENCE_MAX }} mm</span></view>
       </view>
 
       <view v-else-if="screen === 'battery'" class="page-content battery-screen">
@@ -742,6 +814,25 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
         </button>
       </view>
     </AppModalShell>
+    <AppModalShell :open="gearModalOpen" :title="l('Select Ride Gear', '选择当前档位')" icon="Gauge" data-testid="gear-modal" @dismiss="closeGearModal">
+      <view class="gear-modal-list" role="listbox" :aria-label="l('Select Ride Gear', '选择当前档位')">
+        <button
+          v-for="option in gearOptions"
+          :key="option.value"
+          class="gear-modal-option"
+          :class="{ active: vehicle.controls.rideGear === option.value }"
+          :data-testid="`gear-option-${option.value}`"
+          role="option"
+          :aria-selected="vehicle.controls.rideGear === option.value"
+          :disabled="Boolean(operation)"
+          @click="selectGear(option.value)"
+        >
+          <view><b>{{ option.label }}</b><small>{{ option.detail }}</small></view>
+          <LoaderCircle v-if="operation === 'rideGear' && pendingGear === option.value" class="spinning" :size="18" />
+          <Check v-else-if="vehicle.controls.rideGear === option.value" :size="18" />
+        </button>
+      </view>
+    </AppModalShell>
     <view class="home-indicator" />
     <AppFeedbackHost />
   </view>
@@ -772,6 +863,9 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .raven-app .language-modal-option{display:flex;width:100%;min-height:50px;padding:0 14px;align-items:center;justify-content:space-between;border:1px solid #343a34;border-radius:8px;background:#0f120f;color:#c6cbc5;text-align:left}
 .language-modal-option span{font-size:13px;font-weight:700}
 .raven-app .language-modal-option.active{border-color:var(--lime);background:rgba(164,244,90,.08);color:var(--lime)}
+.gear-modal-list{display:grid;gap:8px;margin-top:18px}
+.raven-app .gear-modal-option{display:flex;width:100%;min-height:58px;padding:8px 14px;align-items:center;justify-content:space-between;gap:12px;border:1px solid #343a34;border-radius:8px;background:#0f120f;color:#c6cbc5;text-align:left}
+.gear-modal-option>view{display:flex;min-width:0;flex:1;flex-direction:column;gap:4px}.gear-modal-option b{font-size:13px}.gear-modal-option small{color:#7f867f;font-size:10px}.raven-app .gear-modal-option.active{border-color:var(--lime);background:rgba(164,244,90,.08);color:var(--lime)}.gear-modal-option.active small{color:#a8b0a7}.gear-modal-option>svg{flex:0 0 auto;color:var(--lime)}
 .fixed-action{position:absolute;z-index:10;right:16px;bottom:15px;left:16px;display:flex;height:49px;align-items:center;justify-content:center;gap:8px;background:var(--lime);color:#101510;font-size:10px;font-weight:800}.bottom-tabs{position:absolute;z-index:10;right:0;bottom:0;left:0;display:grid;height:66px;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:#0e110f}.bottom-tabs button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#5e645e;font-size:8px}.bottom-tabs button.active{color:#f0f3ef}.bottom-tabs button.active::before{position:absolute;top:0;width:30px;height:2px;background:var(--lime);content:''}.home-indicator{position:absolute;z-index:12;bottom:4px;left:50%;width:90px;height:3px;border-radius:3px;background:#eee;transform:translateX(-50%)}
 
 /* Reference-board scale and alignment calibration. */
@@ -1034,6 +1128,10 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .power-grid button.active { border-color:var(--orange)!important; background:#452c22; color:#ef965f; }
 .range-setting slider { margin:14px 0 0; }
 .range-setting .setting-title em { min-width:62px; text-align:right; }
+.range-scale { display:flex; margin-top:-2px; justify-content:space-between; color:#737a73; font-size:9px; font-variant-numeric:tabular-nums; }
+.curve-chart-svg { cursor:grab; touch-action:none; user-select:none; }
+.curve-chart-svg.dragging { cursor:grabbing; }
+.curve-chart-svg circle { pointer-events:none; }
 .curve-axis { color:#737a73; font-size:9px; }
 .curve-axis-y { margin-top:10px; }
 .curve-axis-x { margin:-6px 0 10px; text-align:center; }

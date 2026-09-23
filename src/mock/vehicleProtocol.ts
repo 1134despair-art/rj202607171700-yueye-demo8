@@ -14,7 +14,7 @@ function cloneControls(controls: ControlSettings): ControlSettings {
 
 export function createMockVehicleFrame(controls: ControlSettings, telemetry: Telemetry, scenario: TelemetryScenario): MockVehicleFrame {
   if (scenario === "no-data") return { kind: "vehicle-snapshot", payload: { controls: cloneControls(controls), telemetry: null } };
-  const next = { ...telemetry };
+  const next = { ...telemetry, rideGear: controls.rideGear };
   if (scenario === "overheat") {
     next.batteryTemp = 68;
     next.controllerTemp = 82;

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { tr } from "@/i18n";
-import type { BleState, ChargingPower, ControlReadState, ControlSettings, ModuleRuntimeStatus, SpeedLimit, Telemetry, TelemetryScenario, Vehicle, WheelieMode } from "@/types";
+import type { BleState, ChargingPower, ControlReadState, ControlSettings, ModuleRuntimeStatus, RideGear, SpeedLimit, Telemetry, TelemetryScenario, Vehicle, WheelieMode } from "@/types";
 import { availableVehicles, defaultControls, defaultTelemetry } from "@/mock/seed";
 import { createMockVehicleFrame, parseMockVehicleFrame } from "@/mock/vehicleProtocol";
 import { readStorage, storageKeys, writeStorage } from "@/utils/storage";
@@ -27,12 +27,16 @@ function restoredControls(): ControlSettings {
     ? (stored.wheelieMode ? "practice" : "off")
     : (["off", "practice", "advanced", "master", "custom"].includes(String(stored.wheelieMode)) ? stored.wheelieMode as WheelieMode : defaultControls.wheelieMode);
   const speedLimit: SpeedLimit = [0, 25, 45].includes(Number(stored.speedLimit)) ? Number(stored.speedLimit) as SpeedLimit : 45;
+  const rideGear: RideGear = ["eco", "sport", "m", "creep"].includes(String(stored.rideGear))
+    ? stored.rideGear as RideGear
+    : defaultControls.rideGear;
   const powerCurve = Array.isArray(stored.powerCurve) && stored.powerCurve.length === 10 ? [...stored.powerCurve] : [...defaultControls.powerCurve];
   const mPowerCurve = Array.isArray(stored.mPowerCurve) && stored.mPowerCurve.length === 10 ? [...stored.mPowerCurve] : [...defaultControls.mPowerCurve];
   const chargingPowerOptions: ChargingPower[] = [400, 600, 800, 1000, 1200, 1400, 1600, 1800, "max"];
   const controls: ControlSettings = {
     ...defaultControls,
     ...storedControls,
+    rideGear,
     wheelieMode,
     wheelieMaxAngle: stored.wheelieMaxAngle === undefined
       ? WHEELIE_ANGLE_DEFAULT
@@ -236,6 +240,10 @@ export const useVehicleStore = defineStore("vehicle", {
         powerCurve: values.powerCurve ? [...values.powerCurve] : this.controls.powerCurve,
         mPowerCurve: values.mPowerCurve ? [...values.mPowerCurve] : this.controls.mPowerCurve,
       };
+      if (normalizedValues.rideGear !== undefined && this.telemetryAvailable) {
+        this.telemetry = { ...this.telemetry, rideGear: normalizedValues.rideGear };
+        this.lastTelemetryAt = Date.now();
+      }
       this.persistControls();
       this.saving = false;
     },

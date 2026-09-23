@@ -11,6 +11,7 @@ export const availableVehicles: Vehicle[] = [
 ];
 
 export const defaultControls: ControlSettings = {
+  rideGear: "sport",
   autoPark: true,
   tipOverCutoff: true,
   sideStandSensor: true,

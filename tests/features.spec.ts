@@ -52,6 +52,22 @@ describe('seventh suite feature parity', () => {
     setActivePinia(createPinia());
     expect(useVehicleStore().controls).toMatchObject({regenLevel:1,wheelieMode:'custom',wheelieMaxAngle:55,speedLimit:25});
   });
+  it('switches the active ride gear, updates telemetry and restores it after reload', async () => {
+    const vehicle = await connectedVehicle();
+    expect(vehicle.telemetry.rideGear).toBe('sport');
+    const switching = vehicle.writeControl('rideGear', 'm');
+    await vi.runAllTimersAsync(); await switching;
+    expect(vehicle.controls.rideGear).toBe('m');
+    expect(vehicle.telemetry.rideGear).toBe('m');
+
+    setActivePinia(createPinia());
+    const restored = useVehicleStore();
+    expect(restored.controls.rideGear).toBe('m');
+    restored.bindVehicle(restored.availableVehicles[0]);
+    const connecting = restored.connect();
+    await vi.runAllTimersAsync(); await connecting;
+    expect(restored.telemetry.rideGear).toBe('m');
+  });
   it('persists the customer general and M-mode settings with separate throttle curves', async () => {
     const vehicle = await connectedVehicle();
     const generalCurve = [5, 12, 22, 34, 47, 61, 74, 85, 94, 100];
@@ -89,14 +105,15 @@ describe('seventh suite feature parity', () => {
       mPowerCurve: mCurve,
     });
   });
-  it('uses tap controls instead of drag-only controls for customer settings', () => {
+  it('uses sliders for M-mode ranges, supports curve dragging and removes wheel circumference from the current UI', () => {
     const ravenSource = readFileSync(resolve('src/pages/raven/index.vue'), 'utf8');
-    expect(ravenSource).not.toContain('@touchmove');
-    expect(ravenSource).not.toContain('@touchstart');
-    expect(ravenSource).not.toContain('<slider');
-    expect(ravenSource).not.toContain('dragCurvePoint');
+    expect(ravenSource).toContain('data-testid="m-power-slider"');
+    expect(ravenSource).toContain('data-testid="m-torque-slider"');
+    expect(ravenSource).toContain('data-testid="m-speed-slider"');
+    expect(ravenSource).toContain('@pointermove="dragCurvePoint"');
+    expect(ravenSource).not.toContain("open('wheel')");
+    expect(ravenSource).not.toContain("screen === 'wheel'");
     expect(ravenSource).toContain('curve-point-editor');
-    expect(ravenSource).toContain('tap-stepper');
   });
   it('rejects disconnected writes and does not persist failed writes', async () => {
     const vehicle = useVehicleStore();
