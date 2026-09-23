@@ -32,7 +32,12 @@ function restoredControls(): ControlSettings {
     : defaultControls.rideGear;
   const powerCurve = Array.isArray(stored.powerCurve) && stored.powerCurve.length === 10 ? [...stored.powerCurve] : [...defaultControls.powerCurve];
   const mPowerCurve = Array.isArray(stored.mPowerCurve) && stored.mPowerCurve.length === 10 ? [...stored.mPowerCurve] : [...defaultControls.mPowerCurve];
-  const chargingPowerOptions: ChargingPower[] = [400, 600, 800, 1000, 1200, 1400, 1600, 1800, "max"];
+  const storedChargingPower = stored.chargingPower;
+  const chargingPower: ChargingPower = storedChargingPower === "max"
+    ? "max"
+    : typeof storedChargingPower === "number" && Number.isFinite(storedChargingPower) && storedChargingPower >= 400 && storedChargingPower <= 2000
+      ? storedChargingPower >= 2000 ? "max" : Math.round(storedChargingPower)
+      : defaultControls.chargingPower;
   const controls: ControlSettings = {
     ...defaultControls,
     ...storedControls,
@@ -42,7 +47,7 @@ function restoredControls(): ControlSettings {
       ? WHEELIE_ANGLE_DEFAULT
       : normalizeWheelieAngle(stored.wheelieMaxAngle),
     speedLimit,
-    chargingPower: chargingPowerOptions.includes(stored.chargingPower as ChargingPower) ? stored.chargingPower as ChargingPower : defaultControls.chargingPower,
+    chargingPower,
     wheelCircumference: migrateWheelCircumference(stored.wheelCircumference, wheelCircumferenceConfigVersion),
     powerCurve,
     mPowerCurve,
@@ -233,6 +238,11 @@ export const useVehicleStore = defineStore("vehicle", {
       }
       if (values.wheelCircumference !== undefined) {
         normalizedValues.wheelCircumference = normalizeWheelCircumference(values.wheelCircumference);
+      }
+      if (values.chargingPower !== undefined) {
+        normalizedValues.chargingPower = values.chargingPower === "max" || values.chargingPower >= 2000
+          ? "max"
+          : Math.max(400, Math.round(values.chargingPower));
       }
       this.controls = {
         ...this.controls,

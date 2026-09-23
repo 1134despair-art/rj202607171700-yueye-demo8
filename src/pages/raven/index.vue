@@ -51,7 +51,10 @@ const regenLevel = ref(vehicle.controls.regenLevel);
 const wheelieMode = ref<WheelieMode>(vehicle.controls.wheelieMode);
 const wheelieMaxAngle = ref(normalizeWheelieAngle(vehicle.controls.wheelieMaxAngle));
 const speedLimit = ref<SpeedLimit>(vehicle.controls.speedLimit);
-const chargingPowerOptions: ChargingPower[] = [400, 600, 800, 1000, 1200, 1400, 1600, 1800, "max"];
+const CHARGING_POWER_MIN = 400;
+const CHARGING_POWER_MAX = 2000;
+const chargingPowerWatts = (value: ChargingPower) => value === "max" ? CHARGING_POWER_MAX : value;
+const chargingPowerDraft = ref(chargingPowerWatts(vehicle.controls.chargingPower));
 const operation = ref("");
 const wheelieDisclaimerOpen = ref(false);
 const wheelieDisclaimerAcknowledged = ref(false);
@@ -107,7 +110,7 @@ const gearOptions = computed<Array<{ value: RideGear; label: string; detail: str
   { value: "creep", label: l("CREEP", "蠕行"), detail: l("Low-speed assisted movement", "低速辅助行驶") },
 ]);
 const levelLabel = (level: number) => level === 0 ? t("common.off") : l(`Level ${level}`, `${level}档`);
-const chargingPowerLabel = (value: ChargingPower) => value === "max" ? "MAX" : `${value} W`;
+const chargingPowerLabel = (value: ChargingPower) => value === "max" || value >= CHARGING_POWER_MAX ? "MAX" : `${value} W`;
 const diagnosisProgress = computed(() => diagnosis.progress);
 const diagnosticButton = computed(() => diagnosis.running ? t("diagnosis.scanning", { progress: diagnosis.progress }) : diagnosis.latest ? t("diagnosis.rerun") : t("diagnosis.start"));
 const vehicleSearchTitle = computed(() => vehicleSearchState.value === "searching" ? t("bind.searching") : vehicleSearchState.value === "results" ? t("bind.searchComplete") : t("bind.searchNearby"));
@@ -152,6 +155,7 @@ function syncDrafts() {
   wheelieMode.value = vehicle.controls.wheelieMode;
   wheelieMaxAngle.value = normalizeWheelieAngle(vehicle.controls.wheelieMaxAngle);
   speedLimit.value = vehicle.controls.speedLimit;
+  chargingPowerDraft.value = chargingPowerWatts(vehicle.controls.chargingPower);
 }
 
 async function applyControl<K extends keyof ControlSettings>(key: K, value: ControlSettings[K], label: string) {
@@ -169,6 +173,32 @@ async function applyControl<K extends keyof ControlSettings>(key: K, value: Cont
 
 function toggleControl<K extends keyof ControlSettings>(key: K, label: string) {
   void applyControl(key, !Boolean(vehicle.controls[key]) as ControlSettings[K], label);
+}
+
+function previewChargingPower(watts: number) {
+  chargingPowerDraft.value = Math.max(CHARGING_POWER_MIN, Math.min(CHARGING_POWER_MAX, Math.round(watts)));
+}
+
+async function commitChargingPower(watts: number) {
+  const previous = vehicle.controls.chargingPower;
+  const previousWatts = chargingPowerWatts(previous);
+  previewChargingPower(watts);
+  const next: ChargingPower = chargingPowerDraft.value >= CHARGING_POWER_MAX ? "max" : chargingPowerDraft.value;
+  if (next === previous) return;
+  if (!(await ensureConnected()) || vehicle.saving || operation.value) {
+    chargingPowerDraft.value = previousWatts;
+    return;
+  }
+  operation.value = "chargingPower";
+  try {
+    await vehicle.writeControl("chargingPower", next);
+    notify(l("Charging power updated", "充电功率已更新"));
+  } catch (reason) {
+    chargingPowerDraft.value = previousWatts;
+    notify(reason instanceof Error ? reason.message : t("common.unableToSave"), "danger");
+  } finally {
+    operation.value = "";
+  }
 }
 
 function openCurve(profile: "general" | "m") {
@@ -656,7 +686,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
         <view class="line-list tune-list settings-entry-list">
           <button @click="open('general')"><view class="round-icon lime"><Settings2 :size="16" /></view><view><b>{{ l('General Settings', '通用设置') }}</b><small>{{ l('Energy recovery, TCS, safety and charging', '动能回收、TCS、安全保护与充电') }}</small></view><span><ChevronRight :size="16" /></span></button>
           <button @click="open('ride')"><view class="round-icon orange"><Bike :size="16" /></view><view><b>{{ l('Wheelie Settings', '翘头设置') }}</b><small>{{ l('Control, mode and target angle', '控制开关、模式与角度选择') }}</small></view><span>{{ vehicle.controls.wheelieEnabled ? wheelieLabel : t('common.off') }} <ChevronRight :size="16" /></span></button>
-          <button @click="open('m-mode')"><view class="round-icon teal"><Gauge :size="16" /></view><view><b>{{ l('M Mode Settings', 'M档设置') }}</b><small>{{ l('Power, torque, speed and throttle curve', '功率、扭矩、车速与转把行程') }}</small></view><span>{{ vehicle.controls.mPowerPercent }}% <ChevronRight :size="16" /></span></button>
+          <button @click="open('m-mode')"><view class="round-icon teal"><Gauge :size="16" /></view><view><b>{{ l('M Mode Settings', 'M档设置') }}</b><small>{{ l('Power, torque, speed and throttle curve', '功率、扭矩、车速与转把行程') }}</small></view><span><ChevronRight :size="16" /></span></button>
         </view>
       </view>
 
@@ -670,7 +700,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
         <view class="setting-block inline-toggle"><view class="setting-title"><view><b>{{ l('Electronic Parking', '电子驻车设置') }}</b><small>{{ l('Enable electronic parking assist', '启用电子驻车辅助') }}</small></view><button class="switch" :class="{ on: vehicle.controls.electronicParking }" :disabled="!connected || Boolean(operation)" @click="toggleControl('electronicParking', l('Electronic parking','电子驻车'))"><i /></button></view></view>
         <button class="setting-link" @click="openCurve('general')"><view><b>{{ l('Throttle Travel Curve', '转把行程设置') }}</b><small>{{ l('10 × 10 throttle opening / acceleration curve', '10 × 10 转把开度 / 加速度曲线') }}</small></view><span>{{ l('Configure', '设置') }} <ChevronRight :size="15" /></span></button>
         <view class="setting-block"><view class="setting-title"><view><b>{{ l('Creep Level', '蠕行挡位设置') }}</b><small>{{ l('Low-speed creep output level', '低速蠕行的动力输出强度') }}</small></view><em>{{ levelLabel(vehicle.controls.creepLevel) }}</em></view><view class="segment four"><button v-for="level in [0,1,2,3]" :key="level" :class="{ 'active-orange': vehicle.controls.creepLevel===level }" :disabled="!connected || Boolean(operation)" @click="applyControl('creepLevel', level, l('Creep level','蠕行挡位'))">{{ levelLabel(level) }}</button></view></view>
-        <view class="setting-block"><view class="setting-title"><view><b>{{ l('Charging Power', '充电功率设置') }}</b><small>{{ l('Nine levels from 400 W to charger maximum', '从 400W 到充电器最大输出，共 9 挡') }}</small></view><em>{{ chargingPowerLabel(vehicle.controls.chargingPower) }}</em></view><view class="power-grid"><button v-for="power in chargingPowerOptions" :key="power" :class="{ active: vehicle.controls.chargingPower===power }" :disabled="!connected || Boolean(operation)" @click="applyControl('chargingPower', power, l('Charging power','充电功率'))">{{ chargingPowerLabel(power) }}</button></view></view>
+        <view class="setting-block range-setting charging-power-setting"><view class="setting-title"><view><b>{{ l('Charging Power', '充电功率设置') }}</b><small>{{ l('Continuously adjustable from 400 W to charger maximum', '从 400W 到充电器最大输出，支持连续调节') }}</small></view><em>{{ chargingPowerLabel(chargingPowerDraft) }}</em></view><slider data-testid="charging-power-slider" :value="chargingPowerDraft" :min="CHARGING_POWER_MIN" :max="CHARGING_POWER_MAX" :step="1" active-color="#ef7d45" background-color="#303530" block-color="#ef7d45" :block-size="22" :disabled="!connected || Boolean(operation)" @changing="previewChargingPower(Number($event.detail.value))" @change="commitChargingPower(Number($event.detail.value))"/><view class="range-scale"><span>400 W</span><span>MAX</span></view></view>
         <view class="setting-block inline-toggle"><view class="setting-title"><view><b>{{ l('Drift Mode', '滑胎模式') }}</b><small>{{ l('Allow controlled rear-wheel slip', '允许后轮受控滑动') }}</small></view><button class="switch" :class="{ on: vehicle.controls.driftMode }" :disabled="!connected || Boolean(operation)" @click="toggleControl('driftMode', l('Drift mode','滑胎模式'))"><i /></button></view></view>
         <view class="setting-block inline-toggle"><view class="setting-title"><view><b>{{ l('Emergency Charging Mode', '应急充电模式') }}</b><small>{{ l('Use only when standard charging is unavailable', '仅在常规充电不可用时启用') }}</small></view><button class="switch" :class="{ on: vehicle.controls.emergencyCharging }" :disabled="!connected || Boolean(operation)" @click="toggleControl('emergencyCharging', l('Emergency charging','应急充电模式'))"><i /></button></view></view>
       </view>
@@ -1123,9 +1153,6 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .setting-link { display:flex; width:100%; min-height:68px; padding:12px 0; align-items:center; justify-content:space-between; gap:12px; border-bottom:1px solid var(--line)!important; text-align:left; }
 .setting-link > view { display:flex; min-width:0; flex:1; flex-direction:column; gap:5px; }
 .setting-link > span { display:flex; flex:0 0 auto; align-items:center; gap:3px; color:var(--lime); font-size:10px; }
-.power-grid { display:grid; margin-top:15px; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
-.power-grid button { display:flex; min-width:0; height:39px; padding:0; align-items:center; justify-content:center; border:1px solid #303530!important; border-radius:5px; color:#858b85; font-size:9px; line-height:1; text-align:center; }
-.power-grid button.active { border-color:var(--orange)!important; background:#452c22; color:#ef965f; }
 .range-setting slider { margin:14px 0 0; }
 .range-setting .setting-title em { min-width:62px; text-align:right; }
 .range-scale { display:flex; margin-top:-2px; justify-content:space-between; color:#737a73; font-size:9px; font-variant-numeric:tabular-nums; }
@@ -1135,8 +1162,7 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .curve-axis { color:#737a73; font-size:9px; }
 .curve-axis-y { margin-top:10px; }
 .curve-axis-x { margin:-6px 0 10px; text-align:center; }
-.segment button:disabled,
-.power-grid button:disabled { opacity:.45; }
+.segment button:disabled { opacity:.45; }
 .segment.six { grid-template-columns:repeat(6,minmax(0,1fr)); }
 .angle-options { margin-top:14px; }
 .tap-stepper { display:grid; width:100%; height:48px; margin-top:14px; overflow:hidden; grid-template-columns:48px minmax(0,1fr) 48px; border:1px solid #343a34; border-radius:7px; background:#0c0f0d; }

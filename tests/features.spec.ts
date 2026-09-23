@@ -79,7 +79,7 @@ describe('seventh suite feature parity', () => {
       brakeCutoff: false,
       electronicParking: false,
       creepLevel: 3,
-      chargingPower: 'max',
+      chargingPower: 450,
       driftMode: true,
       emergencyCharging: true,
       wheelieEnabled: true,
@@ -97,7 +97,7 @@ describe('seventh suite feature parity', () => {
     setActivePinia(createPinia());
     expect(useVehicleStore().controls).toMatchObject({
       brakeRegenLevel: 3,
-      chargingPower: 'max',
+      chargingPower: 450,
       wheelieEnabled: true,
       mPowerPercent: 95,
       mSpeedLimit: 85,
@@ -105,11 +105,19 @@ describe('seventh suite feature parity', () => {
       mPowerCurve: mCurve,
     });
   });
-  it('uses sliders for M-mode ranges, supports curve dragging and removes wheel circumference from the current UI', () => {
+  it('uses sliders for M-mode and charging ranges, supports curve dragging and removes wheel circumference from the current UI', () => {
     const ravenSource = readFileSync(resolve('src/pages/raven/index.vue'), 'utf8');
     expect(ravenSource).toContain('data-testid="m-power-slider"');
     expect(ravenSource).toContain('data-testid="m-torque-slider"');
     expect(ravenSource).toContain('data-testid="m-speed-slider"');
+    expect(ravenSource).toContain('data-testid="charging-power-slider"');
+    expect(ravenSource).toContain(':min="CHARGING_POWER_MIN"');
+    expect(ravenSource).toContain(':max="CHARGING_POWER_MAX"');
+    expect(ravenSource).toContain(':step="1"');
+    expect(ravenSource).toContain('@change="commitChargingPower');
+    expect(ravenSource).not.toContain('charging-power-ticks');
+    expect(ravenSource).not.toContain('<span>{{ vehicle.controls.mPowerPercent }}%');
+    expect(ravenSource).not.toContain('class="power-grid"');
     expect(ravenSource).toContain('@pointermove="dragCurvePoint"');
     expect(ravenSource).not.toContain("open('wheel')");
     expect(ravenSource).not.toContain("screen === 'wheel'");
