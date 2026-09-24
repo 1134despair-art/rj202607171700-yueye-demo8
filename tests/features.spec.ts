@@ -22,19 +22,21 @@ async function connectedVehicle() {
 describe('seventh suite feature parity', () => {
   it('registers the seventh-suite entry, preserves every fifth-suite route and keeps each page local', () => {
     const current = JSON.parse(readFileSync(resolve('src/pages.json'),'utf8'));
-    const expected = ['home/index','controls/index','service/index','me/index','me/update-messages','me/firmware-updates','onboarding/bind','controls/ride-modes','controls/power-curve','controls/wheel','service/status','service/battery','service/resources','service/diagnosis','service/diagnosis-result','service/ota','service/ota-detail','service/ota-progress','me/app-update','me/legal','me/about','me/debug'];
+    const expected = ['home/index','controls/index','service/index','me/index','me/update-messages','me/firmware-updates','onboarding/bind','controls/ride-modes','controls/power-curve','controls/wheel','controls/sounds','controls/sound-detail','controls/lights','controls/light-rule','controls/team','controls/team-invitation','service/status','service/battery','service/resources','service/diagnosis','service/diagnosis-result','service/ota','service/ota-detail','service/ota-progress','me/app-update','me/legal','me/about','me/debug'];
     const routes = current.pages.map((p: { path: string }) => p.path);
     expect(routes[0]).toBe('pages/raven/index');
     expect(routes).toEqual(expect.arrayContaining(expected.map(path => `pages/${path}`)));
     current.pages.forEach((p: { path: string }) => expect(existsSync(resolve('src',p.path + '.vue'))).toBe(true));
     expect(current.tabBar.list).toHaveLength(4);
   });
-  it('does not read, overwrite or clear fifth-suite data', () => {
+  it('does not read, overwrite or clear other suite data', () => {
     uni.setStorageSync('binsen.adventure.v5.vehicle',{ id:'untouched' });
+    uni.setStorageSync('binsen.raven.v7.vehicle',{ id:'v7-untouched' });
     expect(useVehicleStore().isBound).toBe(false);
-    expect(Object.values(storageKeys).every(k => k.startsWith('binsen.raven.v7.'))).toBe(true);
+    expect(Object.values(storageKeys).every(k => k.startsWith('binsen.raven.v2.lights.'))).toBe(true);
     clearDemoStorage();
     expect(uni.getStorageSync('binsen.adventure.v5.vehicle')).toEqual({ id:'untouched' });
+    expect(uni.getStorageSync('binsen.raven.v7.vehicle')).toEqual({ id:'v7-untouched' });
   });
   it('binds, connects, reads telemetry and preserves binding after disconnect', async () => {
     const vehicle = await connectedVehicle();
@@ -118,10 +120,20 @@ describe('seventh suite feature parity', () => {
     expect(ravenSource).not.toContain('charging-power-ticks');
     expect(ravenSource).not.toContain('<span>{{ vehicle.controls.mPowerPercent }}%');
     expect(ravenSource).not.toContain('class="power-grid"');
+    expect(ravenSource).toContain('--bs-vi-sys-color-background-overlay:rgba(0,0,0,.42)');
+    expect(ravenSource).toContain('.raven-app :deep(.modal-scrim)');
+    expect(ravenSource).not.toContain('--bs-vi-sys-color-background-overlay:rgba(0,0,0,.76)');
     expect(ravenSource).toContain('@pointermove="dragCurvePoint"');
     expect(ravenSource).not.toContain("open('wheel')");
     expect(ravenSource).not.toContain("screen === 'wheel'");
     expect(ravenSource).toContain('curve-point-editor');
+    expect(ravenSource).toContain('data-testid="entry-lights"');
+    expect(ravenSource).toContain('data-testid="entry-team"');
+    expect(ravenSource).toContain('data-testid="entry-sounds"');
+    expect(ravenSource).not.toContain('class="ios-bar"');
+    expect(ravenSource).not.toContain('9:41');
+    expect(readFileSync(resolve('src/components/AppHeader.vue'), 'utf8')).not.toContain('IosStatusBar');
+    expect(readFileSync(resolve('src/App.vue'), 'utf8')).toContain('@use "./styles/experience.scss"');
   });
   it('rejects disconnected writes and does not persist failed writes', async () => {
     const vehicle = useVehicleStore();

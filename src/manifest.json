@@ -1,13 +1,13 @@
 {
-  "name": "BINSEN RAVEN V7",
-  "appid": "__UNI__BINSEN_RAVEN_V7",
-  "description": "BINSEN 第七套 RAVEN 工业仪表视觉方案",
+  "name": "BINSEN RAVEN 灯光版",
+  "appid": "__UNI__BINSEN_RAVEN_LIGHTS",
+  "description": "与第七套同步并保留灯光控制的独立方案",
   "versionName": "1.0.0",
   "versionCode": "100",
   "transformPx": false,
   "uniStatistics": { "enable": false },
   "h5": {
-    "title": "BINSEN 第七套",
+    "title": "BINSEN RAVEN 灯光版",
     "router": { "mode": "hash", "base": "./" }
   }
 }

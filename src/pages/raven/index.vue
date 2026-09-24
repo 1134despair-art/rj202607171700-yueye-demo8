@@ -5,9 +5,9 @@ import { useI18n } from "vue-i18n";
 import {
   Activity, BatteryCharging, Bike, Bluetooth, BookOpen, CalendarDays, Check, ChevronLeft,
   ChevronRight, CircleGauge, CloudDownload, Download, FileText, FolderOpen, Gauge, Globe2, House,
-  Languages, LoaderCircle, Mail, Minus, Pencil, Phone, Plus, RefreshCw, RotateCcw,
+  Languages, Lightbulb, LoaderCircle, Mail, Minus, Pencil, Phone, Plus, RefreshCw, RotateCcw,
   Save, Search, Settings2, ShieldCheck, SlidersHorizontal, Stethoscope, TriangleAlert,
-  Unlink, UserRound, Wrench,
+  Unlink, UserRound, UsersRound, Volume2, Wrench,
 } from "lucide-vue-next";
 import AppFeedbackHost from "@/components/AppFeedbackHost.vue";
 import AppModalShell from "@/components/AppModalShell.vue";
@@ -651,8 +651,6 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 
 <template>
   <view class="raven-app">
-    <view class="ios-bar"><text>9:41</text><view class="ios-icons"><i /><i /><i /></view></view>
-
     <view class="topbar" :class="{ dashboard: screen === 'dashboard' }">
       <view v-if="showTabs" class="top-icon" />
       <button v-else class="top-icon" :aria-label="t('common.back')" @click="back"><ChevronLeft :size="20" /></button>
@@ -687,6 +685,12 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
           <button @click="open('general')"><view class="round-icon lime"><Settings2 :size="16" /></view><view><b>{{ l('General Settings', '通用设置') }}</b><small>{{ l('Energy recovery, TCS, safety and charging', '动能回收、TCS、安全保护与充电') }}</small></view><span><ChevronRight :size="16" /></span></button>
           <button @click="open('ride')"><view class="round-icon orange"><Bike :size="16" /></view><view><b>{{ l('Wheelie Settings', '翘头设置') }}</b><small>{{ l('Control, mode and target angle', '控制开关、模式与角度选择') }}</small></view><span>{{ vehicle.controls.wheelieEnabled ? wheelieLabel : t('common.off') }} <ChevronRight :size="16" /></span></button>
           <button @click="open('m-mode')"><view class="round-icon teal"><Gauge :size="16" /></view><view><b>{{ l('M Mode Settings', 'M档设置') }}</b><small>{{ l('Power, torque, speed and throttle curve', '功率、扭矩、车速与转把行程') }}</small></view><span><ChevronRight :size="16" /></span></button>
+        </view>
+        <text class="section-label">{{ l('LIGHTING & EXPERIENCE', '灯光与个性化') }}</text>
+        <view class="line-list tune-list settings-entry-list">
+          <button data-testid="entry-lights" @click="navigate('/pages/controls/lights?scope=solo')"><view class="round-icon orange"><Lightbulb :size="16" /></view><view><b>{{ l('Ambient Lighting', '氛围灯控制') }}</b><small>{{ l('Five lighting zones, effects and trigger rules', '五区灯光、灯效与联动规则') }}</small></view><span><ChevronRight :size="16" /></span></button>
+          <button data-testid="entry-team" @click="navigate('/pages/controls/team')"><view class="round-icon lime"><UsersRound :size="16" /></view><view><b>{{ l('Group Lighting', '车队灯光同步') }}</b><small>{{ l('Nearby riders and synchronized lighting', '附近车辆组队与灯光同步') }}</small></view><span><ChevronRight :size="16" /></span></button>
+          <button data-testid="entry-sounds" @click="navigate('/pages/controls/sounds')"><view class="round-icon teal"><Volume2 :size="16" /></view><view><b>{{ l('Vehicle Sounds', '车辆音效') }}</b><small>{{ l('Local sounds used by lighting rules', '配置灯光联动使用的本车音效') }}</small></view><span><ChevronRight :size="16" /></span></button>
         </view>
       </view>
 
@@ -873,8 +877,6 @@ onUnmounted(() => { if (vehicleSearchTimer) clearTimeout(vehicleSearchTimer); })
 .raven-app button { border:0; background:transparent; color:inherit; font:inherit; line-height:normal; letter-spacing:0; }
 .raven-app button::after { border:0; }
 .raven-app button[disabled] { color:inherit; }
-.ios-bar { display:flex; height:28px; flex:0 0 28px; padding:0 17px; align-items:center; justify-content:space-between; font-size:11px; font-weight:700; }
-.ios-icons { display:flex; align-items:center; gap:5px; }.ios-icons i:nth-child(1){width:15px;height:10px;background:linear-gradient(90deg,transparent 0 10%,#eee 10% 20%,transparent 20% 30%,#eee 30% 45%,transparent 45% 55%,#eee 55% 75%,transparent 75% 82%,#eee 82%)}.ios-icons i:nth-child(2){width:14px;height:9px;border-top:2px solid #eee;border-radius:50%}.ios-icons i:nth-child(3){width:22px;height:9px;border:1px solid #eee;border-radius:2px}
 .topbar { display:grid; height:49px; flex:0 0 49px; padding:0 14px; grid-template-columns:72px 1fr 72px; align-items:center; border-bottom:1px solid var(--line); }.top-icon{display:grid;width:38px;height:38px;place-items:center}.top-icon.end{grid-column:3;justify-self:end}.top-title{text-align:center;font-size:13px;font-weight:700}.top-logo{width:72px;height:22px;justify-self:center}.top-connected{display:flex;min-width:72px;height:38px;padding:0;align-items:center;justify-content:flex-end;gap:4px;color:#b4baaf;font-size:8px;white-space:nowrap}.top-connected i{width:5px;height:5px;border-radius:50%;background:var(--lime)}.top-connected i.offline{background:#656b65}.top-help{font-size:12px;text-align:right;color:#ddd}
 .screen-scroll { flex:1; min-height:0; }.screen-scroll.has-tabs{padding-bottom:66px}.screen-scroll.has-action{padding-bottom:66px}.page-content{padding:18px 16px 24px}.section-label{display:block;margin:20px 0 10px;color:#5f655f;font-size:9px;font-weight:700}.eyebrow,.center-label{display:block;color:#747a74;font-size:9px}.center-label{text-align:center;margin-top:13px}.page-content h1{margin:5px 0 12px;font-size:24px;line-height:1.1}.page-content h2{margin:0;font-size:16px}.page-content p{margin:5px 0;color:var(--muted);font-size:9px;line-height:1.55}.line-list{border-top:1px solid var(--line)}.line-list>view,.line-list>button{border-bottom:1px solid var(--line)}small{display:block;color:var(--muted);font-size:8px;line-height:1.45}b{font-size:12px}.round-icon{display:grid;width:28px;height:28px;flex:0 0 28px;place-items:center;border:1px solid #303530;border-radius:50%;color:#aeb4ae;background:#151815}.round-icon.lime{color:var(--lime)}.round-icon.orange{color:var(--orange)}.round-icon.teal{color:var(--teal)}
 .bike-stage{height:184px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}.bike-stage image{width:88%;height:176px}.model-line{display:flex;height:54px;margin:0 16px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.model-line>view{display:flex;flex-direction:column}.model-line .model{font-size:22px;font-weight:800}.model-line>view>text:last-child,.model-line>text{color:var(--muted);font-size:8px}.metrics{display:grid;margin:0 16px;border-bottom:1px solid var(--line)}.metrics.three{grid-template-columns:repeat(3,1fr)}.metrics>view{display:flex;min-height:55px;flex-direction:column;align-items:center;justify-content:center}.metrics>view+view{border-left:1px solid var(--line)}.metrics b{font-size:15px}.metrics span{margin-top:5px;color:var(--muted);font-size:7px}.data-row{display:flex;width:calc(100% - 32px);min-height:49px;margin:0 16px;padding:8px 0;align-items:center;gap:9px;border-bottom:1px solid var(--line);text-align:left}.data-row>view:nth-child(2){display:flex;flex-direction:column;gap:3px}.row-end{margin-left:auto;text-align:right}.quick-strip{display:grid;margin:0 16px;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}.quick-strip button{display:flex;height:47px;align-items:center;justify-content:center;gap:5px;font-size:8px}.quick-strip button+button{border-left:1px solid var(--line)}.quick-strip em{display:grid;width:13px;height:13px;place-items:center;border-radius:50%;background:var(--lime);color:#111;font-size:7px;font-style:normal}

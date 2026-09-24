@@ -1,0 +1,329 @@
+{
+  "generatedAt": "2026-08-28T14:28:13.154Z",
+  "collection": "阿里巴巴国际站官方图标库",
+  "collectionUrl": "https://www.iconfont.cn/collections/detail?cid=19238",
+  "licenseNote": "The collection is marked public, original and free-to-use on Iconfont. Search additions retain their source id.",
+  "semanticNormalization": {
+    "style": "24x24 monochrome symbols with consistent visual weight for 16-24px UI use",
+    "basis": "Alibaba Iconfont collection and keyword-search references, redrawn as domain-specific composites where one source icon was ambiguous",
+    "icons": [
+      "offroad-motorcycle",
+      "controller-chip",
+      "electric-motor",
+      "electric-current",
+      "electric-off",
+      "battery-health",
+      "signal-bars",
+      "smartphone-device",
+      "app-update",
+      "cloud-download",
+      "ruler-measure",
+      "sparkles",
+      "wifi-off",
+      "bluetooth-off",
+      "wrench-tool"
+    ]
+  },
+  "icons": [
+    {
+      "key": "add",
+      "id": 34452956,
+      "name": "add",
+      "source": "collection/19238/add#34452956"
+    },
+    {
+      "key": "calendar",
+      "id": 34452970,
+      "name": "calendar",
+      "source": "collection/19238/calendar#34452970"
+    },
+    {
+      "key": "catalog",
+      "id": 34452798,
+      "name": "catalog",
+      "source": "collection/19238/catalog#34452798"
+    },
+    {
+      "key": "check",
+      "id": 34452984,
+      "name": "confirm",
+      "source": "collection/19238/confirm#34452984"
+    },
+    {
+      "key": "close",
+      "id": 34452988,
+      "name": "close",
+      "source": "collection/19238/close#34452988"
+    },
+    {
+      "key": "curve",
+      "id": 34452801,
+      "name": "charts-curve",
+      "source": "collection/19238/charts-curve#34452801"
+    },
+    {
+      "key": "delete",
+      "id": 34452990,
+      "name": "delete",
+      "source": "collection/19238/delete#34452990"
+    },
+    {
+      "key": "document",
+      "id": 34453299,
+      "name": "template",
+      "source": "collection/19238/template#34453299"
+    },
+    {
+      "key": "down",
+      "id": 34452987,
+      "name": "down",
+      "source": "collection/19238/down#34452987"
+    },
+    {
+      "key": "download",
+      "id": 34452995,
+      "name": "download",
+      "source": "collection/19238/download#34452995"
+    },
+    {
+      "key": "edit",
+      "id": 34452981,
+      "name": "edit",
+      "source": "collection/19238/edit#34452981"
+    },
+    {
+      "key": "email",
+      "id": 34453208,
+      "name": "email",
+      "source": "collection/19238/email#34453208"
+    },
+    {
+      "key": "error",
+      "id": 34452967,
+      "name": "error",
+      "source": "collection/19238/error#34452967"
+    },
+    {
+      "key": "globe",
+      "id": 34453220,
+      "name": "global",
+      "source": "collection/19238/global#34453220"
+    },
+    {
+      "key": "home",
+      "id": 34453216,
+      "name": "home",
+      "source": "collection/19238/home#34453216"
+    },
+    {
+      "key": "info",
+      "id": 34453015,
+      "name": "info",
+      "source": "collection/19238/info#34453015"
+    },
+    {
+      "key": "left",
+      "id": 34453005,
+      "name": "left",
+      "source": "collection/19238/left#34453005"
+    },
+    {
+      "key": "link",
+      "id": 34453021,
+      "name": "link",
+      "source": "collection/19238/link#34453021"
+    },
+    {
+      "key": "loading",
+      "id": 34453017,
+      "name": "loading",
+      "source": "collection/19238/loading#34453017"
+    },
+    {
+      "key": "location",
+      "id": 34453026,
+      "name": "location",
+      "source": "collection/19238/location#34453026"
+    },
+    {
+      "key": "lock",
+      "id": 34453011,
+      "name": "lock",
+      "source": "collection/19238/lock#34453011"
+    },
+    {
+      "key": "notice",
+      "id": 34453037,
+      "name": "notice",
+      "source": "collection/19238/notice#34453037"
+    },
+    {
+      "key": "pause",
+      "id": 34453066,
+      "name": "suspend",
+      "source": "collection/19238/suspend#34453066"
+    },
+    {
+      "key": "phone",
+      "id": 34453244,
+      "name": "phone",
+      "source": "collection/19238/phone#34453244"
+    },
+    {
+      "key": "play",
+      "id": 34453036,
+      "name": "play",
+      "source": "collection/19238/play#34453036"
+    },
+    {
+      "key": "product",
+      "id": 34452947,
+      "name": "product",
+      "source": "collection/19238/product#34452947"
+    },
+    {
+      "key": "protection",
+      "id": 34453256,
+      "name": "protection",
+      "source": "collection/19238/protection#34453256"
+    },
+    {
+      "key": "qr",
+      "id": 34453254,
+      "name": "qr-code",
+      "source": "collection/19238/qr-code#34453254"
+    },
+    {
+      "key": "refresh",
+      "id": 34452846,
+      "name": "editor-rotate",
+      "source": "collection/19238/editor-rotate#34452846"
+    },
+    {
+      "key": "return",
+      "id": 34453048,
+      "name": "return",
+      "source": "collection/19238/return#34453048"
+    },
+    {
+      "key": "right",
+      "id": 34453038,
+      "name": "right",
+      "source": "collection/19238/right#34453038"
+    },
+    {
+      "key": "save",
+      "id": 34453267,
+      "name": "save",
+      "source": "collection/19238/save#34453267"
+    },
+    {
+      "key": "search",
+      "id": 34453049,
+      "name": "search",
+      "source": "collection/19238/search#34453049"
+    },
+    {
+      "key": "security",
+      "id": 34453275,
+      "name": "security",
+      "source": "collection/19238/security#34453275"
+    },
+    {
+      "key": "service",
+      "id": 34453295,
+      "name": "tool",
+      "source": "collection/19238/tool#34453295"
+    },
+    {
+      "key": "settings",
+      "id": 34453058,
+      "name": "settings",
+      "source": "collection/19238/settings#34453058"
+    },
+    {
+      "key": "shutdown",
+      "id": 34453277,
+      "name": "shut-down",
+      "source": "collection/19238/shut-down#34453277"
+    },
+    {
+      "key": "success",
+      "id": 34453065,
+      "name": "success",
+      "source": "collection/19238/success#34453065"
+    },
+    {
+      "key": "translate",
+      "id": 36209395,
+      "name": "translate",
+      "source": "collection/19238/translate#36209395"
+    },
+    {
+      "key": "upload",
+      "id": 34453073,
+      "name": "upload",
+      "source": "collection/19238/upload#34453073"
+    },
+    {
+      "key": "user",
+      "id": 34452831,
+      "name": "customer",
+      "source": "collection/19238/customer#34452831"
+    },
+    {
+      "key": "view",
+      "id": 34453076,
+      "name": "view",
+      "source": "collection/19238/view#34453076"
+    },
+    {
+      "key": "warning",
+      "id": 34453084,
+      "name": "warning",
+      "source": "collection/19238/warning#34453084"
+    },
+    {
+      "key": "wifi",
+      "id": 34453318,
+      "name": "wifi",
+      "source": "collection/19238/wifi#34453318"
+    },
+    {
+      "key": "battery",
+      "id": 34413353,
+      "name": "电池",
+      "source": "search/电池#34413353"
+    },
+    {
+      "key": "bluetooth",
+      "id": 5928198,
+      "name": "蓝牙",
+      "source": "search/蓝牙#5928198"
+    },
+    {
+      "key": "motorcycle",
+      "id": 9399632,
+      "name": "摩托车",
+      "source": "search/摩托车#9399632"
+    },
+    {
+      "key": "temperature",
+      "id": 1305048,
+      "name": "温度",
+      "source": "search/温度#1305048"
+    },
+    {
+      "key": "dashboard",
+      "id": 3868284,
+      "name": "仪表盘",
+      "source": "search/仪表#3868284"
+    },
+    {
+      "key": "diagnosis",
+      "id": 1288,
+      "name": "诊断",
+      "source": "search/诊断#1288"
+    }
+  ]
+}

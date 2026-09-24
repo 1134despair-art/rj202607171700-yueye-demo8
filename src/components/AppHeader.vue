@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import IosStatusBar from "@/components/IosStatusBar.vue";
 import UiIcon from "@/components/UiIcon.vue";
 import AppFeedbackHost from "@/components/AppFeedbackHost.vue";
 import logoImage from "@/assets/ui/branding/binsen-logo-horizontal-inverse.png";
@@ -63,7 +62,6 @@ function goBack() {
 
 <template>
   <view class="app-header" :class="{ 'app-header--dark': props.dark, 'app-header--back': props.back, 'app-header--plain-back': props.back }">
-    <IosStatusBar :dark="app.resolvedTheme === 'dark'" />
     <button v-if="props.back" class="icon-button" data-testid="back-button" :aria-label="t('common.back')" @click="goBack"><UiIcon name="ChevronLeft" :tone="app.resolvedTheme === 'dark' ? 'inverse' : 'navy'" :size="24" /></button>
     <image v-else class="app-header__logo" :src="app.resolvedTheme === 'dark' ? logoImage : logoBlack" mode="aspectFit" />
     <text v-if="props.title" class="app-header__title">{{ props.title }}</text>
@@ -83,8 +81,8 @@ function goBack() {
   top: 0;
   display: grid;
   grid-template-columns: 88px 1fr 44px;
-  min-height: calc(56px + var(--status-bar-height, env(safe-area-inset-top)));
-  padding: var(--status-bar-height, env(safe-area-inset-top)) 12px 0;
+  min-height: 56px;
+  padding: 0 12px;
   align-items: center;
   gap: 6px;
   background: rgba(9, 11, 10, .97);

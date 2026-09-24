@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Semantic composite based on Alibaba Iconfont dashboard and switch symbols. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 14.5a8 8 0 0 1 16 0" />
+  <path d="m12 13 4-4M7 12.4h.01M12 8.5h.01M17 12.4h.01" />
+  <path d="M5 18h9l-1.8-1.8M14 18l-1.8 1.8M19 21h-9l1.8-1.8M10 21l1.8 1.8" />
+</svg>

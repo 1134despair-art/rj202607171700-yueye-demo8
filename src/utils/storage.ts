@@ -1,4 +1,4 @@
-const PREFIX = "binsen.raven.v7.";
+const PREFIX = "binsen.raven.v2.lights.";
 
 export const storageKeys = {
   vehicle: `${PREFIX}vehicle`,

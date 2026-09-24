@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Semantic composite based on Alibaba Iconfont downhill and arrow symbols. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3 18.8 21 12.5" />
+  <circle cx="7.8" cy="14.8" r="2" />
+  <circle cx="14.7" cy="12.4" r="2" />
+  <path d="m7.8 14.8 2-4 3.2-1.1 1.7 2.7M9.8 10.8l-1.4-1.4M10 11l4.7 1.4" />
+  <path d="M19 3.2v6M16.8 7 19 9.3 21.2 7" />
+</svg>

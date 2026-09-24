@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Semantic appearance icon normalized from Alibaba Iconfont sparkle references. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9.5 3.5c.8 3.3 2.2 4.7 5.5 5.5-3.3.8-4.7 2.2-5.5 5.5C8.7 11.2 7.3 9.8 4 9c3.3-.8 4.7-2.2 5.5-5.5Z" />
+  <path d="M17.5 12.5c.5 2.2 1.5 3.2 3.7 3.7-2.2.5-3.2 1.5-3.7 3.7-.5-2.2-1.5-3.2-3.7-3.7 2.2-.5 3.2-1.5 3.7-3.7Z" />
+</svg>
